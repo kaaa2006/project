@@ -1,0 +1,83 @@
+/* ── 카드 공통 ── */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* ── 카드 헤더 ── */
+.card-header {
+    background-color: #f8f9fa; /* 상단 색상 */
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between; /* 좌우 배치 */
+    align-items: center;
+}
+
+/* 작성자/관리자와 날짜 오른쪽 */
+.card-header .author-date {
+    font-weight: normal;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* ── 카드 바디 ── */
+.card-body {
+    padding: 20px;
+}
+
+/* ── 제목과 내용 구분선 ── */
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e0e0e0; /* 얇은 실선 */
+}
+
+/* 작성자/작성일 */
+.card-body .d-flex > div.fw-bold {
+    font-size: 1rem;
+}
+
+.card-body .text-muted {
+    color: #555;
+}
+
+/* ── 답변 영역 ── */
+.alert {
+    background-color: #fff;
+    border-radius: 0;
+    border: none;
+    padding: 15px;
+    margin-bottom: 0;
+}
+
+.alert p {
+    margin-bottom: 0.5rem;
+}
+
+.alert .d-flex {
+    justify-content: flex-start;
+    margin-bottom: 8px;
+}
+
+.alert .text-muted {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 768px) {
+    .card-body .d-flex {
+        flex-direction: column;
+    }
+    .card-body .d-flex > div + div {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+}

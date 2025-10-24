@@ -1,0 +1,152 @@
+/* =========================================================
+   Notice — Read (Tip-like Detail)
+   - Scope: .notice-read
+   - Concept color: var(--brand-teal, #00DCA0)
+   ========================================================= */
+
+:root{
+    --nr-brand:  var(--brand-teal, #00DCA0);
+    --nr-ink:    #0b2413;
+    --nr-muted:  #6b7d73;
+    --nr-surface:#ffffff;
+    --nr-border: #e6eeea;
+    --nr-bg:     #f7faf8;
+    --nr-radius: 14px;
+    --nr-shadow: 0 8px 24px rgba(17,24,39,.06);
+}
+
+.notice-read { background: var(--nr-bg); color: var(--nr-ink); }
+
+/* 컨테이너 (팁 상세 list-container 톤) */
+.notice-read .list-container{
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 12px 24px;
+}
+
+.notice-read .notice-read-container{
+    border: 1px solid var(--nr-border);
+    border-radius: var(--nr-radius);
+    background: var(--nr-surface);
+    box-shadow: var(--nr-shadow);
+    padding: 18px;
+}
+
+/* 제목: 왼쪽 포인트 라인 */
+.notice-read .page-title{
+    position: relative;
+    margin: 6px 0 14px;
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+    color:#12251b;
+}
+.notice-read .page-title::before{
+    content:"";
+    position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--nr-brand);
+}
+
+/* 메타 */
+.notice-read .meta-info{
+    display:flex; flex-wrap: wrap; gap: 8px 16px;
+    color: var(--nr-muted);
+}
+.notice-read .meta-info p{ margin: 0; }
+
+/* 본문 */
+.notice-read .post-content{
+    border:1px solid var(--nr-border);
+    border-radius: 12px;
+    background:#fff;
+    padding: 16px;
+    line-height: 1.7;
+    color:#22352c;
+    white-space: pre-line; /* 줄바꿈 보존 */
+}
+
+/* 이미지 그리드 */
+.notice-read .post-images{
+    margin-top: 12px;
+}
+.notice-read .image-grid{
+    display: block;
+}
+.notice-read .post-img{
+    width: 100%; height: auto;
+    border-radius: 10px;
+    border: 1px solid var(--nr-border);
+    box-shadow: 0 3px 14px rgba(0,0,0,.06);
+    margin-top: 10px;
+}
+
+/* 하단 액션: 좌측 목록 / 우측 관리자 */
+.notice-read .actions-row{
+    display:flex; gap:10px; align-items:center; justify-content:space-between;
+    margin-top: 16px;
+}
+
+.notice-read .btn-outline,
+.notice-read .btn-primary,
+.notice-read .btn-danger{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width: 120px; height: 40px; padding: 0 14px;
+    border-radius: 12px; border: 2px solid transparent;
+    font-weight: 800; text-decoration: none !important;
+    transition: background .15s, color .15s, box-shadow .15s, filter .15s;
+    line-height: 1;
+}
+
+/* 목록 */
+.notice-read .btn-outline{
+    background:#fff; color: var(--nr-brand); border-color: var(--nr-brand);
+}
+.notice-read .btn-outline:hover{
+    background: var(--nr-brand); color:#fff;
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+}
+
+/* 수정 */
+.notice-read .btn-primary{
+    background: var(--nr-brand); color:#fff; border-color: var(--nr-brand);
+}
+.notice-read .btn-primary:hover{ filter: brightness(.97); }
+
+/* 삭제 */
+.notice-read .btn-danger{
+    background:#fff; color:#ef4444; border-color:#ef4444;
+}
+.notice-read .btn-danger:hover{ background:#ef4444; color:#fff; }
+
+/* 반응형 */
+@media (max-width: 575.98px){
+    .notice-read .actions-row{ flex-direction: column; align-items: stretch; gap: 8px; }
+    .notice-read .btn-outline,
+    .notice-read .btn-primary,
+    .notice-read .btn-danger{ width: 100%; min-width: 0; }
+}
+/* --- 수정/삭제 버튼 가로 정렬 --- */
+.notice-read .admin-actions{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: nowrap;   /* 줄바꿈 방지 */
+}
+
+/* form 기본 여백 제거(버튼 높이/정렬 맞춤) */
+.notice-read .inline-delete{
+    margin: 0;
+}
+
+/* 모바일에서도 가로 유지 (이전에 100% 폭으로 세로 쌓이던 것 무효화) */
+@media (max-width: 575.98px){
+    /* actions-row는 세로 스택되더라도, admin-actions 내부는 가로 유지 */
+    .notice-read .admin-actions{
+        justify-content: flex-end;   /* 우측 정렬(원하는 정렬로 변경 가능) */
+    }
+    .notice-read .admin-actions .btn-primary,
+    .notice-read .admin-actions .btn-danger{
+        width: auto;   /* 이전 규칙의 width:100% 무효화 */
+        min-width: 0;
+    }
+}

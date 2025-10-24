@@ -1,0 +1,93 @@
+:root{ --brand-teal:#00dca0; }
+
+/* 1) 헤더–푸터 사이 여백 넉넉하게 */
+.signup-success-page{
+    padding-block:96px;              /* 기존보다 넉넉하게 */
+}
+
+/* 2) 회색선 박스 + 가운데 정렬 */
+.signup-success-page .success-wrap{
+    max-width:720px;
+    margin:0 auto;
+    padding:40px 32px;
+    border:1px solid #e5e7eb;        /* 회색선 박스 */
+    border-radius:14px;
+    background:#fff;
+    text-align:center;               /* 내부 텍스트/인라인 요소 중앙정렬 */
+}
+
+/* 3) 아이콘: 중앙 배치 + 브랜드 컬러 */
+.signup-success-page .ico{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:72px; height:72px;
+    margin:0 auto 12px;              /* 좌우 중앙 */
+    border-radius:50%;
+    background:color-mix(in srgb, var(--brand-teal) 12%, transparent);
+    color:var(--brand-teal);
+}
+.signup-success-page .ico .bi{font-size:2rem}
+
+/* 4) 텍스트 모두 중앙 + 간격 보정 */
+.signup-success-page .title{
+    color:var(--brand-teal);
+    font-weight:800;
+    margin:6px 0 10px;
+}
+.signup-success-page .desc{
+    color:#666;
+    margin:0 0 22px;
+    line-height:1.6;
+}
+
+/* 5) 버튼: 가로·세로 정가운데 + 동일 너비 느낌 */
+.signup-success-page .actions{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+    margin:16px 0 4px;               /* 위아래 살짝 띄움 */
+    flex-wrap:wrap;
+}
+.signup-success-page .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;          /* 텍스트/아이콘 정가운데 */
+    gap:8px;
+    height:48px;
+    padding:0 18px;
+    border-radius:12px;
+    font-weight:600;
+    line-height:1;
+    text-align:center;
+}
+.signup-success-page .actions .btn{
+    flex:1 0 200px;                  /* 최소 200px로 폭 맞춤 */
+    max-width:260px;
+}
+
+/* “로그인하러가기” = 제목과 같은 초록 배경 */
+.signup-success-page .btn-login{
+    background:var(--brand-teal);
+    border-color:var(--brand-teal);
+    color:#fff;
+}
+.signup-success-page .btn-login:hover{ filter:brightness(.95); }
+
+/* “메인으로”는 보조 버튼 */
+.signup-success-page .btn-outline-secondary{
+    border-color:#cfcfcf;
+    color:#333;
+    background:#fff;
+}
+.signup-success-page .btn-outline-secondary:hover{
+    background:#f8f9fa; color:#111;
+}
+
+/* 모바일 간격 살짝 컴팩트 */
+@media (max-width:576px){
+    .signup-success-page{ padding-block:72px; }
+    .signup-success-page .success-wrap{ padding:28px 22px; }
+    .signup-success-page .actions .btn{ flex-basis:100%; max-width:none; }
+}

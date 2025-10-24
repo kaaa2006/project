@@ -1,0 +1,315 @@
+<!-- src/main/resources/templates/thymeleaf/admin/item-edit.html (최종본) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title>상품 수정</title>
+
+    <th:block layout:fragment="page_head">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+        <meta name="items-api-base" content="/api/admin/items"/>
+
+        <meta name="after-update-url" th:content="@{|/admin/items/${item.id}|}"/>
+        <meta name="after-delete-url" th:content="@{/admin/items}"/>
+
+        <style>
+            .page-wrap{max-width:1120px;margin:0 auto;padding:24px}
+            .page-header{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+            .grid{display:grid;grid-template-columns:1fr 380px;gap:22px}
+
+            .card{background:#fff;border:1px solid #eee;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+            .card .hd{padding:14px 16px;border-bottom:1px solid #eee;font-weight:600;display:flex;align-items:center;justify-content:space-between}
+            .card .bd{padding:16px}
+            .subhd{font-size:13px;font-weight:700;margin:14px 0 8px;color:#374151;display:flex;align-items:center;gap:8px}
+            .subhd .count{font-size:12px;color:#6b7280;background:#f3f4f6;border:1px solid #e5e7eb;padding:2px 8px;border-radius:999px}
+
+            .field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+            .field input,.field select,.field textarea{padding:10px;border:1px solid #ddd;border-radius:10px}
+            .row{display:flex;gap:10px}
+            .row .field{flex:1}
+
+            .btn{padding:10px 14px;border:1px solid #ddd;border-radius:10px;background:#fafafa;cursor:pointer}
+            .btn.primary{background:#2563eb;color:#fff;border-color:#2563eb}
+            .btn.danger{background:#ef4444;color:#fff;border-color:#ef4444}
+            .btn.ghost{background:#fff;border-color:#e5e7eb;color:#374151}
+            .btn.sm{padding:6px 10px;border-radius:8px;font-size:12px}
+            .btn-icon{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+            .btn-del{position:absolute;top:6px;right:6px}
+
+            .ctrls{display:flex;gap:8px;flex-wrap:wrap}
+
+            /* 갤러리 */
+            .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+            .thumb{position:relative;border:1px solid #e6e6e6;border-radius:10px;padding:8px;background:#fff;transition:box-shadow .15s, border-color .15s}
+            .thumb:hover{box-shadow:0 6px 14px rgba(0,0,0,.06);border-color:#d6d6d6}
+            .thumb img{width:100%;height:110px;object-fit:cover;border-radius:8px}
+            .thumb.thumb-sm img{height:84px}
+
+            .truncate{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+            .meta-row{display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:6px}
+
+            .rep-badge{position:absolute;left:8px;top:8px;background:#2563eb;color:#fff;font-size:11px;padding:2px 6px;border-radius:999px}
+            .thumb .actions{position:absolute;right:6px;top:6px;display:flex;gap:4px;opacity:0;transition:opacity .15s}
+            .thumb:hover .actions{opacity:1}
+
+            .help{font-size:12px;color:#6b7280}
+            .muted{color:#6b7280;font-size:12px}
+
+            .right{text-align:right;margin-top:16px}
+
+            .dropzone{border:2px dashed #d1d5db;border-radius:12px;padding:12px;text-align:center;background:#fafafa}
+            .dropzone:hover{background:#f8fafc}
+            .dropzone .hint{font-size:12px;color:#6b7280;margin-top:6px}
+
+            hr{border:0;border-top:1px solid #eee;margin:16px 0}
+
+            /* 새 미리보기 하이라이트 (JS 주입과 동일) */
+            .thumb.rep::after{
+                content:"대표";
+                position:absolute; top:6px; left:6px;
+                background:#2563eb; color:#fff; font-size:11px;
+                padding:2px 6px; border-radius:999px
+            }
+            .thumb.rep{ box-shadow:0 0 0 2px rgba(37,99,235,.45) }
+        </style>
+
+        <script th:src="@{/js/admin/item-edit.js(v=${#dates.createNow().time})}" defer></script>
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content" class="page-wrap"
+     data-page="edit"
+     th:data-item-id="${item.id}"
+     th:data-after-update-url="@{|/admin/items/${item.id}|}"
+     data-api="/api/admin/items"
+     th:data-sell-status="${item.itemSellStatus}">
+
+    <div class="page-header">
+        <h1>상품 수정</h1>
+        <span class="muted" th:text="'#' + ${item.id}"></span>
+        <span class="badge" th:text="${item.itemSellStatus}"
+              style="margin-left:8px;padding:4px 8px;border-radius:999px;background:#eef;border:1px solid #cde;"></span>
+        <span class="muted" style="margin-left:8px"
+              th:text="'수정: ' + ${#temporals.format(item.updateTime, 'yyyy-MM-dd HH:mm')}"></span>
+    </div>
+
+    <div class="help" th:if="${item.itemSellStatus?.name() == 'STOP'}"
+         th:text="${'STOP 상태입니다. 보존기간 ' + retentionDays + '일 경과 후 하드 삭제 가능합니다.'}">
+    </div>
+
+    <div class="grid">
+        <!-- 좌측: 기본 정보 -->
+        <div class="card">
+            <div class="hd">기본 정보</div>
+            <div class="bd">
+                <form id="itemForm" class="form">
+                    <input type="hidden" name="id" th:value="${form.id}"/>
+
+                    <div class="field">
+                        <label>상품명</label>
+                        <input type="text" name="itemNm" placeholder="예) 매콤 로제 파스타 밀키트"
+                               required th:value="${form.itemNm}">
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label>정가</label>
+                            <input type="text" name="originalPrice" inputmode="numeric" pattern="[0-9,]*"
+                                   placeholder="예) 12,900"
+                                   required th:value="${form.originalPrice}">
+                        </div>
+                        <div class="field">
+                            <label>할인율(0~95)</label>
+                            <input type="text" name="discountRate" inputmode="numeric" pattern="[0-9]*"
+                                   required th:value="${form.discountRate}">
+                        </div>
+                    </div>
+
+                    <div class="help" id="salePricePreview" style="margin-top:-6px">
+                        실판매가: <b id="salePriceValue">-</b> 원
+                    </div>
+
+                    <div class="field">
+                        <label>재고</label>
+                        <input type="number" name="stockNumber" min="0" step="1" required
+                               th:value="${form.stockNumber}">
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label>판매상태</label>
+                            <select name="itemSellStatus">
+                                <option th:each="st : ${sellStatuses}"
+                                        th:value="${st}"
+                                        th:selected="${st} == ${form.itemSellStatus}"
+                                        th:text="${st}">SELL</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>음식 분류(FoodItem)</label>
+                            <select name="foodItem" id="foodItemSelect" required>
+                                <option value="" disabled>선택</option>
+                                <option th:each="fi : ${foodItems}"
+                                        th:value="${fi}"
+                                        th:selected="${fi} == ${form.foodItem}"
+                                        th:text="${fi}"></option>
+                            </select>
+                            <div class="help">Category는 서버에서 FoodItem 기준으로 자동 설정됩니다.</div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>상세 설명</label>
+                        <textarea name="itemDetail" id="itemDetail" rows="10"
+                                  placeholder="텍스트를 입력하거나, 우측 ‘상세 이미지’에서 파일 선택 시 자동으로 본문에 삽입됩니다."
+                                  th:text="${form.itemDetail}"></textarea>
+                        <div class="help">붙여넣기/드롭으로도 이미지를 업로드하면 본문에 자동 삽입됩니다. (중복 URL 자동 방지)</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 우측: 이미지 관리 -->
+        <div class="card">
+            <div class="hd">
+                <span>이미지 관리</span>
+            </div>
+            <div class="bd">
+
+                <!-- 섹션: 기존 상품 이미지 -->
+                <div class="subhd">
+                    기존 상품 이미지
+                    <span class="count" th:text="${#lists.size(itemImages)} + '개'">0개</span>
+                </div>
+                <div class="help" style="margin-bottom:8px">
+                    대표 이미지는 목록/상세 썸네일에 사용됩니다. (버튼 클릭 시 즉시 반영)
+                </div>
+
+                <div class="thumbs" aria-label="기존 상품 이미지 목록">
+                    <div class="thumb" th:each="img : ${itemImages}">
+                        <span class="rep-badge" th:if="${img.repimgYn}">대표</span>
+
+                        <!-- 오버레이 액션 : 삭제 -->
+                        <div class="actions">
+                            <button type="button" class="btn-icon"
+                                    title="이미지 삭제"
+                                    aria-label="이미지 삭제"
+                                    data-action="del-existing"
+                                    th:data-image-id="${img.id}">×</button>
+                        </div>
+
+                        <img th:src="${img.imgUrl}" th:alt="${img.oriImgName}" />
+                        <div class="meta-row">
+                            <small class="muted truncate"
+                                   th:title="${img.oriImgName}"
+                                   th:text="${#strings.abbreviate(img.oriImgName, 28)}">filename.jpg</small>
+
+                            <button type="button" class="btn sm"
+                                    data-action="rep-existing"
+                                    th:disabled="${img.repimgYn}"
+                                    th:data-image-id="${img.id}"
+                                    title="대표로 지정">대표로 지정</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <!-- 섹션: 새 상품 이미지 업로드 -->
+                <div class="subhd">새 이미지 추가</div>
+
+                <div id="productDropZone" class="dropzone" tabindex="0" role="button"
+                     title="여기에 이미지를 드래그하거나 클릭해 선택하세요.">
+                    이미지를 끌어다 놓거나 아래 버튼으로 선택하세요.
+                    <div class="hint">여러 장 선택 가능 • 붙여넣기도 지원</div>
+                </div>
+
+                <div class="field" style="margin-top:10px">
+                    <label class="muted" for="files">파일 선택</label>
+                    <input type="file" id="files" name="files" accept="image/*" multiple>
+                    <div class="help">아래 ‘대표 인덱스’로 업로드 묶음 대표를 선택할 수 있습니다.</div>
+                </div>
+
+                <div class="field" style="margin-top:10px">
+                    <label>선택한 새 파일 미리보기</label>
+                    <div id="thumbs" class="thumbs"></div>
+                    <div class="help">썸네일을 드래그해 순서를 바꿀 수 있습니다. (대표 인덱스 자동 보정)</div>
+                </div>
+
+                <div class="row" style="align-items:flex-end;margin-top:6px">
+                    <div class="field">
+                        <label for="repIndex">대표 인덱스(새 업로드 묶음)</label>
+                        <select id="repIndex" name="repIndex">
+                            <option value="">(자동 지정)</option>
+                        </select>
+                    </div>
+                    <div class="ctrls" style="margin-bottom:12px">
+                        <button type="button" class="btn ghost" id="btnClearNonRep" title="대표만 남기고 제거">대표만 남기기</button>
+                        <button type="button" class="btn ghost" id="btnClearAll" title="선택 초기화">선택 모두 지우기</button>
+                        <button type="button" class="btn" id="btnUpload" title="서버로 업로드">새 이미지 업로드</button>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <!-- 섹션: 기존 상세 이미지 -->
+                <div class="subhd">
+                    기존 상세 이미지(본문용)
+                    <span class="count" th:text="${#lists.size(detailImages)} + '개'">0개</span>
+                </div>
+                <div class="help" style="margin-bottom:8px">
+                    ‘본문삽입’으로 재삽입할 수 있습니다. × 는 서버 파일 삭제이며, 본문 태그도 함께 제거됩니다.
+                </div>
+
+                <div class="thumbs" aria-label="기존 상세 이미지 목록">
+                    <div class="thumb thumb-sm" th:each="img : ${detailImages}">
+                        <!-- 오버레이 액션 : 삭제 (본문 태그도 제거) -->
+                        <div class="actions">
+                            <button type="button" class="btn-icon"
+                                    title="상세 이미지 삭제"
+                                    aria-label="상세 이미지 삭제"
+                                    data-action="del-detail-existing"
+                                    th:data-image-id="${img.id}"
+                                    th:data-img-url="${img.imgUrl}">×</button>
+                        </div>
+
+                        <img th:src="${img.imgUrl}" th:alt="${img.oriImgName}">
+                        <div class="meta-row">
+                            <small class="muted truncate"
+                                   th:title="${img.oriImgName}"
+                                   th:text="${#strings.abbreviate(img.oriImgName, 28)}">detail.jpg</small>
+                        </div>
+                        <div class="ctrls" style="margin-top:6px">
+                            <button type="button" class="btn sm"
+                                    data-action="insert-detail-existing"
+                                    th:data-img-url="${img.imgUrl}">본문삽입</button>
+                            <!-- 본문태그제거 버튼 제거됨 (x 버튼이 대체) -->
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <!-- 섹션: 상세 이미지 (파일 선택 → 자동 업로드 & 본문 삽입) -->
+                <div class="subhd">상세 이미지 삽입(파일 선택 시 자동)</div>
+                <div class="field">
+                    <input type="file" id="itemDetailFiles" name="itemDetailFiles" accept="image/*" multiple>
+                    <div id="detailFilesPreview" class="thumbs thumb-sm" style="margin-top:8px"></div>
+                    <div class="help">파일을 선택하면 즉시 업로드되어 본문에 &lt;img&gt;가 자동 삽입됩니다. (중복 URL 자동 방지)</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="right">
+        <a class="btn" th:href="@{/admin/items}">목록</a>
+        <button class="btn danger" id="btnDelete" type="button">삭제</button>
+        <button class="btn primary" id="btnUpdate" type="submit" form="itemForm">저장</button>
+    </div>
+</div>
+</body>
+</html>

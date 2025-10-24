@@ -1,0 +1,272 @@
+<!-- src/main/resources/templates/admin/items/list.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}" lang="ko">
+
+<head>
+    <title>아이템 관리</title>
+    <th:block layout:fragment="page_head">
+        <link rel="stylesheet" th:href="@{/css/admin/admin-items.css}">
+        <meta name="_csrf" th:content="${_csrf != null ? _csrf.token : null}">
+        <meta name="_csrf_header" th:content="${_csrf != null ? _csrf.headerName : null}">
+
+        <style>
+            .admin-items-page .toolbar{ gap:.5rem; }
+            .admin-items-page .search-box{ max-width:520px; }
+            .admin-items-page .product-grid{
+                display:grid; gap:1rem;
+                grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+            }
+            .admin-items-page .card{
+                border:1px solid #eaeaea; border-radius:.75rem; overflow:hidden;
+                box-shadow:0 2px 8px rgba(0,0,0,.03); background:#fff;
+                display:flex; flex-direction:column; height:100%;
+            }
+            .admin-items-page .thumb-wrap{ position:relative; }
+            .admin-items-page .thumb{
+                width:100%; aspect-ratio:4/3; background:#f5f5f5; object-fit:cover; display:block;
+            }
+            /* 상태에 따른 희미 처리 */
+            .admin-items-page .thumb.dim { filter: grayscale(.15) brightness(.78); }
+            /* 상태 뱃지 */
+            .admin-items-page .status-badge{
+                position:absolute; left:.5rem; top:.5rem;
+                background:rgba(0,0,0,.65); color:#fff; font-size:.78rem;
+                padding:.2rem .5rem; border-radius:999px;
+            }
+            .admin-items-page .card-body{ padding:.75rem .9rem; display:flex; flex-direction:column; gap:.35rem; }
+            .admin-items-page .title{
+                font-weight:700; line-height:1.25; max-height:3.4em; overflow:hidden;
+                display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+            }
+            .admin-items-page .price{ font-weight:800; font-size:1.1rem; }
+            .admin-items-page .meta{ font-size:.88rem; color:#666; display:flex; gap:.65rem; flex-wrap:wrap; }
+            .admin-items-page .actions{ display:flex; gap:.5rem; margin-top:.4rem; flex-wrap:wrap; }
+            .admin-items-page .badge-soft{
+                font-size:.75rem; border:1px solid #eaeaea; background:#fafafa; border-radius:999px; padding:.15rem .5rem;
+            }
+            .admin-items-page .filters{ display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+            .admin-items-page .pagination{ gap:.25rem; flex-wrap:wrap; }
+            .admin-items-page .pagination .page-link{ cursor:pointer; }
+            .admin-items-page .empty{
+                padding:4rem 1rem; text-align:center; color:#666; border:1px dashed #e5e5e5; border-radius:.75rem;
+            }
+            .admin-items-page .row-select {
+                display:flex; align-items:center; gap:.5rem; margin-bottom:.25rem;
+            }
+            .admin-items-page .selectbar { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+            .toast {
+                position: fixed; right: 16px; bottom: 16px; background: #222; color:#fff;
+                padding: .6rem .8rem; border-radius: .5rem; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+                opacity: 0; transform: translateY(8px); pointer-events:none; transition: .2s;
+                z-index: 9999;
+            }
+            .toast.show { opacity: 1; transform: translateY(0); pointer-events:auto; }
+        </style>
+
+        <!-- 외부 스크립트 -->
+        <script th:src="@{/js/admin/item-list.js(v=${#dates.createNow().time})}" defer></script>
+    </th:block>
+</head>
+
+<body>
+<div layout:fragment="content" class="container-xxl py-4 admin-items-page"
+     th:with="
+         sortVal=${param.sort != null ? param.sort[0] : 'NEW'},
+  qRaw=${param.searchQuery != null ? param.searchQuery[0] : null},
+  stRaw=${selectedStatus},
+  catRaw=${selectedCategory},
+  qVal=${#strings.isEmpty(qRaw) ? null : qRaw},
+  stVal=${#strings.isEmpty(stRaw) ? null : stRaw},
+  catVal=${#strings.isEmpty(catRaw) ? null : catRaw}">
+
+    <!-- 헤더 / 툴바 -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="mb-0">아이템 관리</h2>
+        <div class="toolbar d-flex">
+            <div class="selectbar">
+                <label class="form-check" style="user-select:none">
+                    <input id="check-all" type="checkbox" class="form-check-input">
+                    전체선택
+                </label>
+                <button class="btn btn-outline-danger btn-sm" id="btn-bulk-delete" disabled>선택 삭제</button>
+            </div>
+            <a class="btn btn-brand" th:href="@{/admin/items/new}">아이템 등록</a>
+        </div>
+    </div>
+
+    <form class="filters mb-3" method="get" id="server-filter-form">
+        <!-- 검색 -->
+        <div class="input-group search-box">
+            <input class="form-control" type="text" name="searchQuery"
+                   placeholder="상품명으로 검색 (예: 샐러드)"
+                   th:value="${qVal}">
+            <button class="btn btn-outline-secondary" type="submit">검색</button>
+        </div>
+
+        <!-- 상태 -->
+        <select class="form-select" name="itemSellStatus" style="width:auto" onchange="this.form.submit()"
+                th:value="${stVal}">
+            <option th:value="''">전체 상태</option>
+            <option th:value="SELL"      th:selected="${stVal}=='SELL'">판매중</option>
+            <option th:value="SOLD_OUT"  th:selected="${stVal}=='SOLD_OUT'">품절</option>
+            <option th:value="STOP"      th:selected="${stVal}=='STOP'">판매중지</option>
+        </select>
+
+        <!-- 정렬 (ItemSortType) -->
+        <select class="form-select" name="sort" style="width:auto" onchange="this.form.submit()" th:value="${sortVal}">
+            <option value="NEW"          th:selected="${sortVal}=='NEW'">최신순</option>
+            <option value="PRICE_DESC"   th:selected="${sortVal}=='PRICE_DESC'">가격 높은 순</option>
+            <option value="PRICE_ASC"    th:selected="${sortVal}=='PRICE_ASC'">가격 낮은 순</option>
+            <option value="RATING_DESC"  th:selected="${sortVal}=='RATING_DESC'">평점 높은 순</option>
+            <option value="REVIEW_DESC"  th:selected="${sortVal}=='REVIEW_DESC'">리뷰 많은 순</option>
+            <option value="POPULAR_VIEW" th:selected="${sortVal}=='POPULAR_VIEW'">조회수 많은 순</option>
+        </select>
+
+        <!-- 카테고리 -->
+        <select class="form-select" name="category" style="width:auto"
+                onchange="this.form.submit()" th:value="${catVal}">
+            <option value="''">전체 상품</option>
+            <!-- 모델에 categories = Category.values() -->
+            <option th:each="c : ${categories}"
+                    th:value="${c.name()}"
+                    th:text="${c.label}"
+                    th:selected="${catVal}==${c.name()}">
+            </option>
+        </select>
+
+
+    </form>
+
+    <!-- 카드 그리드 -->
+    <div th:if="${page != null and page.totalElements > 0}" class="product-grid" id="grid">
+        <div class="card" th:each="it : ${page.content}">
+            <div class="row-select">
+                <input type="checkbox"
+                       class="row-check"
+                       th:attr="data-id=${it.id}, data-status=${it.itemSellStatus != null ? it.itemSellStatus.name() : ''}">
+                <small class="text-muted">#<span th:text="${it.id}">0</span></small>
+            </div>
+
+            <!-- 이미지 + 상태 뱃지 + 희미 처리 -->
+            <div class="thumb-wrap">
+                <a th:href="@{/admin/items/{id}(id=${it.id})}" style="display:block">
+                    <img class="thumb"
+                         th:classappend="${it.itemSellStatus != null and it.itemSellStatus.name() != 'SELL'} ? ' dim' : ''"
+                         loading="lazy"
+                         th:src="${it.repImgUrl} ?: @{/img/No_Image.jpg}"
+                         th:alt="${it.itemNm}"
+                         th:attr="data-fallback=@{/img/No_Image.jpg}"
+                         onerror="this.onerror=null;this.src=this.dataset.fallback"></a>
+
+                <!-- 품절 뱃지 -->
+                <span class="status-badge"
+                      th:if="${it.itemSellStatus != null and it.itemSellStatus.name() == 'SOLD_OUT'}">품절</span>
+
+                <!-- 판매중지 뱃지 -->
+                <span class="status-badge"
+                      th:if="${it.itemSellStatus != null and it.itemSellStatus.name() == 'STOP'}">판매중지</span>
+            </div>
+
+            <div class="card-body">
+                <div class="title" th:text="${it.itemNm}">상품명</div>
+
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="price"
+                         th:text="${it.price != null ? #numbers.formatDecimal(it.price, 0, 'COMMA', 0, 'POINT') : '0'} + '원'">
+                        0원
+                    </div>
+                    <span class="badge-soft js-date" th:attr="data-iso=${it.regTime}">-</span>
+                </div>
+
+                <div class="meta" aria-label="상품 메타 정보">
+                    <span title="평균 평점">★
+                        <span th:text="${it.avgRating != null ? #numbers.formatDecimal(it.avgRating,1,2) : '0.0'}">0.0</span>
+                        <small class="text-muted" th:text="'(' + ${it.reviewCount} + ')'"> (0)</small>
+                    </span>
+                    <span title="조회수">👁 <span th:text="${it.itemViewCnt}">0</span></span>
+                </div>
+
+                <div class="actions">
+                    <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/items/{id}(id=${it.id})}">
+                        상세
+                    </a>
+                    <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/items/{id}/edit(id=${it.id})}">
+                        수정
+                    </a>
+                    <button class="btn btn-sm btn-outline-danger btn-del-one" type="button"
+                            th:attr="data-id=${it.id}, data-status=${it.itemSellStatus != null ? it.itemSellStatus.name() : ''}">
+                        <span th:text="${it.itemSellStatus != null and it.itemSellStatus.name() == 'STOP'} ? '영구삭제' : '삭제'">삭제</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 빈 상태 -->
+    <div th:if="${page == null or page.totalElements == 0}" class="empty">
+        <p class="mt-2 mb-0">등록된 상품이 없습니다.</p>
+        <div class="mt-2">
+            <a class="btn btn-brand" th:href="@{/admin/items/new}">첫 상품 등록</a>
+        </div>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <nav th:if="${page != null and page.totalPages > 1}" aria-label="pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!--이전-->
+            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="${page.first} ? '#'
+              : @{/admin/items(
+                    page=${page.number-1},
+                    sort=${sortVal},
+                    searchQuery=${qVal},
+                    itemSellStatus=${#strings.isEmpty(stVal) ? null : stVal},
+                    category=${catVal}
+                 )}">
+                    ‹
+                </a>
+            </li>
+
+            <!-- 번호 -->
+            <li class="page-item"
+                th:each="p : ${#numbers.sequence(0, page.totalPages-1)}"
+                th:classappend="${p == page.number} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/admin/items(
+                page=${p},
+                sort=${sortVal},
+                searchQuery=${qVal},
+                itemSellStatus=${#strings.isEmpty(stVal) ? null : stVal},
+                category=${catVal}
+              )}"
+                   th:text="${p+1}">
+                </a>
+            </li>
+
+            <!-- 다음 -->
+            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="${page.last} ? '#'
+              : @{/admin/items(
+                    page=${page.number+1},
+                    sort=${sortVal},
+                    searchQuery=${qVal},
+                    itemSellStatus=${#strings.isEmpty(stVal) ? null : stVal},
+                    category=${catVal}
+                 )}">
+                    ›
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<!-- 토스트 -->
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+</body>
+</html>

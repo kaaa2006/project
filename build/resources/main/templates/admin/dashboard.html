@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title>관리자 대시보드</title>
+    <th:block layout:fragment="page_head"></th:block>
+</head>
+<body>
+<div layout:fragment="content" class="container-xxl py-4">
+    <h2 class="mb-4">관리자 대시보드</h2>
+
+    <div class="row g-3">
+        <!-- 회원 -->
+        <div class="col-6 col-lg-3">
+            <a class="text-decoration-none" th:href="@{/admin/members}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2"><i class="bi bi-people"></i> 회원 조회</h5>
+                        <p class="card-text text-muted small mb-0">등급/상태/가입경로 필터</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 아이템 -->
+        <div class="col-6 col-lg-3">
+            <a class="text-decoration-none" th:href="@{/admin/items}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2"><i class="bi bi-box-seam"></i> 아이템 관리</h5>
+                        <p class="card-text text-muted small mb-0">등록/수정/재고/이미지</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 주문/배송 -->
+        <div class="col-6 col-lg-3">
+            <a class="text-decoration-none" th:href="@{/admin/orders}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2"><i class="bi bi-truck"></i> 주문 · 배송</h5>
+                        <p class="card-text text-muted small mb-0">상태별 처리/송장</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 쿠폰/프로모션 (준비중) -->
+        <div class="col-6 col-lg-3">
+            <a class="text-decoration-none" th:href="@{/admin/under-construction}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2"><i class="bi bi-ticket-perforated"></i> 쿠폰 · 프로모션</h5>
+                        <p class="card-text text-muted small mb-0">발급/적용/통계</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 공지/FAQ (준비중) -->
+        <div class="col-6 col-lg-3">
+            <a class="text-decoration-none" th:href="@{/admin/under-construction}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2"><i class="bi bi-megaphone"></i> 공지 · FAQ</h5>
+                        <p class="card-text text-muted small mb-0">게시/숨김/정렬</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 통계/리포트 -->
+        <div class="col-6 col-lg-3">
+            <a class="text-decoration-none" th:href="@{/admin/reports}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2"><i class="bi bi-graph-up"></i> 통계 · 리포트</h5>
+                        <p class="card-text text-muted small mb-0">매출/전환/리텐션</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 시스템 설정 (준비중) -->
+        <div class="col-6 col-lg-3">
+            <a class="text-decoration-none" th:href="@{/admin/under-construction}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-2"><i class="bi bi-gear"></i> 설정</h5>
+                        <p class="card-text text-muted small mb-0">권한/정책/파일경로</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

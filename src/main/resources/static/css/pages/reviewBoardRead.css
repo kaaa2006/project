@@ -1,0 +1,273 @@
+/* =========================================================
+   Review Board — Read (Tip-like Detail)
+   - Scope: .review-read (충돌 방지)
+   - Concept color: var(--brand-teal, #00DCA0)
+   ========================================================= */
+
+:root{
+    --rr-brand:  var(--brand-teal, #00DCA0);
+    --rr-ink:    #0b2413;
+    --rr-muted:  #6b7d73;
+    --rr-surface:#ffffff;
+    --rr-border: #e6eeea;
+    --rr-bg:     #f7faf8;
+    --rr-radius: 14px;
+    --rr-shadow: 0 8px 24px rgba(17,24,39,.06);
+}
+
+.review-read{ background: var(--rr-bg); color: var(--rr-ink); }
+
+/* 공통 컨테이너 (팁 상세의 list-container 매칭) */
+.review-read .list-container{
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 12px 24px;
+}
+
+/* 카드 느낌 래퍼 */
+.review-read .review-detail-container{
+    border: 1px solid var(--rr-border);
+    border-radius: var(--rr-radius);
+    background: var(--rr-surface);
+    box-shadow: var(--rr-shadow);
+    padding: 18px;
+}
+
+/* 제목 바(왼쪽 포인트 라인) — 팁 상세 동일 */
+.review-read .page-title{
+    position: relative;
+    margin: 6px 0 14px;
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+    color:#12251b;
+}
+.review-read .page-title::before{
+    content:"";
+    position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--rr-brand);
+}
+
+/* 메타 */
+.review-read .meta-info{
+    display:flex; flex-wrap:wrap; gap: 8px 16px;
+    color: var(--rr-muted);
+}
+.review-read .meta-info p{ margin: 0; }
+
+/* 본문 */
+.review-read .post-content{
+    border:1px solid var(--rr-border);
+    border-radius: 12px;
+    background:#fff;
+    padding: 16px;
+    line-height: 1.7;
+    color:#22352c;
+    white-space: pre-line; /* 줄바꿈 보존 */
+}
+
+/* ===== Reaction & Author Actions (팁 상세 레이아웃) ===== */
+.review-read .reaction{
+    display:flex; gap:10px; align-items:center; justify-content:space-between;
+    margin-top: 12px;
+}
+
+/* 좌측 반응 버튼 묶음 — JS 셀렉터 유지 (.review-action-buttons) */
+.review-read .form-buttons.review-action-buttons{
+    display:flex; gap:8px; align-items:center;
+}
+
+/* 반응 버튼 (팁 상세와 동일 톤) */
+.review-read .btn-helpful,
+.review-read .btn-not-helpful{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 40px; padding: 0 14px;
+    border-radius: 12px; border: 2px solid transparent;
+    font-weight: 800; background:#fff; line-height: 1;
+    transition: background .15s, color .15s, box-shadow .15s, border-color .15s;
+}
+
+/* 도움 됐어요: 브랜드 */
+.review-read .btn-helpful{
+    color: var(--rr-brand);
+    border-color: var(--rr-brand);
+}
+.review-read .btn-helpful:hover,
+.review-read .btn-helpful.active{
+    background: var(--rr-brand);
+    color:#fff;
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+}
+
+/* 도움 안 됐어요: 레드 */
+.review-read .btn-not-helpful{
+    color:#ef4444;
+    border-color:#ef4444;
+}
+.review-read .btn-not-helpful:hover,
+.review-read .btn-not-helpful.active{
+    background:#ef4444; color:#fff;
+    box-shadow: 0 0 0 4px rgba(239,68,68,.15);
+}
+
+/* 우측 작성자 액션 (팁 상세 동일 스타일 네이밍만 리뷰용) */
+.review-read .review-action-buttons-right{
+    display:flex; gap:8px; align-items:center; justify-content:flex-end;
+}
+.review-read .review-action-buttons-right .btn-submit,
+.review-read .review-action-buttons-right .btn-delete{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 40px; padding: 0 14px; border-radius:12px;
+    font-weight:800; border:2px solid transparent; text-decoration:none !important;
+}
+.review-read .review-action-buttons-right .btn-submit{
+    background: var(--rr-brand); color:#fff; border-color: var(--rr-brand);
+}
+.review-read .review-action-buttons-right .btn-submit:hover{ filter: brightness(.97); }
+.review-read .review-action-buttons-right .btn-delete{
+    background: #fff; color:#ef4444; border-color:#ef4444;
+}
+.review-read .review-action-buttons-right .btn-delete:hover{
+    background:#ef4444; color:#fff;
+}
+
+/* ===== Secret Modal (팁 상세와 동일 톤) ===== */
+.review-read .secret-overlay{
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,.45);
+    display: grid; place-items: center;
+    z-index: 1050;
+}
+.review-read .secret-modal{
+    width: min(520px, 92vw);
+    border-radius: 16px;
+    background: #fff;
+    padding: 20px 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    border: 1px solid var(--rr-border);
+}
+.review-read .secret-modal h3{ margin: 0 0 8px; font-weight: 800; color:#12251b; }
+.review-read .secret-modal p{ color: var(--rr-muted); margin-bottom: 12px; }
+
+/* ===== Comments (팁 상세 구조 매칭) ===== */
+.review-read .comment-title{
+    font-weight: 800; color:#2a3a33; margin: 18px 0 10px;
+}
+
+.review-read .no-comments{
+    border:1px dashed var(--rr-border);
+    background:#fbfdfc;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.review-read .comments{
+    list-style:none; margin: 0; padding: 0;
+    border:1px solid var(--rr-border);
+    border-radius: 12px;
+    overflow: hidden;
+    background:#fff;
+}
+.review-read .comment + .comment{ border-top:1px solid var(--rr-border); }
+
+.review-read .comment-header{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px 12px;
+    align-items:center;
+    padding: 12px 14px 4px;
+}
+.review-read .comment-header .badge-admin{
+    margin-left: 4px;
+    background:#ef4444; color:#fff;
+    border-radius: 999px; padding: 2px 8px; font-size: .78rem; font-weight: 800;
+}
+.review-read .comment-header .date{
+    color: var(--rr-muted); font-size: .92rem;
+}
+.review-read .comment-body{
+    padding: 0 14px 12px; color:#22352c; line-height:1.6;
+}
+
+/* 댓글 액션(관리자) */
+.review-read .comment-actions .btn-edit,
+.review-read .comment-actions .btn-delete{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 32px; padding: 0 10px; border-radius:10px; border:2px solid transparent;
+    font-weight:700; background:#fff;
+}
+.review-read .comment-actions .btn-edit{
+    color: var(--rr-brand); border-color: var(--rr-brand);
+}
+.review-read .comment-actions .btn-edit:hover{ background: var(--rr-brand); color:#fff; }
+.review-read .comment-actions .btn-delete{
+    color:#ef4444; border-color:#ef4444;
+}
+.review-read .comment-actions .btn-delete:hover{ background:#ef4444; color:#fff; }
+
+/* 댓글 작성 */
+.review-read .comment-write{
+    margin-top: 16px;
+}
+.review-read .comment-write h4{ font-weight: 800; margin-bottom: 8px; }
+.review-read .comment-write textarea.form-control{
+    border:1px solid var(--rr-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    box-shadow: inset 0 1px 0 rgba(16,24,40,.02);
+}
+.review-read .comment-actions-row{
+    display:flex; gap:8px; justify-content:flex-end; align-items:center; margin-top: 8px;
+}
+.review-read .comment-actions-row .btn-outline,
+.review-read .comment-actions-row .btn-primary{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width: 120px; height: 40px; border-radius: 12px; font-weight: 800; border:2px solid transparent;
+}
+.review-read .comment-actions-row .btn-outline{
+    background:#fff; color: var(--rr-brand); border-color: var(--rr-brand);
+}
+.review-read .comment-actions-row .btn-outline:hover{ background: var(--rr-brand); color:#fff; }
+.review-read .comment-actions-row .btn-primary{
+    background: var(--rr-brand); color:#fff; border-color: var(--rr-brand);
+}
+.review-read .comment-actions-row .btn-primary:hover{ filter: brightness(.97); }
+
+/* ===== 하단 '목록으로' 전역 버튼 ===== */
+.review-read .back-to-list{
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+.review-read .back-to-list .back-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 12px;
+    font-weight: 800;
+    text-decoration: none !important;
+    background: #fff;
+    color: var(--rr-brand, #00DCA0);
+    border: 2px solid var(--rr-brand, #00DCA0);
+    transition: background .15s, color .15s, box-shadow .15s;
+}
+.review-read .back-to-list .back-btn:hover{
+    background: var(--rr-brand, #00DCA0);
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+}
+
+/* 반응형 */
+@media (max-width: 575.98px){
+    .review-read .reaction{ flex-direction: column; align-items: stretch; }
+    .review-read .review-action-buttons-right{ justify-content: stretch; }
+    .review-read .review-action-buttons-right .btn-submit,
+    .review-read .review-action-buttons-right .btn-delete{ flex: 1; }
+    .review-read .comment-header{ grid-template-columns: 1fr; }
+    .review-read .comment-actions-row .btn-outline,
+    .review-read .comment-actions-row .btn-primary{ flex: 1; }
+    .review-read .back-to-list .back-btn{ width: 100%; }
+}

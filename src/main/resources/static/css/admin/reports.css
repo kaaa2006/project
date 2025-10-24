@@ -1,0 +1,15 @@
+:root{
+    --brand-teal:#00dca0;
+    --brand-ink:#0b2413;
+    --brand-muted:#667a6f;
+    --brand-surface:#f3faf6;
+    --radius-xl:1.25rem;
+}
+.report-wrap { background: linear-gradient(#fff, var(--brand-surface)); }
+.kpi-card { border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0,0,0,.06); padding: 16px 20px; background: #fff; }
+.kpi-title { color: var(--brand-muted); font-weight:600; font-size:.95rem; }
+.kpi-value { font-size:1.6rem; font-weight:700; color:var(--brand-ink); }
+.pagination .page-link { color: var(--brand-ink); }
+.pagination .page-item.active .page-link {
+    background: var(--brand-teal); border-color: var(--brand-teal);
+}

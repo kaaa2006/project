@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title>주문/결제</title>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+    <th:block layout:fragment="page_head">
+        <link rel="stylesheet" th:href="@{/css/pages/checkout.css}">
+    </th:block>
+</head>
+
+<body>
+<main layout:fragment="content" class="container checkout-page">
+
+    <!-- 주문자 정보 -->
+    <section class="member-info mb-4">
+        <h3>주문자</h3>
+        <p>이름: <span th:text="${member.memberName}"></span></p>
+        <p>전화번호: <span th:text="${member.phone}"></span></p>
+    </section>
+
+    <!-- 주문 상품 요약 -->
+    <section class="order-summary mb-4">
+        <h3>주문 상품</h3>
+
+        <div class="order-item" th:each="ci : ${cart.items}">
+            <input type="hidden" name="cartItemIds" th:value="${ci.cartItemId}" />
+            <img th:src="${ci.thumbnailUrl != null ? ci.thumbnailUrl : '/img/no-image.png'}" class="thumb" alt="상품이미지">
+            <div class="info">
+                <div class="name" th:text="${ci.itemName}">상품명</div>
+                <div class="qty">수량: <span th:text="${ci.quantity}"></span>개</div>
+                <div class="price" th:text="${#numbers.formatInteger(ci.linePayable, 3, 'COMMA')} + '원'">0원</div>
+            </div>
+        </div>
+
+        <!-- Cart 요약 디자인 이식 -->
+        <div id="checkout-summary" class="summary mt-3">
+            <div class="summary-row">
+                <span>총 상품금액</span>
+                <span id="sumProducts">0원</span>
+            </div>
+            <div class="summary-row">
+                <span>등급 할인</span>
+                <span id="gradeDiscount">-0원</span>
+            </div>
+            <div class="summary-row">
+                <span>총 배송비</span>
+                <span id="sumShipping">0원</span>
+            </div>
+            <div class="summary-row total">
+                <span>결제금액</span>
+                <span id="grandTotal">0원</span>
+            </div>
+
+            <!-- 호환 유지용(다른 코드가 읽는 값) -->
+            <span id="selectedShipping" class="visually-hidden">0원</span>
+            <span id="selectedTotal" class="visually-hidden">0원</span>
+        </div>
+    </section>
+
+    <!-- 주문/결제 Form -->
+    <form th:action="@{/orders/checkout}" method="post" id="checkoutForm">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <th:block th:if="${param.cartItemIds != null}">
+            <input type="hidden" name="selectedOnly" value="true"/>
+            <input type="hidden" th:each="ci : ${cart.items}" name="cartItemIds" th:value="${ci.cartItemId}"/>
+        </th:block>
+
+        <!-- 배송지 선택 -->
+        <section class="shipping-section mb-4">
+            <h3>배송지</h3>
+            <div id="addrList">
+                <div th:if="${#lists.isEmpty(addresses)}" class="text-muted">등록된 배송지가 없습니다.</div>
+                <div th:if="${!#lists.isEmpty(addresses)}">
+                    <div th:each="addr : ${addresses}" class="address-option mb-2"
+                         th:attr="data-address-id=${addr.addressId}">
+                        <label>
+                            <input type="radio" name="addressId"
+                                   th:value="${addr.addressId}"
+                                   th:checked="${param.selected != null and param.selected[0] == addr.addressId.toString()}"
+                                   required>
+                            <span th:text="${addr.zipCode + ' ' + addr.addr1 + ' ' + (addr.addr2 != null ? addr.addr2 : '')}"></span>
+                            <span class="text-muted" th:if="${addr.isDefault}"> (기본)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="pf-btn pf-btn-outline btn-sm"
+                    data-action="open-address-modal" id="new-address-btn">
+                + 새 배송지 추가
+            </button>
+        </section>
+
+        <!-- 결제수단 -->
+        <section class="pay-method-section mb-4">
+            <h3>결제 수단</h3>
+            <label><input type="radio" name="payMethod" value="POINT" required> 포인트</label>
+            <label><input type="radio" name="payMethod" value="BANK_TRANSFER"> 무통장 입금</label>
+            <label><input type="radio" name="payMethod" value="TOSSPAY"> 토스페이</label>
+        </section>
+
+        <!-- 결제 버튼 -->
+        <div class="checkout-actions text-end">
+            <button type="submit" id="checkoutBtn" class="pf-btn pf-btn-primary btn-lg">결제하기</button>
+        </div>
+    </form>
+
+    <!-- ✅ 모달(프로필과 동일 마크업) -->
+    <div class="pf-modal" id="addrModal" aria-hidden="true">
+        <div class="pf-modal-backdrop" data-action="close-address-modal"></div>
+        <div class="pf-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="addrModalTitle">
+            <div class="pf-modal-head">
+                <h3 id="addrModalTitle">배송지 추가</h3>
+                <button type="button" class="pf-modal-close" data-action="close-address-modal" aria-label="닫기">×</button>
+            </div>
+
+            <!-- ✔️ 프로필과 동일한 form 구조/클래스(row/col + form-control pf-input) -->
+            <form id="addrForm" class="pf-modal-body" novalidate>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">별칭(선택)</label>
+                        <input type="text" class="form-control pf-input" name="alias" placeholder="집/회사 등" maxlength="20">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">우편번호</label>
+                        <input type="text" class="form-control pf-input" name="zipCode" placeholder="00000"
+                               inputmode="numeric" maxlength="5" required>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="button" class="pf-btn pf-btn-outline w-100" id="btnFindZip">주소검색</button>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">주소</label>
+                        <input type="text" class="form-control pf-input" name="addr1" placeholder="도로명 주소" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">상세주소(선택)</label>
+                        <input type="text" class="form-control pf-input" name="addr2" placeholder="동/호수 등" maxlength="50">
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="isDefault" name="isDefault">
+                            <label class="form-check-label" for="isDefault">기본 배송지로 설정</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pf-modal-foot">
+                    <button type="button" class="pf-btn pf-btn-outline" data-action="close-address-modal">취소</button>
+                    <button type="submit" class="pf-btn pf-btn-primary" id="addrSubmitBtn">추가하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<!-- 하단 스크립트 -->
+<th:block layout:fragment="page_foot">
+    <!-- 모달 공통 동작(프로필과 동일 동작) -->
+    <script th:src="@{/js/common/address-modal.js(v=${#dates.createNow().time})}" defer></script>
+    <!-- 체크아웃 전용(요약/배송비 계산 포함) -->
+    <script th:src="@{/js/shop/checkout.js(v=${#dates.createNow().time})}" defer></script>
+</th:block>
+</body>
+</html>

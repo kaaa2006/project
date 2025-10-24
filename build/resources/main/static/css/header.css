@@ -1,0 +1,145 @@
+/* ======================================================================
+   header.css  ⟪thin-header + sticky category bar + mega panel (slide)⟫
+   2025-09-16  — sticky 복원 + fixed fallback (.fixed) 재도입
+   ====================================================================== */
+
+/* 1) 공통 글꼴 --------------------------------------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap");
+body{font-family:"Noto Sans KR","Malgun Gothic",sans-serif;background:#fff}
+
+/* 스크롤 잠금(선택) */
+html.overflow-hidden, body.overflow-hidden { overflow: hidden; }
+
+/* 2) 변수 -------------------------------------------------------------- */
+:root{
+    --brand-teal:#00dca0;
+    --gray:#505050;
+    --light-gray:#9a9a9a;
+    --pad-x-desk:40px;  --pad-x-mob:20px;
+    --pad-y-desk:32px;  --pad-y-mob:24px;
+    --icon-desk:2rem;   --icon-mob:1.7rem;
+    --cat-gap:6rem;     /* 카테고리 간격(데스크톱) */
+    --qm-size:120px;    /* quick menu 기본 크기 */
+}
+
+/* 3) 상단 스트립 ------------------------------------------------------- */
+.top-strip{background:var(--brand-teal);height:40px;display:flex;justify-content:center;align-items:center;position:relative;z-index:1990}
+.top-msg{color:#fff;font-size:1rem;letter-spacing:.2px}
+@media(max-width:500px){.top-msg{font-size:.9rem}}
+
+/* 4) 메인 헤더 --------------------------------------------------------- */
+.main-header{
+    background:#fff;border-bottom:1px solid #e5e5e5;
+    padding:var(--pad-y-desk) 0;
+    position:relative; z-index:2000; overflow:visible;
+}
+.navbar-brand{color:var(--brand-teal)!important;font-size:3rem;font-weight:700}
+.main-header>.container-xxl{padding:0 var(--pad-x-desk)}
+
+.util-link{font:550 1.2rem/1 "Noto Sans KR";margin-left:.7rem}
+.main-header i{color:var(--gray);font-size:1.15rem}
+.main-header .bi-person,.main-header .bi-cart{font-size:2.4rem!important;margin-left:.35rem}
+.util-link:hover,.main-header i:hover{color:#000}
+
+/* ─ 검색 박스 ─ */
+.search-box{display:flex;align-items:center;flex:0 0 auto;inline-size:clamp(280px,32vw,420px);max-width:420px;margin-left:24px}
+.search-box input{
+    height:60px;background:#eee;border:none;font-size:1rem;
+    border-radius:50rem 0 0 50rem!important;padding:.375rem .9rem;margin:0;flex:1 1 auto;
+}
+.search-box button{
+    height:60px;width:66px;background:#eee;border:none;margin:0;
+    border-radius:0 50rem 50rem 0!important;display:inline-flex;align-items:center;justify-content:center;position:relative;left:-1px;
+}
+.search-box i{color:var(--light-gray);font-size:1.3rem}
+@media(max-width:991.98px){
+    .search-box{flex:1 1 auto;inline-size:100%;max-width:none;margin-left:0}
+    .search-box input,.search-box button{height:40px;font-size:.9rem}
+}
+
+/* ─ 장바구니 배지 ─ */
+.cart-btn{position:relative;padding:0}
+.cart-count{position:absolute;top:-3.5px;right:-8.5px;background:var(--brand-teal);color:#fff;font-size:1.05rem;padding:4px 9px;border-radius:50rem;line-height:1}
+@media(max-width:991.98px){.cart-count{top:-5px;right:-3px}}
+
+/* 5) 카테고리 바 (Sticky + Fixed Fallback) ---------------------------- */
+.category-bar{
+    position:sticky !important; top:0; z-index:1100;
+    background:#fff;border-bottom:1px solid #e5e5e5;
+}
+
+/* ✅ 스크롤 위치에 따라 JS가 붙이는 고정 모드 */
+.category-bar.fixed{
+    position:fixed !important;
+    top:0; left:0; right:0;
+    z-index:1100;           /* 드롭다운(1150)보다 낮게 유지 */
+}
+
+/* 고정 시 레이아웃 점프 방지를 위한 패딩 클래스(예비) */
+body.has-fixed-cat{ padding-top:72px; } /* JS가 실제 높이로 덮어씀 */
+
+@media(min-width:992px){
+    .category-bar>.container-xxl{
+        padding:0; gap:var(--cat-gap); justify-content:center; column-gap:var(--cat-gap);
+    }
+    .cat-first{background:none;border:none;font:600 1.2rem "Noto Sans KR";color:inherit}
+    .cat-items{display:flex;column-gap:var(--cat-gap)}
+    .cat-link{font:450 1.2rem/1 "Noto Sans KR";color:var(--gray);text-decoration:none;letter-spacing:.03em}
+    .cat-link:hover{color:#000}
+}
+@media(max-width:991.98px){
+    .category-bar>.container-xxl{gap:2rem;justify-content:flex-start;padding:0 var(--pad-x-mob)}
+    .cat-items{max-height:0;overflow:hidden;transition:max-height .3s ease}
+    .cat-items.show{max-height:300px}
+    .cat-link{font:500 1.05rem/1 "Noto Sans KR";color:var(--gray);text-decoration:none}
+    .cat-link:hover{color:#000}
+}
+
+/* 6) 배너 -------------------------------------------------------------- */
+.main-banner{position:relative;z-index:0;overflow:hidden}
+.banner-swiper{position:relative;width:100%;aspect-ratio:16/5;height:auto!important;max-height:480px;z-index:0}
+@media(min-width:992px){.banner-swiper{aspect-ratio:16/3.5!important;max-height:550px!important}}
+.banner-img{width:100%;height:100%;object-fit:cover;object-position:center}
+.banner-swiper>.swiper-button-prev,
+.banner-swiper>.swiper-button-next{position:absolute;top:50%;transform:translateY(-50%);color:#fff;opacity:.6;--swiper-navigation-size:26px;z-index:10}
+.banner-swiper>.swiper-button-prev:hover,
+.banner-swiper>.swiper-button-next:hover{opacity:1}
+
+/* 7) 로고 -------------------------------------------------------------- */
+.logo-img{height:60px;width:auto;object-fit:contain}
+@media(max-width:991.98px){.logo-img{height:32px}}
+
+/* 8) 메가 패널 (슬라이드 다운) ---------------------------------------- */
+#megaPanel.mega-panel{
+    position:relative;           /* 흐름 내에서 아래로 펼침 */
+    z-index:1099;                /* cat-bar(1100) 아래로 유지 */
+    overflow:hidden;
+    max-height:0;
+    opacity:0;
+    background:#fff;
+    border-bottom:1px solid #e5e5e5;
+    box-shadow:0 4px 10px rgba(0 0 0 /.06);
+    transition:max-height .45s ease, opacity .45s ease;
+}
+#megaPanel.open{ max-height:650px; opacity:1; }
+
+.mega-title{ text-align:center; font:600 1.05rem/1 "Noto Sans KR"; padding-bottom:.5rem; margin-bottom:.8rem; border-bottom:1px solid #e5e5e5; color:var(--brand-teal); }
+.mega-list{ list-style:none; padding:0; margin:0; text-align:center; }
+.mega-list li{ margin-bottom:.25rem; }
+.mega-list a{ color:var(--gray); font-size:.9rem; text-decoration:none; }
+.mega-list a:hover{ color:#000; }
+
+.mega-panel .row{ justify-content:center; }
+@media(min-width:992px){
+    .mega-panel .container-xxl{ padding:0; }
+    .mega-panel .row{ --bs-gutter-x:var(--cat-gap); }
+}
+
+/* 9) 드롭다운 z-index 보정 -------------------------------------------- */
+.main-header .dropdown-menu{
+    z-index:1150 !important;  /* cat-bar(1100)보다 높게 */
+    margin-top:0 !important;
+}
+@media(hover:hover){.navbar-nav .dropdown:hover>.dropdown-menu{display:block}}
+.main-header .dropdown{position:relative}
+.main-header .dropdown::after{content:''; position:absolute; left:0; right:0; top:100%; height:8px}

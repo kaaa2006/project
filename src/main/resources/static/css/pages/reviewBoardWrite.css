@@ -1,0 +1,105 @@
+/* =========================================================
+   Review Board — Write (Register)
+   - Scope: .review-write
+   - Design only (no behavior changes)
+   - Concept color: var(--brand-teal, #00DCA0)
+   ========================================================= */
+
+:root{
+    --rw-brand:  var(--brand-teal, #00DCA0);
+    --rw-ink:    #0b2413;
+    --rw-muted:  #6b7d73;
+    --rw-surface:#ffffff;
+    --rw-border: #e6eeea;
+    --rw-bg:     #f7faf8;
+    --rw-radius: 14px;
+    --rw-shadow: 0 8px 24px rgba(17,24,39,.06);
+}
+
+.review-write{ background: var(--rw-bg); color: var(--rw-ink); }
+
+/* 카드 */
+.review-write .rb-card{
+    border: 1px solid var(--rw-border);
+    border-radius: var(--rw-radius);
+    box-shadow: var(--rw-shadow) !important;
+    overflow: hidden;
+    background: var(--rw-surface);
+}
+
+/* 제목 바 (왼쪽 포인트 라인) */
+.review-write .rb-page-title{
+    position: relative;
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+    color: #12251b;
+}
+.review-write .rb-page-title::before{
+    content:"";
+    position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--rw-brand);
+}
+
+/* 필드 라벨/컨트롤 */
+.review-write .form-label{
+    font-weight: 800; color:#2a3a33;
+}
+.review-write .form-control{
+    border:1px solid var(--rw-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    background:#fff;
+    box-shadow: inset 0 1px 0 rgba(16,24,40,.02);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.review-write .form-control:focus{
+    border-color: var(--rw-brand);
+    box-shadow: 0 0 0 4px rgba(0,220,160,.18);
+    outline: none;
+}
+.review-write ::placeholder{ color:#a2b2ab; }
+.review-write textarea#content{ min-height: 260px; resize: vertical; }
+
+/* 스위치(비밀글) 브랜드화 */
+.review-write .form-check-input:checked{
+    background-color: var(--rw-brand);
+    border-color: var(--rw-brand);
+}
+.review-write .form-text{ color: var(--rw-muted); }
+
+/* 액션 버튼 (아이콘 없음, 텍스트 중앙) */
+.review-write .rb-actions .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 44px; padding: 0 16px;
+    border-radius: 12px; font-weight: 800;
+    border: 2px solid transparent;
+    text-decoration: none !important;
+    line-height: 1; gap: 0; /* 아이콘 간격 제거 안전장치 */
+}
+
+/* Primary(등록) */
+.review-write .rb-btn-primary{
+    background: var(--rw-brand);
+    color:#fff;
+    border-color: var(--rw-brand);
+    box-shadow: var(--rw-shadow);
+}
+.review-write .rb-btn-primary:hover{ filter: brightness(.97); }
+
+/* Outline(취소) */
+.review-write .rb-btn-outline{
+    background:#fff;
+    color: var(--rw-brand);
+    border-color: var(--rw-brand);
+}
+.review-write .rb-btn-outline:hover{
+    background: var(--rw-brand);
+    color:#fff;
+}
+
+/* 반응형 */
+@media (max-width: 576px){
+    .review-write .rb-actions{ flex-direction: column-reverse; }
+    .review-write .rb-actions .btn{ width: 100%; }
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title>환불 내역</title>
+</head>
+<body>
+<main layout:fragment="content" class="container my-4">
+    <h2>환불 내역</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>주문번호</th>
+            <th>사유</th>
+            <th>상세사유</th>
+            <th>등록일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="refund : ${refunds}">
+            <!-- 주문번호 -->
+            <td th:text="${refund.order.orderNo}">20250908001</td>
+
+            <!-- ✅ Enum → description 출력 -->
+            <td th:text="${refund.reasonCode.description}">단순 변심</td>
+
+            <!-- 상세 사유 -->
+            <td th:text="${refund.reasonDetail}">상세 내용</td>
+
+            <!-- 등록일 -->
+            <td th:text="${#temporals.format(refund.regTime, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

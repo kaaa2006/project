@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>팁 상세</title>
+
+    <!-- ✅ 페이지 전용 CSS로 교체 -->
+    <link rel="stylesheet" th:href="@{/css/pages/tipBoardRead.css?v=1}">
+
+    <!-- 전역 CSS (그대로) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9.4.1/swiper-bundle.min.css">
+    <link rel="stylesheet" th:href="@{/css/tokens.css?v=2}">
+    <link rel="stylesheet" th:href="@{/css/components.css?v=2}">
+    <link rel="stylesheet" th:href="@{/css/header.css?v=20250821}">
+    <link rel="icon" th:href="@{/favicon.ico}">
+
+    <!-- CSRF -->
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="bno" th:content="${tipBoardDTO.bno}"/>
+    <meta name="member-id" th:content="${memberId}"/>
+</head>
+
+<!-- ✅ 디자인 스코프용 클래스 추가 -->
+<body class="tip-read" th:attr="data-is-logged-in=${isLoggedIn}">
+
+
+<!-- 공통 헤더 -->
+<header th:replace="~{fragments/header :: header}"></header>
+
+<!-- 본문 컨테이너 -->
+<div class="list-container">
+    <h1 th:text="${tipBoardDTO.title}">제목 없음</h1>
+    <div class="meta-info">
+        <p>작성자: <span th:text="${tipBoardDTO.writer != null ? tipBoardDTO.writer : '작성자 없음'}"></span></p>
+        <p>등록일: <span th:text="${#temporals.format(tipBoardDTO.regDate, 'yyyy-MM-dd a h:mm')}">-</span></p>
+        <p th:if="${tipBoardDTO.modDate != null}">
+            수정일: <span th:text="${#temporals.format(tipBoardDTO.modDate, 'yyyy-MM-dd a h:mm')}">-</span>
+        </p>
+        <p>조회수: <span th:text="${tipBoardDTO.viewCount}">0</span></p>
+    </div>
+
+    <!-- 내용과 구분선 -->
+    <hr>
+
+    <!-- 본문 내용 -->
+    <div class="tip-content" th:text="${tipBoardDTO.content}">내용 없음</div>
+
+    <!-- 반응 버튼 -->
+    <div class="reaction" th:data-user-reaction="${tipBoardDTO.userReaction}">
+        <div class="form-buttons tip-action-buttons">
+            <!-- 좋아요 -->
+            <button class="reaction-btn btn-helpful" data-type="like" th:attr="data-bno=${tipBoardDTO.bno}">
+                <i class="bi bi-hand-thumbs-up reaction-icon" aria-hidden="true"></i>
+                <span class="label">좋아요</span>
+                (<span class="count" th:text="${tipBoardDTO.likeCount != null ? tipBoardDTO.likeCount : 0}">0</span>)
+            </button>
+
+            <!-- 싫어요 -->
+            <button class="reaction-btn btn-not-helpful" data-type="dislike" th:attr="data-bno=${tipBoardDTO.bno}">
+                <i class="bi bi-hand-thumbs-down reaction-icon" aria-hidden="true"></i>
+                <span class="label">싫어요</span>
+                (<span class="count" th:text="${tipBoardDTO.dislikeCount != null ? tipBoardDTO.dislikeCount : 0}">0</span>)
+            </button>
+
+        </div>
+
+    <!-- 오른쪽 끝 수정/삭제 버튼 -->
+    <div class="tip-action-buttons-right" th:if="${memberIdLong != null and tipBoardDTO.writerId != null and memberIdLong.equals(tipBoardDTO.writerId)}">
+        <a th:href="@{/board/tip/modify(bno=${tipBoardDTO.bno})}" class="btn-submit">수정</a>
+        <form th:action="@{/board/tip/remove}" method="post" style="display:inline;">
+            <input type="hidden" name="bno" th:value="${tipBoardDTO.bno}" />
+            <button type="submit" class="btn-delete">삭제</button>
+        </form>
+    </div>
+    </div>
+
+    <!-- 댓글 작성 -->
+    <h3>댓글</h3>
+
+    <div id="new-comment" th:if="${memberId != null}">
+        <textarea id="reply-text" rows="3" placeholder="댓글을 입력하세요"></textarea><br>
+        <button id="btn-add-comment">댓글 등록</button>
+    </div>
+    <div th:if="${memberId == null}">
+        <p>댓글 작성을 위해 로그인해주세요.</p>
+    </div>
+
+    <!-- 댓글 영역 -->
+    <div id="comments-container" th:attr="data-bno=${tipBoardDTO.bno},data-mno=${memberId}">
+        <p th:if="${tipBoardDTO.replies == null or #lists.isEmpty(tipBoardDTO.replies)}">댓글이 없습니다.</p>
+        <ul th:if="${tipBoardDTO.replies != null}">
+            <li th:each="reply : ${tipBoardDTO.replies}" th:attr="data-rno=${reply.rno}">
+                <div class="comment-header">
+                    <strong th:text="${reply.writerName != null ? reply.writerName : '익명'}">익명</strong>
+                    <span class="comment-date" th:text="${#temporals.format(reply.regDate, 'yyyy-MM-dd H:mm')}"></span>
+                <div class="comment-buttons">
+                    <button class="btn-edit"
+                            th:if="${memberId != null and reply.writerId != null and memberId.equals(reply.writerId.toString())}">수정</button>
+                    <button class="btn-delete"
+                            th:if="${memberId != null and reply.writerId != null and memberId.equals(reply.writerId.toString())}">삭제</button>
+                </div>
+                </div>
+                <div class="reply-text" th:text="${reply.replyText}">댓글 내용</div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 하단 액션 -->
+    <a th:href="@{/board/tip/list}">목록으로</a>
+</div>
+
+<!-- 공통 푸터 -->
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<!-- JS -->
+<script th:src="@{/js/tipBoard.js}"></script>
+<script th:src="@{/js/tipBoardRead.js?v=1}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9.4.1/swiper-bundle.min.js"></script>
+<script th:src="@{/js/main.js}" defer></script>
+
+</body>
+</html>

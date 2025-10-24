@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+  <title>환불/취소 내역</title>
+
+  <th:block layout:fragment="page_head">
+    <!-- 공통 마이페이지 CSS 포함 -->
+    <link rel="stylesheet" th:href="@{/css/pages/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/shop/refund-list.css}">
+    <meta name="memberName" th:content="${#authentication?.principal?.memberName}">
+    <meta name="memberId"   th:content="${#authentication?.principal?.memberId}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+  </th:block>
+</head>
+
+<body>
+<main layout:fragment="content" class="refund-list-page container d-flex gap-4">
+
+  <!-- ✅ 사이드바 -->
+  <aside th:replace="~{fragments/mypage-side :: side('refunds')}"></aside>
+
+  <!-- ✅ 메인 콘텐츠 -->
+  <section class="flex-grow-1">
+    <header class="page-header mb-4">
+      <div class="eyebrow">MY ORDERS</div>
+      <h2 class="page-title">환불/취소 내역</h2>
+      <p class="page-sub">최근 환불 및 주문 취소 내역을 확인하세요.</p>
+    </header>
+
+    <!-- 내역 없음 -->
+    <div th:if="${#lists.isEmpty(refunds)}" class="empty">
+      <div class="empty-icon">💸</div>
+      <p class="empty-text">환불/취소 내역이 없습니다.</p>
+    </div>
+
+    <!-- 내역 있을 때 -->
+    <div th:if="${!#lists.isEmpty(refunds)}" class="card p-3 shadow-sm">
+      <div class="table-wrap">
+        <table class="pf-table w-100">
+          <thead>
+          <tr>
+            <th>주문번호</th>
+            <th>상품명</th>
+            <th>주문일자</th>
+            <th>상태</th>
+            <th>결제금액</th>
+            <th>액션</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="o : ${refunds}">
+            <td class="order-no fw-semibold text-primary" th:text="${o.orderNo}">20250924101525-1CF316</td>
+
+            <td class="products">
+              <ul class="products-list">
+                <li th:each="name : ${o.itemNames}" th:text="${name}">상품명</li>
+              </ul>
+            </td>
+
+            <td class="text-center" th:text="${#temporals.format(o.orderedAt,'yyyy-MM-dd HH:mm')}">2025-09-24 10:15</td>
+
+            <td class="text-center">
+              <span class="status-chip"
+                    th:classappend="${o.status == 'REFUNDED'} ? ' refunded' : (o.status == 'CANCELED' ? ' canceled' : '')"
+                    th:text="${o.statusDescription}">환불 완료</span>
+            </td>
+
+            <td class="text-end fw-bold"
+                th:text="${#numbers.formatInteger(o.payableAmount,3,'COMMA')} + '원'">225,120원</td>
+
+            <td class="text-end">
+              <a th:href="@{|/orders/${o.orderId}/detail|}" class="pf-btn pf-btn-outline pf-btn-xs">상세</a>
+              <!-- ✅ 리뷰 버튼 제거 -->
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<th:block layout:fragment="page_foot">
+  <script th:src="@{/js/shop/review-modal.js}" defer></script>
+</th:block>
+</body>
+</html>

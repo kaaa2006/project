@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title>상품 목록</title>
+    <th:block layout:fragment="page_head">
+        <link rel="stylesheet" th:href="@{/css/shop/shop-items.css}">
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content"
+     class="py-4 shop-theme shop-items-page"
+     data-api-list="/api/items"
+     th:attr="data-category=${category},
+              data-food-item=${foodItem},
+              data-special-deal=${specialDeal},
+              data-new-item=${newItem}">
+
+    <!-- Page Hero -->
+    <section class="hero-wrap container-xxl">
+        <div class="hero-card">
+            <div>
+                <div class="eyebrow">MEALKIT</div>
+                <h1 class="hero-title">오늘도 신선한 <span class="accent">밀키트</span></h1>
+                <p class="hero-sub">간편하지만 건강하게. 지금 가장 인기 있는 메뉴를 만나보세요.</p>
+            </div>
+            <img class="hero-illust" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='160'%3E%3Crect rx='16' width='240' height='160' fill='%23E8F6EE'/%3E%3Ccircle cx='74' cy='72' r='36' fill='%2316A34A' opacity='.12'/%3E%3Ccircle cx='164' cy='92' r='48' fill='%2316A34A' opacity='.08'/%3E%3C/svg%3E">
+        </div>
+    </section>
+
+    <!-- Toolbar -->
+    <section class="container-xxl mt-4">
+        <div class="toolbar card shadow-sm">
+            <div class="card-body row g-2 align-items-center">
+                <div class="col- col-lg-5">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                        <input id="q" class="form-control border-start-0" placeholder="상품명 검색">
+                        <button id="btn-search" class="btn btn-brand">검색</button>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <select id="filter-food" class="form-select form-select-lg">
+                        <!-- Thymeleaf 바인딩(th:field) 사용하는 페이지라면 value="" 대신 value="''" 권장 -->
+                        <option value="''">상품(전체)</option>
+                        <option value="SALAD">샐러드</option>
+                        <option value="POKE">포케</option>
+                        <option value="CHICKEN_BREAST">닭가슴살</option>
+                        <option value="FRIED_RICE">볶음밥</option>
+                        <option value="PROTEIN_DRINK">단백질음료</option>
+                        <option value="DRESSING">드레싱</option>
+                        <option value="SET">세트</option>
+                    </select>
+                </div>
+
+                <!-- ★ 상태 필터 추가 -->
+                <div class="col-6 col-lg-2">
+                    <select id="filter-status" class="form-select form-select-lg">
+
+                        <option value="''">상태(전체)</option>
+                        <option value="SELL">판매중</option>
+                        <option value="SOLD_OUT">품절</option>
+                    </select>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <select id="sort" class="form-select form-select-lg">
+                        <option value="regTime,DESC">최신순</option>
+                        <option value="price,ASC">가격 낮은순</option>
+                        <option value="price,DESC">가격 높은순</option>
+                        <option value="reviewCount,DESC">리뷰많은순</option>
+                        <option value="avgRating,DESC">평점순</option>
+                        <option value="itemViewCnt,DESC">인기순</option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-lg-1 text-lg-end">
+                    <span id="result-count" class="text-muted">0개</span>
+                </div>
+
+                <!-- 가격 범위: 드롭다운(클릭시 펼침) -->
+                <div class="col-12 col-lg-3">
+                    <div class="dropdown w-100" data-bs-auto-close="outside">
+                        <button class="btn btn-outline-secondary w-50 py-2 dropdown-toggle"
+                                type="button" id="ddPriceBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                            가격 범위
+                            <small class="text-muted ms-1" id="ddPriceLabel">전체</small>
+                        </button>
+
+                        <div class="dropdown-menu price-menu p-3" aria-labelledby="ddPriceBtn">
+                            <div class="price-range" data-min="0" data-max="200000" data-step="500">
+                                <label class="form-label mb-2 d-flex justify-content-between align-items-center">
+                                    <span>가격 범위</span>
+                                    <small class="text-muted"><span id="price-range-label">0원 ~ 200,000원</span></small>
+                                </label>
+
+                                <div class="d-flex gap-2 mb-2">
+                                    <input id="min-price" type="number" class="form-control" placeholder="최소가">
+                                    <input id="max-price" type="number" class="form-control" placeholder="최대가">
+                                </div>
+
+                                <div class="range-wrap position-relative">
+                                    <input id="range-min" type="range" class="form-range" min="0" max="200000" step="500" value="0">
+                                    <input id="range-max" type="range" class="form-range" min="0" max="200000" step="500" value="200000">
+                                    <div class="range-track"></div>
+                                    <div class="range-fill"></div>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-2 mt-3">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="priceClearBtn">초기화</button>
+                                    <button type="button" class="btn btn-sm btn-brand" id="priceApplyBtn">적용</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Grid -->
+    <section class="container-xxl mt-3">
+        <div id="grid" class="row g-3"><!-- JS 렌더링 --></div>
+    </section>
+
+    <!-- Pagination -->
+    <section class="container-xxl mt-4">
+        <nav>
+            <ul id="pagination" class="pagination brand-paging justify-content-center mb-0"><!-- JS --></ul>
+        </nav>
+    </section>
+</div>
+
+<th:block layout:fragment="page_foot">
+    <script th:src="@{/js/shop/items-list.js(v=${T(java.time.Instant).now().toEpochMilli()})}"></script>
+</th:block>
+</body>
+</html>

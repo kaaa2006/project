@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원탈퇴</title>
+  <th:block layout:fragment="page_head">
+    <link rel="stylesheet" th:href="@{/css/pages/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/mypage-profile.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/mypage-withdraw.css(v=${#dates.createNow().time})}">
+  </th:block>
+  <th:block layout:fragment="page_foot">
+    <script th:src="@{/js/mypage-withdraw.js(v=${#dates.createNow().time})}" defer></script>
+  </th:block>
+</head>
+<body>
+<div layout:fragment="content" class="mypage-wrap d-flex gap-4">
+
+  <!-- 좌측 사이드바: withdraw 활성화 -->
+  <aside th:replace="~{fragments/mypage-side :: side('withdraw')}"></aside>
+
+  <main class="content flex-grow-1">
+    <div class="page-header pf-border-accent">
+      <div class="eyebrow">My Page</div>
+      <h2 class="page-title">회원탈퇴</h2>
+      <div class="page-sub">탈퇴 전 안내사항을 확인해 주세요.</div>
+    </div>
+
+    <!-- 안내 박스 -->
+    <section class="card-elevated withdraw-warn">
+      <div class="warn-title"><i class="bi bi-exclamation-triangle"></i> 탈퇴 전 꼭 확인하세요</div>
+      <ul class="warn-list">
+        <li>보유 중인 <strong>포인트/쿠폰은 즉시 소멸</strong>됩니다.</li>
+        <li>주문/결제 이력은 전자상거래법 등 관련 법령에 따라 <strong>법정 보관기간 동안 분리 보관</strong>됩니다.</li>
+        <li>같은 이메일로 <strong>일정 기간 재가입이 제한</strong>될 수 있습니다.</li>
+      </ul>
+    </section>
+
+    <!-- 탈퇴 폼 -->
+    <section class="card-elevated">
+      <div class="card-title"><i class="bi bi-person-dash"></i> 탈퇴 요청</div>
+
+      <!-- ✅ action/POST/CSRF/name 모두 추가 -->
+      <form id="withdrawForm" class="withdraw-form"
+            th:action="@{/mypage/withdraw}"
+            method="post"
+            th:attr="data-success=@{/mypage/withdraw/success}">
+
+        <!-- CSRF -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <!-- 비밀번호 확인 -->
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold">현재 비밀번호</label>
+            <input type="password" class="form-control pf-input" name="password"
+                   placeholder="현재 비밀번호" autocomplete="current-password" required>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold">탈퇴 사유 (선택)</label>
+            <select class="form-select pf-input" name="reason">
+              <option value="">선택하세요</option>
+              <option>서비스 이용이 불편함</option>
+              <option>가격/혜택 불만</option>
+              <option>앱/웹 성능 문제</option>
+              <option>개인정보 삭제 요청</option>
+              <option>기타</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">추가 의견 (선택)</label>
+            <textarea class="form-control pf-input" name="memo" rows="3"
+                      placeholder="개선이 필요한 점을 알려주세요."></textarea>
+          </div>
+        </div>
+
+        <hr class="my-3">
+
+        <!-- 동의 체크 + 타이핑 확인 -->
+        <div class="form-check mb-2">
+          <!-- ✅ name 추가 -->
+          <input class="form-check-input" type="checkbox" id="agreeCheck" name="agree" required>
+          <label class="form-check-label" for="agreeCheck">
+            위 안내사항을 모두 확인했으며, 회원탈퇴에 동의합니다.
+          </label>
+        </div>
+        <div class="confirm-typing">
+          <label class="form-label">확인 문구를 입력하세요: <code>회원탈퇴</code></label>
+          <!-- ✅ name 추가 -->
+          <input type="text" class="form-control pf-input" id="confirmText" name="confirmText"
+                 placeholder="회원탈퇴" required>
+        </div>
+
+        <div class="actions mt-3">
+          <a class="pf-btn pf-btn-outline" th:href="@{/mypage/profile}">취소</a>
+          <button type="submit" class="pf-btn pf-btn-danger">탈퇴하기</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</div>
+</body>
+</html>

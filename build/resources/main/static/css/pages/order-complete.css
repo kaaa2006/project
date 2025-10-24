@@ -1,0 +1,123 @@
+/* =========================================================
+   MealKit Shop — Order Complete (match cart/checkout tone)
+   ========================================================= */
+.order-complete-page{
+    --brand: var(--brand-teal, #00dca0);
+    --ink:#0b2413; --muted:#6b7d73; --soft:#eef3ef;
+    --surface:#fff; --radius:14px;
+    color:var(--ink);
+    max-width:1000px;
+    margin:0 auto;
+    padding:2rem 1rem;
+    font-family:"Noto Sans KR","Malgun Gothic",sans-serif;
+}
+
+/* 헤더 카드 */
+.complete-header{
+    background:#fff; border:1px solid #dde5e0; border-radius:20px;
+    padding:28px 26px; box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+.complete-header h2{
+    margin:0 0 .4rem 0; font-weight:800; font-size:2rem; letter-spacing:-.3px;
+}
+.complete-header p{ margin:0; color:var(--muted); font-weight:600; }
+
+/* 공통 카드 룩 */
+.order-complete-page .card{
+    background:var(--surface); border:1px solid #dde5e0;
+    border-radius:var(--radius); box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+.order-complete-page .card h4{
+    margin:0 0 .75rem 0; font-weight:800; font-size:1.18rem; letter-spacing:-.2px;
+    position:relative; padding-left:12px;
+}
+.order-complete-page .card h4::before{
+    content:""; position:absolute; left:0; top:.22em;
+    width:6px; height:1.05em; border-radius:8px; background:var(--brand);
+}
+
+/* 리스트(ul) 정리 */
+.order-complete-page .card ul{ list-style:none; padding-left:0; margin:0; }
+.order-complete-page .card li{
+    display:flex; gap:8px; align-items:baseline; padding:.25rem 0;
+}
+.order-complete-page .card li strong{ color:#3b4a43; min-width:92px; }
+
+/* 표 공통 */
+.order-complete-page .table{
+    width:100%; margin:0; border-collapse:separate; border-spacing:0;
+}
+.order-complete-page .table thead th{
+    background:#fbfdfc; color:#6b7d73; font-weight:800;
+    border-bottom:1px solid #e9efec; padding:12px 12px;
+}
+.order-complete-page .table tbody td{
+    padding:12px; border-bottom:1px solid #f1f3f2; vertical-align:middle;
+}
+
+/* 주문 상품 표: 수량/단가/합계 → 우측 정렬 */
+.order-complete-page .table-striped thead th:nth-child(2),
+.order-complete-page .table-striped thead th:nth-child(3),
+.order-complete-page .table-striped thead th:nth-child(4),
+.order-complete-page .table-striped tbody td:nth-child(2),
+.order-complete-page .table-striped tbody td:nth-child(3),
+.order-complete-page .table-striped tbody td:nth-child(4){
+    text-align:right;
+}
+/* 스트라이프 톤 부드럽게 */
+.order-complete-page .table-striped tbody tr:nth-of-type(odd){
+    background:#fcfefe;
+}
+
+/* 결제 요약 표: 값 열 우측 정렬 + 총액 강조 */
+.order-complete-page .card .table:not(.table-striped) td:nth-child(2),
+.order-complete-page .card .table:not(.table-striped) th:nth-child(2){
+    text-align:right;
+}
+.order-complete-page .card .table:not(.table-striped) tr.fw-bold td{
+    color:var(--brand); font-size:1.25rem; font-weight:800;
+}
+
+/* 버튼(브랜드 톤 + 반전 호버) */
+.order-actions{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+.order-actions .btn{
+    min-width:220px; height:52px; border-radius:14px; font-weight:800;
+    display:inline-flex; align-items:center; justify-content:center;
+    transition:background .15s, color .15s, border-color .15s, box-shadow .15s;
+    box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+.order-actions .btn-primary{
+    background:var(--brand); border:2px solid var(--brand); color:#fff;
+}
+.order-actions .btn-primary:hover{ background:#fff; color:var(--brand); }
+.order-actions .btn-outline-secondary{
+    background:#fff; border:2px solid var(--brand); color:var(--brand);
+}
+.order-actions .btn-outline-secondary:hover{ background:var(--brand); color:#fff; }
+
+/* 반응형 */
+@media (max-width:768px){
+    .order-complete-page{ padding:1.25rem .75rem; }
+    .complete-header{ padding:22px 18px; }
+    .order-actions .btn{ min-width:200px; height:50px; }
+}
+/* 주문완료 제목을 브랜드 색으로 */
+.order-complete-page .complete-header h2{ color: var(--brand, #00dca0); }
+/* ===== 단계표시 공통 ===== */
+.order-complete-page .page-top{ margin-bottom: 12px; }
+.order-complete-page .page-title{
+    font-weight:800; font-size:2rem; letter-spacing:-.3px; color:#0b2413;
+}
+
+.order-complete-page .checkout-steps{
+    display:flex; align-items:center; justify-content:flex-end;
+    gap:14px; margin:.25rem 0 0; padding:0; list-style:none; white-space:nowrap;
+    line-height:1.2;
+}
+.order-complete-page .checkout-steps > li{ list-style:none; }
+.order-complete-page .checkout-steps > li::marker{ content:""; }
+.order-complete-page .checkout-steps > li::before{ content:none; }
+
+.order-complete-page .checkout-steps .step{ color:#90a099; font-weight:700; }
+.order-complete-page .checkout-steps .step.active{ color: var(--brand, #00dca0); }
+.order-complete-page .checkout-steps .sep{ color:#c5d0cb; font-weight:900; margin:0 8px; }

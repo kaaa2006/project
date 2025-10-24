@@ -1,0 +1,53 @@
+/* BEM 패턴 */
+.product-card { border:0 }
+.product-card__name{ font-size:1rem; line-height:1.4; margin:8px 0 4px }
+.product-card__price{ font-weight:700 }
+/* ===== product-card 보강 ===== */
+.product-card__thumb{ overflow:hidden; border-radius:1rem; background:#f8f9fa; }
+.product-card__thumb img{ width:100%; height:100%; object-fit:cover; }
+
+/* 이름 2줄 말줄임 */
+.product-card__name{
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden; min-height:2.6em;
+}
+
+/* 배지 위치(좌상단/우상단) */
+.pc-badge-left{ left:0; top:0; }
+.pc-badge-right{ right:0; top:0; }
+
+/* 메타 영역 간격 */
+.product-card__meta .price{ font-weight:700; }
+
+/* 맨 아래쪽에 추가 (Bootstrap 다음에 로드되므로 override 안전) */
+.btn-admin{
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--brand-teal, var(--brand, #14b8a6));
+    --bs-btn-border-color: var(--brand-teal, var(--brand, #14b8a6));
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: color-mix(in srgb, var(--brand-teal, var(--brand, #14b8a6)), #000 10%);
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--brand-teal, var(--brand, #14b8a6)), #000 12%);
+    --bs-btn-focus-shadow-rgb: 20, 184, 166;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: color-mix(in srgb, var(--brand-teal, var(--brand, #14b8a6)), #000 15%);
+    --bs-btn-active-border-color: color-mix(in srgb, var(--brand-teal, var(--brand, #14b8a6)), #000 18%);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--brand-teal, var(--brand, #14b8a6));
+    --bs-btn-disabled-border-color: var(--brand-teal, var(--brand, #14b8a6));
+}
+
+/* 구형 브라우저 대응이 필요하면 호버만 보강 */
+@supports not (color-mix(in srgb, #000, #fff)) {
+    .btn-admin:hover { filter: brightness(.95); color:#fff; }
+}
+
+@media (min-width: 992px){
+    .is-admin .main-header .search-box{
+        max-width: 560px; /* 필요 시 480~640px 내에서 조정 */
+        flex: 0 0 auto;   /* grow 방지 안전장치 */
+    }
+    .is-admin .main-header .header-search-input{
+        width: 100%;
+        min-width: 320px; /* 입력창 너무 작아짐 방지 */
+    }
+}

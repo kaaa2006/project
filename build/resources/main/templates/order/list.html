@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <title>주문 내역</title>
+
+    <th:block layout:fragment="page_head">
+        <link rel="stylesheet" th:href="@{/css/shop/order-list.css}">
+        <!-- 서버 값 메타 -->
+        <meta name="memberName" th:content="${#authentication?.principal?.memberName}">
+        <meta name="memberId"   th:content="${#authentication?.principal?.memberId}">
+        <meta name="_csrf" th:content="${_csrf.token}">
+        <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    </th:block>
+</head>
+
+<body>
+<main layout:fragment="content" class="order-list-page container">
+
+    <!-- 상단 헤더 -->
+    <header class="page-header">
+        <div class="eyebrow">My Orders</div>
+        <h2 class="page-title">주문 내역</h2>
+        <p class="page-sub">최근 주문을 확인하고 리뷰를 작성하세요.</p>
+    </header>
+
+    <!-- 주문 없을 때 -->
+    <div th:if="${#lists.isEmpty(orders)}" class="empty">
+        <div class="empty-icon">🧺</div>
+        <p class="empty-text">주문 내역이 없습니다.</p>
+    </div>
+
+    <!-- 주문 있을 때 -->
+    <section th:if="${!#lists.isEmpty(orders)}" class="card">
+        <div class="table-wrap">
+            <table class="pf-table">
+                <thead>
+                <tr>
+                    <th>주문번호</th>
+                    <th>상품명</th>
+                    <th>주문일자</th>
+                    <th>상태</th>
+                    <th>결제금액</th>
+                    <th>액션</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="o : ${orders}">
+                    <td class="order-no" th:text="${o.orderNo}">ORD-2025-0001</td>
+
+                    <td class="products">
+                        <ul class="products-list">
+                            <li th:each="item : ${o.lines}" th:text="${item.itemName}">상품명</li>
+                        </ul>
+                    </td>
+
+                    <td class="text-center"
+                        th:text="${#temporals.format(o.orderedAt, 'yyyy-MM-dd HH:mm')}">2025-09-03 12:34</td>
+
+                    <td class="text-center">
+                        <span class="status-chip"
+                              th:text="${#objects.nullSafe(o.status?.description, o.status)}">CREATED</span>
+                    </td>
+
+                    <td class="text-end amount"
+                        th:text="${#numbers.formatInteger(o.payableAmount, 3, 'COMMA')} + '원'">12,000원</td>
+
+                    <td class="text-end">
+                        <!-- 상세 -->
+                        <a th:href="@{|/orders/${o.orderId}/detail|}"
+                           class="pf-btn pf-btn-outline pf-btn-xs">상세</a>
+                        <!-- 리뷰(첫 상품 기준) -->
+                        <a th:if="${!#lists.isEmpty(o.lines)}"
+                           href="#"
+                           class="pf-btn pf-btn-primary pf-btn-xs js-open-review"
+                           th:data-item-id="${o.lines[0].itemId}"
+                           th:data-item-name="${o.lines[0].itemName}"
+                           th:data-item-img="${o.lines[0].repImgUrl}"
+                           th:data-status="${o.status}">리뷰</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ✅ 클라이언트 페이지네이션(백엔드 변경 없이 15개씩) -->
+        <nav id="clientPager" class="pf-pagination" aria-label="페이지네이션" style="display:none"></nav>
+    </section>
+
+    <!-- 리뷰 작성 모달 -->
+    <div id="review-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rv-title">
+            <div class="modal-hd">
+                <h5 id="rv-title" class="mb-0">리뷰 작성</h5>
+                <button type="button" class="btn-close" aria-label="닫기" data-close></button>
+            </div>
+
+            <div class="modal-bd">
+                <form id="review-form">
+                    <input type="hidden" name="itemId" id="rv-item-id">
+                    <input type="hidden" name="writerMno" id="rv-writer-mno">
+                    <input type="hidden" name="rating" id="rv-rating" value="5">
+
+                    <!-- 상품 이미지 + 이름 -->
+                    <div class="mb-3 text-center">
+                        <img id="rv-item-img" src="/img/No_Image.jpg"
+                             alt="상품 이미지"
+                             style="max-width:120px; border-radius:8px; margin-bottom:8px;">
+                        <div id="rv-item-name" class="form-control-plaintext fw-semibold"></div>
+                    </div>
+
+                    <!-- 작성자 -->
+                    <div class="mb-3">
+                        <label class="form-label">작성자</label>
+                        <div id="rv-writer-name" class="form-control-plaintext"></div>
+                    </div>
+
+                    <!-- 평점 위젯 -->
+                    <div class="mb-3">
+                        <label class="form-label d-block">평점</label>
+                        <div id="rv-stars" class="rv-stars" title="클릭/드래그로 별점을 선택하세요">
+                            <div class="bg">★★★★★</div>
+                            <div class="fill" style="width:20%">★★★★★</div>
+                        </div>
+                        <small id="rv-rating-label" class="text-muted">5점</small>
+                    </div>
+
+                    <!-- 내용 -->
+                    <div class="mb-3">
+                        <label for="rv-content" class="form-label">내용</label>
+                        <textarea id="rv-content" name="content" class="form-control" rows="5"
+                                  maxlength="2000" placeholder="리뷰 내용을 입력하세요 (최대 2000자)"></textarea>
+                    </div>
+
+                    <!-- 이미지 업로드 -->
+                    <div class="mb-2">
+                        <label class="form-label">이미지 (최대 3장, 3MB/장, jpg/jpeg/png/gif)</label>
+                        <input id="rv-images" name="images" type="file" class="form-control"
+                               accept=".jpg,.jpeg,.png,.gif" multiple>
+                        <div id="rv-previews" class="rv-previews mt-2"></div>
+                    </div>
+
+                    <div id="rv-error" class="text-danger small mt-1" role="alert"></div>
+
+
+
+                    <div class="modal-ft">
+                        <button type="button" class="btn btn-outline-secondary" data-close>취소</button>
+                        <button type="submit" id="rv-submit" class="btn btn-primary">등록</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<th:block layout:fragment="page_foot">
+    <script th:src="@{/js/shop/order-list.js(v=${T(java.time.Instant).now().toEpochMilli()})}" defer></script>
+    <script th:src="@{/js/shop/review-modal.js(v=${T(java.time.Instant).now().toEpochMilli()})}" defer></script>
+</th:block>
+</body>
+</html>

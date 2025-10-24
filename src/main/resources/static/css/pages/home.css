@@ -1,0 +1,121 @@
+/* ============ Theme Vars ============ */
+:root{
+    --brand-green:#00DCA0;
+    --brand-green-600:#00C090;
+    --brand-ink:#0b2413;
+    --brand-muted:#667a6f;
+    --brand-surface:#f3faf6;
+    --brand-surface-2:#e8f6ee;
+    --radius-xl:1.25rem;
+}
+
+/* ============ Banner ============ */
+.banner-swiper{ position:relative; width:100%; aspect-ratio:16/5; height:auto!important; max-height:480px; }
+@media (min-width:992px){ .banner-swiper{ aspect-ratio:16/3.5; max-height:350px; } }
+.banner-img{ width:100%; height:100%; object-fit:cover; object-position:center; }
+.swiper-button-prev,.swiper-button-next{ position:absolute; top:50%; transform:translateY(-50%); opacity:.6; --swiper-navigation-size:26px; }
+.swiper-button-prev:hover,.swiper-button-next:hover{ opacity:1; }
+
+/* ============ Header Search ============ */
+.search-box{ flex:0 0 380px; max-width:380px; margin-left:32px; }
+.search-box input{ height:48px; background:#eee; border:none; border-radius:50rem 0 0 50rem; }
+.search-box button{ height:48px; width:54px; background:#eee; border:none; border-radius:0 50rem 50rem 0; }
+@media (max-width:991.98px){
+    .search-box{ flex:1 1 auto; max-width:none; margin-left:0; }
+    .search-box input,.search-box button{ height:40px; }
+}
+
+/* ============ Menu Tiles (5) ============ */
+.menu-label{ margin-top:6px; font:500 15px/1 "Noto Sans KR",sans-serif; color:#555; }
+.menu-tiles .row{ --bs-gutter-x:2.5rem; --bs-gutter-y:2rem; }
+@media (min-width:992px){ .menu-tiles .row{ --bs-gutter-x:3rem; --bs-gutter-y:2.5rem; } }
+.menu-link{ display:inline-flex; flex-direction:column; align-items:center; text-align:center; }
+.menu-link img{ margin-bottom:.7rem; width:min(100%, clamp(180px, 24vw, 260px)); aspect-ratio:1/1; height:auto; }
+.menu-tiles .menu-label{ font-size:1.14rem; font-weight:450; }
+.menu-link:focus-visible{ outline:3px solid var(--brand-green); outline-offset:2px; }
+
+/* ============ Section gap tweak ============ */
+@media (min-width:992px){ .py-5:not(.main-header):not(.category-bar){ padding-top:1.5rem!important; } }
+
+/* ============ BEST Cards (Bootstrap .card를 테마 룩으로) ============ */
+.best-cards .card{
+    position:relative;  /* 랭킹 뱃지 기준점 */
+    border:1px solid #eef0f2; border-radius:var(--radius-xl); background:#fff; overflow:hidden;
+    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.best-cards .card:hover{ transform:translateY(-4px); border-color:#e3efe7; box-shadow:0 10px 30px rgba(0,0,0,.06); }
+
+/* 코너 리본 */
+.best-cards .rank-ribbon{
+    position:absolute; top:12px; left:-30px;    /* 모서리 살짝 물려 들어가게 */
+    width:120px; padding:.35rem 0; text-align:center;
+    transform:rotate(-45deg);
+    font-weight:900; letter-spacing:.02em;
+    background:linear-gradient(180deg,var(--brand-green),var(--brand-green-600));
+    color:#fff;
+    box-shadow:0 10px 20px rgba(0,0,0,.12);
+    z-index:3;
+    pointer-events:none; /* 클릭 방해 X */
+    border:1px solid #bff3e3;                   /* 사이트톤 경계선 */
+}
+
+/* 1위 강조(선택) — 1위만 살짝 진하게 */
+.best-cards .rank-ribbon[data-rank="1"]{
+    filter:saturate(1.1) brightness(.98);
+}
+
+/* 모바일에서 과하지 않게 살짝 축소 */
+@media (max-width:575.98px){
+    .best-cards .rank-ribbon{ width:96px; padding:.28rem 0; }
+}
+
+
+/* 이미지: 정사각 cover + 하단 경계선 */
+.best-cards .card-img-top{
+    width:100%; aspect-ratio:1/1; object-fit:cover; display:block;
+    background:#fafafa; border-bottom:1px solid #eef0f2;
+}
+
+/* 본문/제목 */
+.best-cards .card-body{ padding:12px 14px 14px; }
+.best-cards .card-title{
+    margin-bottom:6px; font-weight:800; color:#0f172a;
+    font-size:clamp(0.95rem, 2.6vw, 1.1rem); line-height:1.28;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:calc(1.28em * 2);
+}
+
+/* 가격 라인 (판매가/정가/할인율) */
+.best-cards .card-body .small strong{
+    font-weight:900; color:#0f172a;
+    font-size:clamp(1.25rem, 4.5vw, 1.75rem); line-height:1.1; letter-spacing:-0.01em;
+}
+.best-cards .card-body .text-decoration-line-through{
+    color:#94a3b8; font-weight:700; white-space:nowrap; font-size:.95rem; margin-left:4px;
+}
+
+/* 할인율 배지: 부트스트랩 bg-danger 덮어쓰기 (색/배경/테두리 모두 테마) */
+.best-cards .card-body .badge.bg-danger{
+    background:rgba(0,220,160,.12) !important;
+    color:var(--brand-green) !important;
+    border:1px solid #bff3e3 !important;
+    font-weight:700;
+}
+
+.best-cards .price-block{ margin-top:6px; }
+.best-cards .sale-price{
+    display:block;font-weight:900;
+    font-size:clamp(1.25rem,4.5vw,1.75rem);line-height:1.1;color:#0f172a;letter-spacing:-.01em;
+}
+.best-cards .sub-prices{ display:flex; align-items:center; gap:8px; margin-top:2px; }
+.best-cards .old-price{ color:#94a3b8; text-decoration:line-through; font-weight:700; font-size:.95rem; }
+.best-cards .discount-badge{
+    display:inline-block; padding:.1rem .45rem; border-radius:.5rem; font-weight:700; font-size:.9rem;
+    background:rgba(0,220,160,.12); color:var(--brand-green); border:1px solid #bff3e3;
+}
+
+/* 평점/리뷰 색 */
+.best-cards .card-body .mt-1.small{ color:#64748b; font-weight:700; }
+
+/* (기존) 랭킹 뱃지 모양 보정 규칙은 유지해도 무방 */
+.best-cards .badge.bg-dark{ border-radius:.75rem; }

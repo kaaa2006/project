@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title>소셜 추가정보 입력</title>
+    <th:block layout:fragment="page_head">
+        <link rel="stylesheet" th:href="@{/css/pages/member/socialjoin.css}">
+    </th:block>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="container-xxl signup-page">
+        <div class="signup-wrap">
+            <h2 class="signup-title">추가 정보 입력</h2>
+            <div class="signup-step">비밀번호/이름/휴대폰/마케팅동의만 입력합니다.</div>
+
+            <div class="signup-card">
+                <form id="socialJoinForm" th:action="@{/member/socialjoin}" method="post" th:object="${form}" novalidate>
+                    <!-- CSRF -->
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                    <!-- 이메일(표시용) -->
+                    <div class="mb-3">
+                        <label class="form-label">이메일</label>
+                        <input type="text" class="form-control" th:value="${emailPrefill}" readonly>
+                    </div>
+
+                    <!-- 비밀번호 -->
+                    <div class="mb-3">
+                        <label class="form-label">• 비밀번호</label>
+                        <input id="pw" type="password" class="form-control"
+                               th:field="*{password}" minlength="8" maxlength="64" required
+                               placeholder="8자 이상 입력">
+                        <div id="pwHint" class="hint danger">비밀번호를 8자 이상 입력.</div>
+                        <div class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">비밀번호 오류</div>
+                    </div>
+
+                    <!-- 비밀번호 확인 -->
+                    <div class="mb-3">
+                        <label class="form-label">• 비밀번호 확인</label>
+                        <!-- ✅ 바인딩 추가 -->
+                        <input id="pw2" type="password" class="form-control"
+                               th:field="*{confirmPassword}"
+                               minlength="8" maxlength="64" required placeholder="한 번 더 입력">
+                        <div id="pw2Hint" class="hint danger">비밀번호를 확인해주세요.</div>
+
+                        <!-- ✅ confirmPassword 에러 표시 -->
+                        <div class="field-error"
+                             th:if="${#fields.hasErrors('confirmPassword')}"
+                             th:errors="*{confirmPassword}">확인 오류</div>
+
+                        <!-- ✅ @AssertTrue(passwordMatched) 에러 표시 -->
+                        <div class="field-error"
+                             th:if="${#fields.hasErrors('passwordMatched')}"
+                             th:errors="*{passwordMatched}">비밀번호가 일치하지 않습니다.</div>
+                    </div>
+
+                    <!-- 이름 -->
+                    <div class="mb-3">
+                        <label class="form-label">• 이름</label>
+                        <input type="text" class="form-control" th:field="*{memberName}" maxlength="20" required>
+                        <div class="field-error" th:if="${#fields.hasErrors('memberName')}" th:errors="*{memberName}">이름 오류</div>
+                    </div>
+
+                    <!-- 휴대폰 -->
+                    <div class="mb-3">
+                        <label class="form-label">• 휴대폰번호</label>
+                        <input type="text" class="form-control" th:field="*{phone}"
+                               placeholder="- 없이 입력" maxlength="13" inputmode="numeric" pattern="^[0-9]{9,13}$" required>
+                        <div class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">휴대폰 오류</div>
+                    </div>
+
+                    <!-- 마케팅 동의 -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" th:field="*{marketingYn}" id="mk">
+                        <label class="form-check-label" for="mk">[선택] 정보 수신 동의 (SMS, 이메일)</label>
+                    </div>
+
+                    <button class="btn btn-teal w-100" type="submit">완료</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="page_foot">
+    <script th:src="@{/js/pages/member/socialjoin.js}"></script>
+</th:block>
+</body>
+</html>

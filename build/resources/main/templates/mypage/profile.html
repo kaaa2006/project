@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}"
+      lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내 회원정보</title>
+
+    <th:block layout:fragment="page_head">
+        <!-- 공통 마이페이지 스타일 -->
+        <link rel="stylesheet" th:href="@{/css/pages/mypage.css}">
+        <!-- 프로필 전용 스타일 (아래 B 파일) -->
+        <link rel="stylesheet" th:href="@{/css/pages/mypage-profile.css}">
+    </th:block>
+
+    <th:block layout:fragment="page_foot">
+        <script th:src="@{/js/mypage.js}" defer></script>
+        <script th:src="@{/js/mypage-address-modal.js(v=${#dates.createNow().time})}" defer></script>
+    </th:block>
+
+</head>
+<body>
+<div layout:fragment="content"
+     class="mypage-wrap d-flex gap-4"
+     th:with="
+        name=${member != null ? member.memberName : '회원'},
+        grade=${member != null ? member.grade : 'BASIC'},
+        points=${member != null && member.points != null ? member.points : 0}
+     ">
+
+    <!-- ✅ 왼쪽 세로 카테고리바 (프래그먼트) -->
+    <aside th:replace="~{fragments/mypage-side :: side('profile')}"></aside>
+
+    <!-- ✅ 오른쪽 콘텐츠 -->
+    <main class="content flex-grow-1">
+        <!-- 페이지 헤더 -->
+        <div class="page-header pf-border-accent">
+            <div class="eyebrow">My Page</div>
+            <h2 class="page-title">내 회원정보</h2>
+            <div class="page-sub">계정 정보와 배송지를 확인/관리하세요.</div>
+        </div>
+
+        <!-- 회원 기본정보 카드 -->
+        <section class="card card-elevated">
+            <div class="card-title">
+                <i class="bi bi-person-badge"></i>
+                <span>회원 기본정보</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-sm align-middle table-profile">
+                    <tbody>
+                    <tr>
+                        <th>이메일</th>
+                        <td th:text="${member != null ? member.email : '-'}">email@example.com</td>
+                    </tr>
+                    <tr>
+                        <th>이름</th>
+                        <td th:text="${member != null ? member.memberName : '-'}">홍길동</td>
+                    </tr>
+                    <tr>
+                        <th>휴대폰</th>
+                        <td th:text="${member != null ? member.phone : '-'}">010-0000-0000</td>
+                    </tr>
+                    <tr>
+                        <th>등급</th>
+                        <td>
+                            <span class="chip chip-grade" th:text="${grade}">BASIC</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>포인트</th>
+                        <td class="text-em">
+                            <span class="accent" th:text="${#numbers.formatInteger(points, 1, 'COMMA')}">0</span> 원
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>마케팅 수신</th>
+                        <td>
+              <span class="pf-badge pf-badge-soft"
+                    th:text="${member != null && member.marketingYn} ? '동의' : '미동의'">미동의</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ✅ 액션: 초록(흰 글씨) '수정하기' 추가 + 홈으로(외곽선) 우측 정렬 -->
+            <div class="actions">
+                <!-- ✅ 수정하기: 수정 페이지로 -->
+                <a class="pf-btn pf-btn-primary" th:href="@{/mypage/profile/edit}">수정하기</a>
+                <!-- ✅ 홈으로: thymeleaf/main 으로 -->
+                <a class="pf-btn pf-btn-outline" th:href="@{/thymeleaf/main}">홈으로</a>
+            </div>
+        </section>
+
+        <!-- 배송지 -->
+        <section class="card pf-card">
+            <div class="pf-card-head">
+                <div class="pf-card-title"><i class="bi bi-geo-alt"></i> 배송지</div>
+                <div class="pf-card-actions">
+                    <button type="button" class="pf-btn pf-btn-primary" data-action="open-address-modal">배송지추가</button>
+                </div>
+            </div>
+
+            <!-- 빈 상태 문구 -->
+            <div class="text-muted" id="addrEmpty"
+                 th:if="${member == null or #lists.isEmpty(member.addresses)}">
+                등록된 주소가 없습니다.
+            </div>
+
+            <!-- 테이블: 항상 렌더 + 비어있으면 숨김 -->
+            <div class="table-responsive">
+                <table class="table table-sm align-middle pf-table" id="addrTable"
+                       th:classappend="${member == null or #lists.isEmpty(member.addresses)} ? ' d-none'">
+                    <thead>
+                    <tr>
+                        <th>별칭</th><th>우편번호</th><th>주소</th><th>상세주소</th><th>기본</th><th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody id="addrTbody">
+                    <tr th:each="addr : ${member.addresses}"
+                        th:attr="data-address-id=${addr.id},
+             data-alias=${addr.alias},
+             data-zip=${addr.zipCode},
+             data-addr1=${addr.addr1},
+             data-addr2=${addr.addr2},
+             data-default=${addr.isDefault}">
+                        <td th:text="${addr.alias} ?: '-'">집</td>
+                        <td th:text="${addr.zipCode}">00000</td>
+                        <td th:text="${addr.addr1}">서울시 …</td>
+                        <td th:text="${addr.addr2} ?: '-'">101동 101호</td>
+                        <td>
+                            <span class="pf-badge pf-badge-primary" th:if="${addr.isDefault}">기본</span>
+                            <span class="text-muted" th:if="${!addr.isDefault}">-</span>
+                        </td>
+                        <td class="text-end">
+                            <button type="button" class="pf-btn pf-btn-outline pf-btn-xs"
+                                    data-action="edit-address">수정</button>
+                            <button type="button" class="pf-btn pf-btn-danger pf-btn-xs"
+                                    data-action="delete-address">삭제</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 모달 -->
+        <div class="pf-modal" id="addrModal" aria-hidden="true">
+            <div class="pf-modal-backdrop" data-action="close-address-modal"></div>
+            <div class="pf-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="addrModalTitle">
+                <div class="pf-modal-head">
+                    <h3 id="addrModalTitle">배송지 추가</h3>
+                    <button type="button" class="pf-modal-close" data-action="close-address-modal" aria-label="닫기">×</button>
+                </div>
+
+                <form id="addrForm" class="pf-modal-body" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">별칭(선택)</label>
+                            <input type="text" class="form-control pf-input" name="alias" placeholder="집/회사 등" maxlength="20">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">우편번호</label>
+                            <input type="text" class="form-control pf-input" name="zipCode" placeholder="00000" inputmode="numeric" maxlength="5" required>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="button" class="pf-btn pf-btn-outline w-100" id="btnFindZip">주소검색</button>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">주소</label>
+                            <input type="text" class="form-control pf-input" name="addr1" placeholder="도로명 주소" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">상세주소(선택)</label>
+                            <input type="text" class="form-control pf-input" name="addr2" placeholder="동/호수 등" maxlength="50">
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isDefault" name="isDefault">
+                                <label class="form-check-label" for="isDefault">기본 배송지로 설정</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pf-modal-foot">
+                        <button type="button" class="pf-btn pf-btn-outline" data-action="close-address-modal">취소</button>
+                        <button type="submit" class="pf-btn pf-btn-primary" id="addrSubmitBtn">추가하기</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

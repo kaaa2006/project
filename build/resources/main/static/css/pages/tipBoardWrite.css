@@ -1,0 +1,161 @@
+/* =========================================================
+   TIP Board — Write (Register)
+   - Scope: .tip-write
+   - Design only; no behavior changes
+   - Concept color: var(--brand-teal, #00DCA0)
+   ========================================================= */
+
+:root{
+    --tw-brand:  var(--brand-teal, #00DCA0);
+    --tw-ink:    #0b2413;
+    --tw-muted:  #6b7d73;
+    --tw-surface:#ffffff;
+    --tw-border: #e6eeea;
+    --tw-bg:     #f7faf8;
+    --tw-radius: 14px;
+    --tw-shadow: 0 8px 24px rgba(17,24,39,.06);
+}
+
+.tip-write{ color: var(--tw-ink); background: var(--tw-bg); }
+
+.tip-write .detail-container{
+    max-width: 1000px;
+    margin: 24px auto;
+    padding: 0 12px 28px;
+}
+
+/* ===== Title ===== */
+.tip-write .page-title{
+    position: relative;
+    margin: 6px 0 14px;
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+    color: #12251b;
+}
+.tip-write .page-title::before{
+    content:"";
+    position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--tw-brand);
+}
+
+/* ===== Form card ===== */
+.tip-write .tip-form{
+    border:1px solid var(--tw-border);
+    border-radius: var(--tw-radius);
+    background: var(--tw-surface);
+    box-shadow: var(--tw-shadow);
+    padding: 18px;
+}
+
+.tip-write .field-row{ margin-bottom: 14px; }
+.tip-write .field-row:last-child{ margin-bottom: 0; }
+
+.tip-write .field-row label{
+    display:block;
+    margin-bottom: 6px;
+    font-weight: 800;
+    color:#2a3a33;
+}
+
+/* Inputs */
+.tip-write input[type="text"],
+.tip-write input[type="file"],
+.tip-write textarea{
+    width: 100%;
+    border:1px solid var(--tw-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    background:#fff;
+    box-shadow: inset 0 1px 0 rgba(16,24,40,.02);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+    font-size: 1rem;
+}
+.tip-write textarea{ min-height: 260px; resize: vertical; }
+
+.tip-write input:focus,
+.tip-write textarea:focus{
+    outline: none;
+    border-color: var(--tw-brand);
+    box-shadow: 0 0 0 4px rgba(0,220,160,.18);
+}
+
+.tip-write ::placeholder{ color:#a2b2ab; }
+
+.tip-write .help{
+    color: var(--tw-muted);
+    font-size: .92rem;
+    margin-top: 6px;
+}
+
+/* Image preview */
+.tip-write .image-preview-wrap{
+    margin-top: 10px;
+    border:1px dashed var(--tw-border);
+    background:#fbfdfc;
+    border-radius: 12px;
+    padding: 12px;
+}
+.tip-write #image-preview{
+    display:block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* ===== Actions ===== */
+.tip-write .form-buttons{
+    display:flex; gap: 8px;
+    justify-content: flex-end; align-items: center;
+    margin-top: 8px;
+}
+
+.tip-write .btn-submit,
+.tip-write .btn-cancel{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 44px; padding: 0 16px;
+    border-radius: 12px; border: 2px solid transparent;
+    font-weight: 800; text-decoration: none !important;
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s, filter .15s;
+}
+
+/* Submit: 브랜드 단색 */
+.tip-write .btn-submit{
+    background: var(--tw-brand);
+    color:#fff;
+    border-color: var(--tw-brand);
+    box-shadow: var(--tw-shadow);
+}
+.tip-write .btn-submit:hover{ filter: brightness(.97); }
+
+/* Cancel: 아웃라인 */
+.tip-write .btn-cancel{
+    background:#fff;
+    color: var(--tw-brand);
+    border-color: var(--tw-brand);
+}
+.tip-write .btn-cancel:hover{
+    background: var(--tw-brand);
+    color:#fff;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 767.98px){
+    .tip-write .detail-container{ padding: 0 10px 22px; }
+    .tip-write .form-buttons{ flex-direction: column-reverse; align-items: stretch; }
+    .tip-write .btn-submit, .tip-write .btn-cancel{ width: 100%; }
+}
+
+/* ===== Bootstrap coexistence ===== */
+.tip-write .btn{ line-height: 1; } /* 버튼 텍스트 세로정렬 안정화 */
+
+/* 버튼 텍스트만 중앙 배치 (아이콘 제거 후 최종 정렬) */
+.tip-write .btn-submit,
+.tip-write .btn-cancel{
+    display: inline-flex;         /* 이미 있으면 OK */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1;               /* 세로 정렬 안정화 */
+    gap: 0;                       /* 아이콘 여백 제거 안전장치 */
+}

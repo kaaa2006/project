@@ -1,0 +1,245 @@
+/* =========================================================
+   TIP Board — List (Design only)
+   - Scope: this page only
+   - Concept color: var(--brand-teal, #00DCA0)
+   - No behavior changes
+   ========================================================= */
+
+:root{
+    --tip-brand: var(--brand-teal, #00DCA0);
+    --tip-ink:   #0b2413;
+    --tip-muted: #6b7d73;
+    --tip-surface:#ffffff;
+    --tip-border:#e6eeea;
+    --tip-bg:    #f7faf8;
+    --tip-radius:14px;
+    --tip-shadow:0 8px 24px rgba(17,24,39,.06);
+    --tip-shadow-lg:0 16px 36px rgba(17,24,39,.10);
+}
+
+/* Page base */
+body{ background: var(--tip-bg); }
+.list-container{
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 12px 24px;
+    color: var(--tip-ink);
+}
+
+/* ===== Page header ===== */
+.list-container .header{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom: 12px;
+}
+.list-container .header h1{
+    position: relative;
+    margin: 0;
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+}
+.list-container .header h1::before{
+    content:"";
+    position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--tip-brand);
+}
+
+/* ===== Write button ===== */
+.btn-register{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 44px; padding: 0 16px;
+    border-radius: 12px; border: 2px solid var(--tip-brand);
+    background: var(--tip-brand); color:#fff !important;
+    font-weight: 800; text-decoration: none !important;
+    box-shadow: var(--tip-shadow);
+    transition: filter .15s, transform .15s, box-shadow .15s;
+    margin: 8px 0 16px auto;
+}
+.btn-register:hover{ filter: brightness(.97); transform: translateY(-1px); }
+
+/* ===== Table-like list ===== */
+.tip-table{
+    list-style: none; margin: 0; padding: 0;
+    border: 1px solid var(--tip-border);
+    border-radius: var(--tip-radius);
+    background: var(--tip-surface);
+    box-shadow: var(--tip-shadow);
+    overflow: hidden; /* rounded top for header */
+}
+
+/* Grid columns (header & items share the same grid) */
+.tip-table .tip-header,
+.tip-table .tip-item{
+    display: grid;
+    grid-template-columns: 90px 1fr 140px 90px 90px 200px;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+}
+
+/* Header row */
+.tip-table .tip-header{
+    background: #f1f6f4;
+    color: #2e3a34;
+    font-weight: 800;
+    border-bottom: 1px solid var(--tip-border);
+}
+
+/* Data rows */
+.tip-table .tip-item{
+    background: #fff;
+    transition: background .15s, transform .15s, border-color .15s;
+    border-bottom: 1px solid var(--tip-border);
+}
+.tip-table .tip-item:last-child{ border-bottom: 0; }
+
+.tip-table .tip-item:hover{
+    background: #fbfdfc;
+    transform: translateY(-1px);
+}
+
+/* Cells */
+.tip-table .col-no{
+    text-align: center;
+    color:#4b5c54; font-weight: 700;
+}
+.tip-table .col-title{
+    min-width: 0; /* for ellipsis */
+    font-weight: 700; color:#12251b;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.tip-table .col-title a{
+    color: inherit; text-decoration: none;
+}
+.tip-table .col-title a:hover{ text-decoration: underline; }
+
+.tip-table .col-writer{ color:#2b3c34; font-weight:700; }
+.tip-table .col-views,
+.tip-table .col-like{
+    text-align: center; color:#4b5c54; font-weight:700;
+}
+.tip-table .col-date{
+    color: var(--tip-muted);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap; /* 시간까지 한 줄로 보이게 */
+}
+
+/* Like pill (if JS wraps the number later, keep safe defaults) */
+.tip-table .col-like .pill{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width: 44px; height: 28px; padding: 0 10px;
+    border-radius: 999px; background: #f0faf6; color:#0f5132; font-weight:800;
+}
+
+/* Empty state */
+.tip-empty,
+#tip-list:empty::after{
+    content: "등록된 TIP이 없습니다.";
+    display:block; padding: 40px 16px; text-align:center;
+    color: #9aa8a1;
+}
+
+/* ===== Pagination (이벤트 리스트와 동일 톤) ===== */
+.list-container .pagination-wrap{ margin-top: 20px; }
+.list-container .pagination{ gap: 6px; }
+
+.list-container .page-item .page-link,
+.list-container .pagination li > a,
+.list-container .pagination li > button{
+    border: none;
+    background: #fff;
+    color:#334155;
+    font-weight:700;
+    min-width: 40px;
+    height: 40px;
+    border-radius: .75rem;
+    box-shadow: 0 1px 0 rgba(16,24,40,.06);
+    display:flex; align-items:center; justify-content:center;
+}
+
+.list-container .page-item .page-link:hover,
+.list-container .pagination li > a:hover,
+.list-container .pagination li > button:hover{
+    background: rgba(0,220,160,.08);
+    color: var(--tip-brand, #00DCA0);
+}
+
+.list-container .page-item.active .page-link,
+.list-container .pagination li.active > a,
+.list-container .pagination li.active > button{
+    background: var(--tip-brand, #00DCA0);
+    color:#fff;
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+}
+
+.list-container .page-item.disabled .page-link{
+    background:#f1f5f9; color:#94a3b8; cursor:not-allowed;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1199.98px){
+    .tip-table .tip-header,
+    .tip-table .tip-item{
+        grid-template-columns: 70px 1fr 120px 80px 80px 150px;
+    }
+}
+@media (max-width: 991.98px){
+    .tip-table .tip-header,
+    .tip-table .tip-item{
+        grid-template-columns: 70px 1fr 110px 80px 0px 140px; /* 좋아요 폭 축소 */
+    }
+    .tip-table .col-like{ display:none; } /* 좋아요 컬럼 숨김 (모바일 가독성) */
+}
+@media (max-width: 767.98px){
+    .btn-register{ width: 100%; }
+    .tip-table .tip-header,
+    .tip-table .tip-item{
+        grid-template-columns: 60px 1fr 90px 80px; /* 번호 | 제목 | 작성자 | 조회 */
+    }
+    .tip-table .col-date{ display:none; }
+}
+@media (max-width: 575.98px){
+    .list-container{ padding: 0 8px 18px; }
+    .tip-table .tip-header,
+    .tip-table .tip-item{
+        grid-template-columns: 52px 1fr 80px; /* 번호 | 제목 | 작성자 */
+    }
+    .tip-table .col-views{ display:none; }
+}
+
+/* ===== Small polish ===== */
+.tip-table .tip-item:active{ transform: translateY(0); }
+.tip-table .tip-item .badge{ font-weight:800; }
+
+/* Keep Bootstrap coexistence sane */
+.btn{ line-height: 1; } /* vertical centering */
+
+/* ===== Pagination (공용 pagination.js 대응: .page-btn) ===== */
+.list-container .pagination .page-btn{
+    border: none;
+    background: #fff;
+    color:#334155;
+    font-weight:700;
+    min-width: 40px;
+    height: 40px;
+    border-radius: .75rem;
+    box-shadow: 0 1px 0 rgba(16,24,40,.06);
+    padding: 0 12px;
+    cursor: pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+}
+.list-container .pagination .page-btn:hover:not(.active):not(.disabled){
+    background: rgba(0,220,160,.08);
+    color: var(--tip-brand, #00DCA0);
+}
+.list-container .pagination .page-btn.active{
+    background: var(--tip-brand, #00DCA0);
+    color:#fff;
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+    cursor: default;
+}
+.list-container .pagination .page-btn.disabled{
+    background:#f1f5f9; color:#94a3b8;
+    cursor:not-allowed;
+}

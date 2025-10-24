@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 문의 목록</title>
+
+    <!-- 전역 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/tokens.css?v=2}">
+    <link rel="stylesheet" th:href="@{/css/components.css?v=2}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9.4.1/swiper-bundle.min.css">
+    <link rel="stylesheet" th:href="@{/css/header.css?v=20250821}">
+
+    <!-- ✅ 페이지 전용 CSS (디자인만 적용 / JS 영향 없음) -->
+    <link rel="stylesheet" th:href="@{/css/pages/inquiryUser.css?v=1}">
+
+    <!-- Favicon -->
+    <link rel="icon" th:href="@{/favicon.ico}">
+
+    <!-- CSRF for AJAX (user.js에서 사용) -->
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+<body class="inquiry-user-page">
+
+<!-- 공통 헤더 -->
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="list-container">
+    <!-- 상단 헤더 -->
+    <div class="header d-flex justify-content-between align-items-center">
+        <h1>내 1:1 문의</h1>
+        <!-- ✅ ID 유지 (user.js에서 클릭 토글) -->
+        <button id="openInquiryFormBtn" type="button" class="btn-register">문의 작성</button>
+    </div>
+
+    <!-- ✅ 작성 폼 (처음 숨김, ID/구조 유지) -->
+    <section id="inquiryFormContainer" class="card inquiry-card mb-4" style="display:none;">
+        <div class="card-body">
+            <h5 class="card-title">문의 작성</h5>
+            <form id="inquiryForm" novalidate>
+                <div class="mb-3">
+                    <input type="text" id="title" class="form-control" placeholder="제목" required>
+                </div>
+                <div class="mb-3">
+                    <textarea id="content" class="form-control" rows="4" placeholder="내용" required></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn-submit">작성</button>
+                    <button type="button" id="cancelInquiryBtn" class="btn-cancel">취소</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- 문의 목록 -->
+    <section id="inquiryList" class="inquiry-list-wrap">
+        <div class="list-table-wrap">
+            <table class="table inquiry-table">
+                <!-- ✅ 고정 폭 -->
+                <colgroup>
+                    <col style="width:100px;">   <!-- 번호 -->
+                    <col style="width:auto;">    <!-- 제목 -->
+                    <col style="width:160px;">   <!-- 작성자 -->
+                    <col style="width:180px;">   <!-- 문의일 -->
+                    <col style="width:140px;">   <!-- 상태 -->
+                </colgroup>
+
+                <!-- ✅ 테이블 헤더: 여기로 이동 -->
+                <thead>
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">문의일</th>
+                    <th scope="col">상태</th>
+                </tr>
+                </thead>
+
+                <tbody id="inquiryListTableBody"><!-- user.js가 채움 --></tbody>
+            </table>
+
+            <div id="inquiryEmpty" class="inquiry-empty d-none">등록된 문의가 없습니다.</div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ✅ 기존 JS 그대로 사용 -->
+<script th:src="@{/js/user.js}" defer></script>
+
+<!-- 공통 푸터 -->
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<!-- 전역 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9.4.1/swiper-bundle.min.js"></script>
+<script th:src="@{/js/main.js}" defer></script>
+</body>
+</html>

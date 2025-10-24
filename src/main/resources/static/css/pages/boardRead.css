@@ -1,0 +1,140 @@
+/* =========================================================
+   Event Board — Read (Detail)
+   - Scope: .board-read
+   - Concept color follows var(--brand-teal, #00DCA0)
+   - Design only; no behavior changes
+   ========================================================= */
+
+:root{
+    --br-brand: var(--brand-teal, #00DCA0);
+    --br-ink:   #0b2413;
+    --br-muted: #6b7d73;
+    --br-surface:#ffffff;
+    --br-border:#e6eeea;
+    --br-bg:    #f7faf8;
+    --br-radius:16px;
+    --br-shadow:0 8px 24px rgba(17,24,39,.06);
+    --br-shadow-lg:0 16px 36px rgba(17,24,39,.10);
+}
+
+/* page base */
+.board-read{ color: var(--br-ink); }
+.board-read .container-xxl{ background: transparent; }
+
+/* ===== Top ===== */
+.board-read .br-head{ margin: 6px 0 16px; }
+.board-read .br-title{
+    position: relative;
+    margin: 0;
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+}
+.board-read .br-title::before{
+    content:"";
+    position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--br-brand);
+}
+
+/* ===== Buttons (shared) ===== */
+.board-read .br-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    height:44px; padding:0 16px; border-radius:12px;
+    font-weight:800; text-decoration:none !important; border:2px solid transparent;
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+    box-shadow: var(--br-shadow);
+}
+.board-read .br-btn-primary{
+    background: var(--br-brand); color:#fff; border-color: var(--br-brand);
+}
+.board-read .br-btn-primary:hover{ filter: brightness(.97); }
+.board-read .br-btn-outline{
+    background:#fff; color: var(--br-brand); border-color: var(--br-brand);
+}
+.board-read .br-btn-outline:hover{ background: var(--br-brand); color:#fff; }
+.board-read .br-btn-danger{
+    background:#fff; color:#b42318; border-color:#ffd1cc;
+}
+.board-read .br-btn-danger:hover{
+    background:#ffeceb; color:#8f1c14; border-color:#ffc2bb;
+}
+
+/* action group */
+.board-read .admin-actions{
+    display:flex; gap:10px; justify-content:flex-end; margin-top:18px;
+}
+.board-read .admin-actions .inline{ display:inline; }
+
+/* ===== Card ===== */
+.board-read .br-card{
+    border:1px solid var(--br-border);
+    border-radius: var(--br-radius);
+    background: var(--br-surface);
+    box-shadow: var(--br-shadow);
+    padding: 18px 18px 20px;
+}
+
+/* ===== Title & Meta ===== */
+.board-read .event-title{
+    margin: 0 0 8px;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -.2px;
+    color: #12251b;
+    word-break: keep-all;
+}
+.board-read .event-meta{
+    display:flex; align-items:center; flex-wrap:wrap; gap:8px;
+    color: var(--br-muted);
+    font-size: .94rem;
+    margin-bottom: 12px;
+}
+.board-read .event-meta .meta-item strong{ color:#2b3c34; font-weight:800; }
+.board-read .event-meta .meta-dot{ color:#a7b5ae; }
+
+/* ===== Images ===== */
+.board-read .board-images{ margin: 14px 0 12px; }
+.board-read .img-stack{
+    border:1px solid var(--br-border);
+    border-radius: 12px;
+    overflow:hidden; background:#f2f5f3;
+    box-shadow: 0 1px 0 rgba(16,24,40,.06);
+    margin-bottom: 12px;
+}
+.board-read .board-img{
+    display:block; width:100%; height:auto; object-fit:cover;
+}
+
+/* ===== Content (typography) ===== */
+.board-read .typo{
+    color:#12251b;
+    font-size: 1rem;
+    line-height: 1.75;
+    word-break: keep-all;
+}
+.board-read .typo h1,
+.board-read .typo h2,
+.board-read .typo h3,
+.board-read .typo h4,
+.board-read .typo h5,
+.board-read .typo h6{
+    margin: 1.2em 0 .6em; font-weight:800; line-height:1.35;
+}
+.board-read .typo p{ margin: .65em 0; }
+.board-read .typo a{ color: var(--br-brand); text-decoration: underline; }
+.board-read .typo ul, .board-read .typo ol{ padding-left: 1.2em; margin: .6em 0; }
+.board-read .typo img{ max-width:100%; height:auto; border-radius: 8px; }
+
+/* ===== Spacing harmony ===== */
+.board-read .event-detail > * + *{ margin-top: 12px; }
+
+/* ===== Responsive ===== */
+@media (max-width: 767.98px){
+    .board-read .br-head{
+        flex-direction: column; align-items: flex-start !important; gap:10px;
+    }
+    .board-read .br-btn{ height:42px; }
+}
+
+/* ===== Safe overrides (Bootstrap coexist) ===== */
+.board-read .btn{ line-height: 1; }  /* 상하 치우침 방지 */

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+  <meta charset="UTF-8">
+  <title layout:fragment="page_title">FAQ 목록</title>
+
+  <th:block layout:fragment="page_head">
+    <!-- ✅ 팁게시판 톤/레이아웃과 동일 -->
+    <link rel="stylesheet" th:href="@{/css/pages/faqBoard.css?v=2}">
+  </th:block>
+</head>
+
+<body>
+<main layout:fragment="content" class="list-container">
+
+  <!-- 상단 헤더 -->
+  <div class="header">
+    <h1>FAQ 게시판</h1>
+    <div sec:authorize="hasRole('ADMIN')">
+      <a class="btn-register"
+         th:href="@{/board/register(boardType=${boardType})}">
+        FAQ 등록
+      </a>
+    </div>
+  </div>
+
+  <!-- 목록 (UL 그리드) -->
+  <ul class="faq-table">
+    <li class="faq-header">
+      <span class="col-no">번호</span>
+      <span class="col-title">제목</span>
+      <span class="col-writer">작성자</span>
+      <span class="col-views">조회수</span>
+      <span class="col-date">등록일</span>
+    </li>
+
+    <!-- 데이터 -->
+    <li class="faq-item" th:each="dto : ${responseDTO.dtoList}">
+      <span class="col-no" th:text="${dto.bno}">1</span>
+
+      <span class="col-title">
+        <a th:href="@{'/board/read'(bno=${dto.bno}, boardType=${dto.boardType.name()})}"
+           th:text="${dto.title}">제목</a>
+      </span>
+
+      <span class="col-writer" th:text="${dto.writer}">관리자</span>
+      <span class="col-views" th:text="${dto.viewCount}">0</span>
+      <span class="col-date"
+            th:text="${dto.regTime != null ? #temporals.format(dto.regTime,'yyyy-MM-dd a h:mm') : ''}">
+        2025-09-29 오후 10:30
+      </span>
+    </li>
+
+    <!-- 빈 상태 -->
+    <li class="faq-empty" th:if="${#lists.isEmpty(responseDTO.dtoList)}">
+      등록된 FAQ가 없습니다.
+    </li>
+  </ul>
+
+  <!-- 페이지네이션 (서버 사이드, 심플 버전) -->
+  <nav th:if="${responseDTO != null and responseDTO.totalPage > 1}" class="pagination-wrap">
+    <ul class="pagination justify-content-center flex-wrap brand">
+
+      <!-- 이전 -->
+      <li class="page-item" th:classappend="${responseDTO.page == 1} ? ' disabled'">
+        <a class="page-link"
+           th:href="@{'/board/list'(boardType=${boardType}, page=${responseDTO.page - 1}, size=${responseDTO.size})}">
+          이전
+        </a>
+      </li>
+
+      <!-- 번호 -->
+      <li class="page-item"
+          th:each="p : ${responseDTO.pageList}"
+          th:classappend="${p == responseDTO.page} ? ' active'">
+        <a class="page-link"
+           th:text="${p}"
+           th:href="@{'/board/list'(boardType=${boardType}, page=${p}, size=${responseDTO.size})}">
+          1
+        </a>
+      </li>
+
+      <!-- 다음 -->
+      <li class="page-item" th:classappend="${responseDTO.page == responseDTO.totalPage} ? ' disabled'">
+        <a class="page-link"
+           th:href="@{'/board/list'(boardType=${boardType}, page=${responseDTO.page + 1}, size=${responseDTO.size})}">
+          다음
+        </a>
+      </li>
+
+    </ul>
+  </nav>
+
+</main>
+
+<th:block layout:fragment="page_foot">
+  <!-- FAQ는 서버사이드 페이징이라 전용 JS 필요없음. 필요시 아래 주석 해제
+  <script th:src="@{/js/faqBoard.js}"></script>
+  -->
+</th:block>
+</body>
+</html>

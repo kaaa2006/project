@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <meta charset="UTF-8">
+    <title layout:fragment="page_title">게시글 수정</title>
+
+    <th:block layout:fragment="page_head">
+        <!-- 전역/페이지 CSS -->
+        <link rel="stylesheet" th:href="@{/css/tokens.css?v=2}">
+        <link rel="stylesheet" th:href="@{/css/components.css?v=2}">
+        <link rel="stylesheet" th:href="@{/css/header.css?v=20250821}">
+        <link rel="stylesheet" th:href="@{/css/footer.css?v=20250821}">
+        <link rel="stylesheet" th:href="@{/css/pages/board.css?v=fix1}"/>
+
+        <!-- CSRF -->
+        <meta name="_csrf" th:content="${_csrf.token}">
+        <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+        <!-- (선택) 썸네일 작은 스타일이 필요하면 board.css에 옮겨도 됨 -->
+        <style>
+            .bm-wrap{display:flex;gap:8px;flex-wrap:wrap}
+            .bm-thumb{position:relative;width:120px;height:90px;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden}
+            .bm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+            .bm-remove-old,.bm-remove-new{
+                position:absolute;top:4px;right:4px;border:none;background:rgba(0,0,0,.55);color:#fff;
+                width:28px;height:28px;border-radius:999px;cursor:pointer;line-height:1
+            }
+            .bm-removed{opacity:.45;filter:grayscale(100%)}
+        </style>
+    </th:block>
+</head>
+
+<body>
+<main layout:fragment="content" class="container py-4 board-write">
+    <h1 class="bw-page-title">글 수정</h1>
+
+    <section class="bw-card">
+        <form id="modifyForm"
+              th:action="@{/board/modify}"
+              th:object="${boardDTO}"
+              method="post"
+              enctype="multipart/form-data"
+              novalidate>
+
+            <!-- CSRF -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <!-- PK / 타입 -->
+            <input type="hidden" th:field="*{bno}">
+            <input type="hidden" th:field="*{boardType}">
+
+            <!-- 삭제 히든필드 보관소 -->
+            <div id="hiddenDeletes"></div>
+
+            <div class="bw-grid">
+                <!-- 제목 -->
+                <div class="bw-span-2">
+                    <label for="titleInput">제목:</label>
+                    <input id="titleInput" type="text" th:field="*{title}" required>
+                </div>
+
+                <!-- 내용 -->
+                <div class="bw-span-2">
+                    <label for="contentInput">내용:</label>
+                    <textarea id="contentInput" th:field="*{content}" required></textarea>
+                </div>
+
+                <!-- 기존 첨부 미리보기 -->
+                <div class="bw-row bw-span-2"
+                     th:if="${boardDTO.fileNames != null and !#lists.isEmpty(boardDTO.fileNames)}">
+                    <label>현재 첨부:</label>
+                    <div class="bm-wrap" id="existingWrap">
+                        <div class="bm-thumb"
+                             th:each="img : ${boardDTO.fileNames}"
+                             th:attr="data-filename=${img}">
+                            <img th:src="${img}" alt="첨부">
+                            <button type="button" class="bm-remove-old" title="삭제" aria-label="삭제">&times;</button>
+                            <!-- 서버로 '현재 유지' 리스트를 보낼 경우(선호) -->
+                            <input type="hidden" name="keptFileNames" th:value="${img}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 새 첨부파일 -->
+                <div id="fileUploadDiv" class="bw-row bw-span-2">
+                    <label for="files">첨부파일:</label>
+                    <!-- 등록 페이지와 동일한 필드명 유지 -->
+                    <input id="files" type="file" th:field="*{files}" multiple accept="image/*">
+                    <div id="newPreview" class="bm-wrap mt-2" aria-live="polite"></div>
+                </div>
+
+                <!-- 액션 -->
+                <div class="bw-actions bw-span-2">
+                    <a class="pf-btn pf-btn-outline"
+                       th:href="@{/board/list(boardType=${boardDTO.boardType != null ? boardDTO.boardType.name() : 'NOTICE'})}">
+                        목록
+                    </a>
+                    <button type="submit" class="pf-btn pf-btn-primary">수정</button>
+                </div>
+            </div>
+        </form>
+    </section>
+</main>
+
+<th:block layout:fragment="page_foot">
+    <!-- 기존 공용 (register 전용 로직이니 modify에 영향 없음) -->
+    <script th:src="@{/js/board.js}" defer></script>
+
+</th:block>
+</body>
+</html>

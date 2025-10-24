@@ -1,0 +1,192 @@
+/* ================================================
+   Inquiry User — List (Tip board 스타일)
+   디자인만 커스텀, 기존 JS/DOM ID에 영향 없음
+   ================================================ */
+:root{
+    --iu-brand: var(--brand-teal, #00DCA0);
+    --iu-ink:   #0b2413;
+    --iu-muted: #6b7d73;
+    --iu-surface:#ffffff;
+    --iu-border:#e6eeea;
+    --iu-bg:    #f7faf8;
+    --iu-radius:14px;
+    --iu-shadow:0 8px 24px rgba(17,24,39,.06);
+}
+
+body.inquiry-user-page{ background: var(--iu-bg); color: var(--iu-ink); }
+.list-container{ max-width: 1200px; margin: 24px auto; padding: 0 12px 24px; }
+
+/* 상단 헤더 */
+.header h1{
+    position: relative; margin: 0; padding-left: 14px;
+    font-weight: 800; letter-spacing: -.2px; color:#12251b;
+}
+.header h1::before{
+    content:""; position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--iu-brand);
+}
+
+/* 문의 작성 버튼 */
+.btn-register{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 44px; padding: 0 16px;
+    border-radius: 12px; border: 2px solid var(--iu-brand);
+    background: var(--iu-brand); color:#fff !important;
+    font-weight: 800; text-decoration: none !important;
+    box-shadow: var(--iu-shadow);
+    transition: filter .15s, transform .15s;
+}
+.btn-register:hover{ filter: brightness(.97); transform: translateY(-1px); }
+
+/* 작성 폼 카드 */
+.inquiry-card{
+    border:1px solid var(--iu-border);
+    border-radius: var(--iu-radius);
+    background: var(--iu-surface);
+    box-shadow: var(--iu-shadow);
+}
+.inquiry-card .card-title{ font-weight: 800; }
+.inquiry-card .form-buttons{
+    display:flex; gap:8px; justify-content:flex-end; margin-top:8px;
+}
+.btn-submit, .btn-cancel{
+    display:inline-flex; align-items:center; justify-content:center;
+    height:40px; padding:0 14px; border-radius:12px; font-weight:800;
+    border:2px solid transparent; text-decoration:none !important; line-height:1;
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+}
+.btn-submit{ background: var(--iu-brand); color:#fff; border-color: var(--iu-brand); }
+.btn-submit:hover{ filter: brightness(.97); }
+.btn-cancel{ background:#fff; color: var(--iu-brand); border-color: var(--iu-brand); }
+.btn-cancel:hover{ background: var(--iu-brand); color:#fff; }
+
+/* 리스트 헤더 바 (그리드 형태 / 표 상단 안내) */
+.inquiry-list-head{
+    display:grid; grid-template-columns: 100px 1fr 160px 180px 140px;
+    gap:8px; padding: 12px 16px; margin: 0 0 8px;
+    border:1px solid var(--iu-border); border-radius:12px;
+    background:#f1f6f4; color:#2e3a34; font-weight:800;
+}
+
+/* 테이블 래퍼 */
+.list-table-wrap{
+    border:1px solid var(--iu-border); border-radius: var(--iu-radius);
+    background:#fff; box-shadow: var(--iu-shadow); overflow: hidden;
+}
+
+/* 테이블 스타일 */
+.inquiry-table{ margin:0; }
+.inquiry-table tbody tr{
+    border-bottom:1px solid var(--iu-border);
+    transition: background .15s, transform .15s;
+}
+.inquiry-table tbody tr:hover{ background:#fbfdfc; transform: translateY(-1px); }
+.inquiry-table td{ vertical-align: middle; }
+
+/* 상태(5번째 열) 기본 칩 스타일 — JS는 텍스트만 넣으므로 공통 톤만 */
+.inquiry-table tbody td:nth-child(5){
+    font-weight: 800; color:#0f5132;
+    background: #e6fff7; border-radius:999px; text-align:center;
+    min-width: 96px; padding: 6px 10px;
+}
+
+/* 빈 상태 */
+.inquiry-empty{
+    padding: 28px 16px; text-align:center; color:#9aa8a1;
+}
+
+/* 반응형 */
+@media (max-width: 1199.98px){
+    .inquiry-list-head{ grid-template-columns: 80px 1fr 140px 160px 120px; }
+}
+@media (max-width: 991.98px){
+    .inquiry-list-head{ grid-template-columns: 70px 1fr 0px 160px 120px; }
+    .inquiry-list-head .col-writer{ display:none; }
+    .inquiry-table tbody td:nth-child(3){ display:none; } /* 작성자 숨김 */
+}
+@media (max-width: 767.98px){
+    .btn-register{ width: 100%; }
+    .inquiry-list-head{ grid-template-columns: 60px 1fr 140px; }
+    .inquiry-list-head .col-writer, .inquiry-list-head .col-status{ display:none; }
+    .inquiry-table tbody td:nth-child(3),
+    .inquiry-table tbody td:nth-child(5){ display:none; } /* 작성자/상태 숨김 */
+}
+@media (max-width: 575.98px){
+    .list-container{ padding: 0 8px 18px; }
+    .inquiry-list-head{ grid-template-columns: 52px 1fr; }
+    .inquiry-list-head .col-date{ display:none; }
+    .inquiry-table tbody td:nth-child(4){ display:none; } /* 문의일 숨김 */
+}
+/* ===== 테이블 정렬 보장 ===== */
+.inquiry-table{
+    width:100%;
+    table-layout: fixed;      /* 헤더/바디 열 너비 일치 */
+    margin:0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.inquiry-table thead th,
+.inquiry-table tbody td{
+    padding: 12px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--iu-border);
+}
+
+/* 헤더 톤 (팁게시판 헤더 바 느낌) */
+.inquiry-table thead th{
+    background:#f1f6f4;
+    color:#2e3a34;
+    font-weight:800;
+}
+.list-table-wrap{
+    border:1px solid var(--iu-border);
+    border-radius: var(--iu-radius);
+    background:#fff;
+    box-shadow: var(--iu-shadow);
+    overflow:hidden;          /* 둥근 모서리 유지 */
+}
+
+/* 행 호버 */
+.inquiry-table tbody tr{
+    transition: background .15s, transform .15s;
+}
+.inquiry-table tbody tr:hover{
+    background:#fbfdfc;
+    transform: translateY(-1px);
+}
+
+/* 열 정렬 */
+.inquiry-table th:nth-child(1),
+.inquiry-table td:nth-child(1){ text-align:center; } /* 번호 */
+.inquiry-table th:nth-child(5),
+.inquiry-table td:nth-child(5){ text-align:center; } /* 상태 */
+
+/* 상태 칩(본문 셀만) */
+.inquiry-table tbody td:nth-child(5){
+    font-weight:800; color:#0f5132;
+    background:#e6fff7;
+    border-radius:999px;
+    min-width:96px;
+}
+
+/* ===== 반응형: thead와 tbody 동시 숨김 (열 동기화) ===== */
+/* md- 다운: 작성자 숨김 */
+@media (max-width: 991.98px){
+    .inquiry-table thead th:nth-child(3),
+    .inquiry-table tbody td:nth-child(3){ display:none; }
+}
+
+/* sm- 다운: 상태 숨김 + 작성 버튼 100% */
+@media (max-width: 767.98px){
+    .btn-register{ width:100%; }
+    .inquiry-table thead th:nth-child(5),
+    .inquiry-table tbody td:nth-child(5){ display:none; }
+}
+
+/* xs- 다운: 문의일 숨김 */
+@media (max-width: 575.98px){
+    .list-container{ padding:0 8px 18px; }
+    .inquiry-table thead th:nth-child(4),
+    .inquiry-table tbody td:nth-child(4){ display:none; }
+}

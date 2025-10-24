@@ -1,0 +1,103 @@
+<!-- templates/fragments/footer.html -->
+<div th:fragment="footer">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <footer class="site-footer">
+        <!-- ── 고객센터 ─────────────────────────────────── -->
+        <section class="footer__cs">
+            <h4 class="footer__title">고객센터</h4>
+            <p>평일 09:00 – 18:00 (점심 12:30 – 13:30)<br>
+                토요일 09:30 – 13:00 · 일요일/공휴일 휴무</p>
+            <a class="btn-cs" href="#">고객센터</a>
+        </section>
+
+        <!-- ── 사업자 정보 ─────────────────────────────── -->
+        <details class="footer__biz" open>
+            <summary>
+                <strong>(주)야무진밀키트 사업자 정보</strong>
+                <i class="fa-solid fa-chevron-up"></i>
+            </summary>
+
+            <div class="biz-grid">
+                <span class="footer__biz-label">대표자</span>
+                <span>전민기</span>
+
+                <span class="footer__biz-label">주소</span>
+                <address>수원시 팔달구 매산로1가 36,·201호&nbsp;2층 (매산동, 야무진타워)</address>
+
+                <span class="footer__biz-label">사업자등록번호</span>
+                <span>000-00-00000&nbsp; <a href="#" class="biz-check">사업자정보 확인</a></span>
+
+                <span class="footer__biz-label">통신판매업 신고</span>
+                <span>2018-수원팔달-00000</span>
+
+                <span class="footer__biz-label">마케팅 제휴문의</span>
+                <span>kdk1562123@naver.com</span>
+
+                <span class="footer__biz-label">영업 제휴문의</span>
+                <span>kdk1562123@naver.com</span>
+
+                <span class="footer__biz-label">상품 입점문의</span>
+                <span>kdk1562123@naver.com</span>
+
+                <span class="footer__biz-label">쿠켓신상 입점문의</span>
+                <span>kdk1562123@naver.com</span>
+
+                <span class="footer__biz-label">개인정보보호 책임자</span>
+                <span>김진우&nbsp;(kdk1562123@naver.com)</span>
+            </div>
+            <p class="copyright">Copyright © 야무진. All rights reserved.</p>
+        </details>
+
+        <!-- ── SNS 아이콘 & 하단 링크 ─────────────────── -->
+        <div class="footer__bottom">
+            <ul class="sns-list">
+                <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+            </ul>
+            <nav class="footer__links">
+                <a href="#">이용약관</a>
+                <a href="#">개인정보 처리방침</a>
+                <a href="#">사업자 할인문</a>
+                <a href="#">고객센터</a>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- ── 내장 스타일 ──────────────────────────────── -->
+    <style>
+        :root{
+            --gray:#6c6c6c;
+            --light:#9b9b9b;
+            --border:#e2e2e2;
+            --font-sm:14px;
+        }
+        .site-footer{max-width:960px;margin:40px auto;font-size:var(--font-sm);color:var(--gray);}
+        .site-footer h4{font-size:16px;margin:0 0 4px 0;}
+        .footer__cs{border-bottom:1px solid var(--border);padding-bottom:18px;}
+        .btn-cs{display:inline-block;margin-top:6px;padding:4px 14px;font-size:12px;border:1px solid var(--border);border-radius:2px;color:var(--gray);}
+        .footer__biz{padding:18px 0;border-bottom:1px solid var(--border);}
+        .footer__biz > summary{list-style:none;cursor:pointer;display:flex;align-items:center;font-size:15px;font-weight:600;}
+        .footer__biz > summary i{margin-left:4px;font-size:13px;transition:.2s;}
+        .footer__biz[open]  > summary i{transform:rotate(180deg);}
+        .biz-grid{display:grid;grid-template-columns:120px 1fr;row-gap:6px;column-gap:12px;margin-top:14px;}
+        .footer__biz-label{color:var(--light);}
+        .biz-check{font-size:12px;color:#ff4d4d;margin-left:4px;}
+        address{margin:0;font-style:normal;}
+        .copyright{margin-top:14px;color:var(--light);}
+        /* SNS + 하단 링크 */
+        .footer__bottom{display:flex;justify-content:space-between;align-items:center;padding:18px 0;}
+        .sns-list{list-style:none;display:flex;gap:12px;margin:0;padding:0;}
+        .sns-list a{color:var(--gray);font-size:18px;}
+        .footer__links a{color:var(--gray);margin-left:16px;font-size:13px;text-decoration:none;}
+        .footer__links a:first-child{margin-left:0;}
+        /* 모바일: 1열 */
+        @media(max-width:600px){
+            .biz-grid{grid-template-columns:1fr;}
+            .footer__bottom{flex-direction:column;gap:12px;}
+            .footer__links a{margin-left:12px;font-size:12px;}
+        }
+    </style>
+</div>

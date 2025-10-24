@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+  <title>경영 요약</title>
+  <th:block layout:fragment="page_head">
+    <link rel="stylesheet" th:href="@{/css/admin/reports.css}">
+  </th:block>
+</head>
+<body>
+<main layout:fragment="content" class="container-xxl report-wrap py-4" data-api="/api/reports/exec">
+  <header class="d-flex align-items-center gap-2 mb-3">
+    <h2 class="mb-0">경영 요약</h2>
+    <div class="ms-auto d-flex gap-2">
+      <input type="date" id="fromDate" class="form-control form-control-sm">
+      <input type="date" id="toDate" class="form-control form-control-sm">
+      <button id="btnApply" class="btn btn-sm" style="background:#00dca0;color:#fff">적용</button>
+    </div>
+  </header>
+
+  <section class="row g-3" id="kpiRow">
+    <div class="col-6 col-lg-3"><div class="kpi-card"><div class="kpi-title">주문수</div><div class="kpi-value" id="kpiOrders">-</div></div></div>
+    <div class="col-6 col-lg-3"><div class="kpi-card"><div class="kpi-title">총매출</div><div class="kpi-value" id="kpiGross">-</div></div></div>
+    <div class="col-6 col-lg-3"><div class="kpi-card"><div class="kpi-title">할인</div><div class="kpi-value" id="kpiDisc">-</div></div></div>
+    <div class="col-6 col-lg-3"><div class="kpi-card"><div class="kpi-title">순매출(배송비 제외)</div><div class="kpi-value" id="kpiNet">-</div></div></div>
+  </section>
+
+  <p class="text-muted mt-3 small">※ 순매출=상품금액-할인 (배송비/환불 제외, 현재 스키마 기준)</p>
+
+  <script th:src="@{/js/admin/report-exec.js}"></script>
+</main>
+</body>
+</html>

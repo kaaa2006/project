@@ -1,0 +1,29 @@
+:root{ --brand-teal:#00dca0; --danger:#e03131; --muted:#9a9a9a; }
+
+.signup-page .signup-wrap{max-width:880px;margin:40px auto;}
+.signup-page .signup-title{margin:0 0 6px;text-align:center;font-weight:700}
+.signup-page .signup-step{color:#00a06a;text-align:center;font-weight:700;margin-bottom:18px}
+
+.signup-page .signup-card{border:1px solid #e6e6e6;border-radius:8px;background:#fff;padding:24px}
+.signup-page .signup-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.signup-page .section-title{font-weight:700}
+.signup-page .help-legend{color:#888;font-size:.9rem}
+
+.signup-page .form-control{height:44px}
+.signup-page .form-select{height:44px}
+.signup-page .btn{height:44px;border-radius:8px}
+.signup-page .btn-teal{background:var(--brand-teal);color:#fff;border:1px solid var(--brand-teal)}
+.signup-page .btn-teal:hover{opacity:.96}
+.signup-page .btn-outline-secondary{background:#fff}
+
+.signup-page .email-grid{
+    display:grid;grid-template-columns:1fr 40px 1fr 160px 110px;gap:8px;align-items:center
+}
+.signup-page .at-badge{display:flex;justify-content:center;color:#888}
+
+.signup-page .hint{font-size:.85rem;margin-top:6px;min-height:1.2em}
+.signup-page .hint.success{color:var(--brand-teal)}
+.signup-page .hint.danger{color:var(--danger)}
+.signup-page .field-error{color:var(--danger);font-size:.85rem;margin-top:6px}
+
+.signup-page .terms-box{border-top:1px solid #eee;margin-top:18px;padding-top:18px}

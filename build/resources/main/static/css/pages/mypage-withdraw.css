@@ -1,0 +1,68 @@
+/* ── Withdraw pages (scoped) ───────────────────────────────── */
+.mypage-wrap .pf-btn-danger{
+    background:#ef4444; border:1px solid #ef4444; color:#fff;
+}
+.mypage-wrap .pf-btn-danger:hover{ filter:brightness(.95); }
+
+/* 경고 박스 */
+.mypage-wrap .withdraw-warn{
+    background:#fff;
+    border:1px solid #ffe8cc;
+    box-shadow:0 4px 16px rgba(255,171,0,.08);
+}
+.mypage-wrap .withdraw-warn .warn-title{
+    font-weight:800; color:#b45309; display:flex; gap:8px; align-items:center; margin-bottom:8px;
+}
+.mypage-wrap .withdraw-warn .warn-title i{ color:#f59e0b; }
+.mypage-wrap .withdraw-warn .warn-list{ margin:0; padding-left:18px; color:#6b7280; }
+
+/* 폼 간격 */
+.mypage-wrap .withdraw-form .confirm-typing{ max-width:420px; }
+
+/* ── Success page (fully scoped) ──────────────────────────── */
+.withdraw-success-page{
+    /* ① 색상 소스 우선순위: 페이지(프로필) 토큰 → 전역 브랜드 → 최종 fallback */
+    --success-teal: var(--pf-teal, var(--brand-teal, #14b8a6));
+    padding-block:96px;
+}
+.withdraw-success-page .success-wrap{
+    max-width:720px; margin:0 auto; padding:40px 32px;
+    border:1px solid #e5e7eb; border-radius:14px; background:#fff; text-align:center;
+}
+.withdraw-success-page .ico{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:72px; height:72px; margin:0 auto 12px; border-radius:50%;
+    /* ② color-mix 지원 전/후 둘 다 자연스러운 배경 */
+    background:#eaf8f4; /* fallback (약한 민트) */
+    background: color-mix(in srgb, var(--success-teal) 12%, white);
+    color: var(--success-teal);
+}
+.withdraw-success-page .ico .bi{ font-size:2rem; }
+
+/* ③ 제목/버튼 모두 동일 톤 사용 */
+.withdraw-success-page .title{
+    color: var(--success-teal); font-weight:800; margin:6px 0 10px;
+}
+.withdraw-success-page .desc{ color:#666; margin:0 0 22px; line-height:1.6; }
+
+.withdraw-success-page .actions{
+    display:flex; justify-content:center; align-items:center; gap:14px; margin:16px 0 4px; flex-wrap:wrap;
+}
+.withdraw-success-page .actions .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px; height:48px; padding:0 18px;
+    border-radius:12px; font-weight:600; line-height:1; flex:1 0 200px; max-width:260px;
+}
+.withdraw-success-page .btn-login{
+    background: var(--success-teal); border:1px solid var(--success-teal); color:#fff;
+}
+.withdraw-success-page .btn-login:hover{ filter:brightness(.95); }
+.withdraw-success-page .btn-outline-secondary{
+    border:1px solid #cfcfcf; color:#333; background:#fff;
+}
+.withdraw-success-page .btn-outline-secondary:hover{ background:#f8f9fa; color:#111; }
+
+@media (max-width:576px){
+    .withdraw-success-page{ padding-block:72px; }
+    .withdraw-success-page .success-wrap{ padding:28px 22px; }
+    .withdraw-success-page .actions .btn{ flex-basis:100%; max-width:none; }
+}

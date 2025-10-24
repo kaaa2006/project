@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title>로그인</title>
+
+    <th:block layout:fragment="page_head">
+        <style>
+            .login-wrap{max-width:620px;margin:40px auto;}
+            .login-card{border:1px solid #e6e6e6;border-radius:8px;background:#fff;padding:28px 28px 32px;}
+            .login-title{font-weight:700;font-size:1.1rem;margin-bottom:18px;}
+            .form-gap .form-control{height:48px;border-radius:8px;}
+            .form-gap .btn{height:48px;border-radius:8px;}
+            .btn-teal{background:var(--brand-teal,#00dca0);color:#fff;border:1px solid var(--brand-teal,#00dca0);}
+            .btn-teal:hover{opacity:.95}
+            .btn-outline-teal{background:#fff;color:var(--brand-teal,#00dca0);border:1px solid var(--brand-teal,#00dca0);}
+            .btn-outline-teal:hover{background:var(--brand-teal,#00dca0);color:#fff}
+            .hr-or{position:relative;margin:18px 0}
+            .hr-or::before{content:"";display:block;height:1px;background:#e6e6e6;}
+            .hr-or span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;color:#9a9a9a;padding:0 10px}
+            .btn-kakao{background:#FEE500;color:#222;border:0;}
+            .btn-naver{background:#03C75A;color:#fff;border:0;}
+            .sns-ico{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin-right:8px;border-radius:4px;background:#0000}
+            .sns-ico.kakao{background:#000;border-radius:50%;color:#FEE500;width:22px;height:22px;font-weight:700;line-height:22px;text-align:center}
+            .sns-ico.naver{background:#fff;color:#03C75A;font-weight:800}
+            .small-muted{color:#9a9a9a;font-size:.9rem}
+        </style>
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content" class="container-xxl login-page">
+    <div class="login-wrap">
+        <div class="login-card">
+
+            <div class="login-title">회원 로그인</div>
+
+            <div th:if="${param.error}" class="alert alert-danger mb-3">아이디 또는 비밀번호를 확인해 주세요.</div>
+            <div th:if="${param.logout}" class="alert alert-success mb-3">로그아웃 되었습니다.</div>
+
+            <form th:action="@{/login}" method="post" class="vstack gap-3 form-gap">
+                <!-- CSRF -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                <input name="email" type="text" class="form-control" placeholder="아이디" autocomplete="username" required>
+                <input name="password" type="password" class="form-control" placeholder="비밀번호" autocomplete="current-password" required>
+
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="checkbox" id="remember" name="remember-me">
+                    <label class="form-check-label small-muted" for="remember">아이디저장</label>
+                </div>
+
+                <button type="submit" class="btn btn-teal w-100">로그인</button>
+                <a th:href="@{/signup}" class="btn btn-outline-teal w-100">회원가입</a>
+
+                <div class="hr-or"><span>또는</span></div>
+
+                <a th:href="@{/oauth2/authorization/kakao}" class="btn btn-kakao w-100 d-flex align-items-center justify-content-center">
+                    <span class="sns-ico kakao">💬</span> 카카오 로그인
+                </a>
+                <a th:href="@{/oauth2/authorization/naver}" class="btn btn-naver w-100 d-flex align-items-center justify-content-center mt-2">
+                    <span class="sns-ico naver">N</span> 네이버 로그인
+                </a>
+            </form>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

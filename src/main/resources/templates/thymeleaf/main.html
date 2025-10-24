@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <title>메인 페이지</title>
+    <th:block layout:fragment="page_head">
+        <link rel="preload" as="image" href="/uploads/banner/banner1.jpg" media="(min-width:992px)">
+        <link rel="preload" as="image" href="/uploads/banner/banner1.jpg" media="(max-width:991.98px)">
+        <!-- 홈 전용 CSS (캐시버전 ↑) -->
+        <link rel="stylesheet" th:href="@{/css/pages/home.css?v=5}"><!-- v=5로 캐시 갱신 -->
+    </th:block>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <!-- ① 배너 -->
+    <section class="main-banner">
+        <div class="swiper banner-swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <picture>
+                        <source media="(min-width:992px)" srcset="/uploads/banner/banner1.jpg">
+                        <img class="banner-img" src="/uploads/banner/banner1.jpg" alt="신규 가입 3,000원 쿠폰 증정" decoding="async" width="1200" height="400">
+                    </picture>
+                </div>
+                <div class="swiper-slide">
+                    <picture>
+                        <source media="(min-width:992px)" srcset="/uploads/banner/banner2.jpg">
+                        <img class="banner-img" src="/uploads/banner/banner2.jpg" alt="여름 한정 기획전" loading="lazy" width="1200" height="400">
+                    </picture>
+                </div>
+                <div class="swiper-slide">
+                    <picture>
+                        <source media="(min-width:992px)" srcset="/uploads/banner/banner3.jpg">
+                        <img class="banner-img" src="/uploads/banner/banner3.jpg" alt="간편식 신제품 출시" loading="lazy" width="1200" height="400">
+                    </picture>
+                </div>
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+    </section>
+
+    <!-- ② 메뉴 5칸 -->
+    <section class="container-xxl py-5 text-center menu-tiles">
+        <div class="row justify-content-center">
+            <div class="col-4 col-md-2">
+                <a th:href="@{/board/list(boardType='EVENT')}" class="d-inline-block text-decoration-none text-reset menu-link" aria-label="이벤트 바로가기">
+                    <img src="/img/테스트메뉴1.gif" class="img-fluid rounded" alt="이벤트" loading="lazy" width="200" height="200">
+                    <p class="menu-label">이벤트</p>
+                </a>
+            </div>
+            <div class="col-4 col-md-2">
+                <a th:href="@{/items(newItem=true)}" class="d-inline-block text-decoration-none text-reset menu-link" aria-label="신상품 바로가기">
+                    <img src="/img/테스트메뉴2.png" class="img-fluid rounded" alt="신상품" loading="lazy" width="200" height="200">
+                    <p class="menu-label">신상품</p>
+                </a>
+            </div>
+            <div class="col-4 col-md-2">
+                <a th:href="@{/items(specialDeal=true)}" class="d-inline-block text-decoration-none text-reset menu-link" aria-label="특가상품 바로가기">
+                    <img src="/img/테스트메뉴3.png" class="img-fluid rounded" alt="특가상품" loading="lazy" width="200" height="200">
+                    <p class="menu-label">특가상품</p>
+                </a>
+            </div>
+            <div class="col-4 col-md-2">
+                <a th:href="@{/orders/list}" class="d-inline-block text-decoration-none text-reset menu-link" aria-label="주문 및 배송조회 바로가기">
+                    <img src="/img/테스트메뉴4.png" class="img-fluid rounded" alt="주문/배송조회" loading="lazy" width="200" height="200">
+                    <p class="menu-label">주문/배송조회</p>
+                </a>
+            </div>
+            <div class="col-4 col-md-2">
+                <a th:href="@{/board/tip/list}" class="d-inline-block text-decoration-none text-reset menu-link" aria-label="팁 게시판 바로가기">
+                    <img src="/img/테스트메뉴5.png" class="img-fluid rounded" alt="팁 게시판" loading="lazy" width="200" height="200">
+                    <p class="menu-label">팁 게시판</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ③ BEST 섹션 -->
+    <section class="container-xxl py-3 best-cards">
+        <h3 class="text-center fw-bold mb-4">BEST 5</h3>
+
+        <div class="row row-cols-2 row-cols-lg-3 row-cols-xl-5 g-4">
+            <!-- 빈 상태 -->
+            <div class="col" th:if="${#lists.isEmpty(products)}">
+                <div class="text-center text-muted py-5">상품 준비 중입니다.</div>
+            </div>
+
+            <!-- 카드 -->
+            <div class="col" th:each="p, stat : ${products}">
+                <a th:href="@{|/items/${p.id}|}" class="text-reset text-decoration-none d-block h-100">
+                    <div class="card h-100">
+                        <!-- ▼ 랭킹 뱃지: 카드 내부로 이동 -->
+                        <span class="rank-ribbon" th:text="${stat.index + 1}">1</span>
+
+                        <img class="card-img-top"
+                             th:src="${#strings.isEmpty(p.repImgUrl) ? '/img/placeholder.png' : p.repImgUrl}"
+                             alt="" loading="lazy">
+                        <div class="card-body">
+                            <h6 class="card-title mb-1" th:text="${p.itemNm}">상품명</h6>
+
+                            <!-- ◆ 가격 블록: 항상 [판매가] + 다음 줄 [정가, 할인율] -->
+                            <div class="price-block small"
+                                 th:with="
+                                    orig = ${p.originalPrice != null ? p.originalPrice : p.price},
+                                    rate = ${
+                                        (p.discountRate != null) ? p.discountRate :
+                                        ((orig != null and orig > 0) ? ((orig - p.price) * 100 / orig) : 0)
+                                    }">
+
+                                <!-- 판매가 (1줄) -->
+                                <strong class="sale-price"
+                                        th:text="${#numbers.formatInteger(p.price,3,'COMMA')} + '원'">0원</strong>
+
+                                <!-- 정가/할인율 (아래줄) -->
+                                <div class="sub-prices">
+                                    <span class="old-price"
+                                          th:text="${#numbers.formatInteger(orig,3,'COMMA')} + '원'">0원</span>
+                                    <span class="discount-badge"
+                                          th:text="${#numbers.formatDecimal(rate,0,0)} + '%'">0%</span>
+                                </div>
+                            </div>
+
+                            <!-- 평점/리뷰 -->
+                            <div class="mt-1 small text-muted">
+                                <span class="me-2" th:text="${'★ ' + (p.avgRating != null ? #numbers.formatDecimal(p.avgRating, 1, 1) : '0.0')}">★ 0.0</span>
+                                <span th:text="${'리뷰 ' + (p.reviewCount != null ? p.reviewCount : 0)}">리뷰 0</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- /each -->
+        </div>
+    </section>
+
+</div>
+
+<!-- ▼ 페이지 전용 JS -->
+<th:block layout:fragment="page_foot">
+    <script th:src="@{/js/home.js?v=4}" defer></script>
+</th:block>
+</body>
+</html>

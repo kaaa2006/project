@@ -1,0 +1,47 @@
+/* 로그인 카드 레이아웃 */
+.login-wrap{ max-width: 520px; }
+.nav-tabs .nav-link{ font-weight:600; }
+.nav-tabs .nav-link.active{ color:#111; }
+
+/* 입력 UI */
+.form-control-lg{ border-radius: .6rem; height: 48px; }
+.form-label{ font-weight:600; }
+
+/* 브랜드 버튼(사이트 메인 컬러와 맞춤) */
+:root{
+    --brand: var(--brand-teal, #00dca0);
+    --brand-900: #00b487;
+}
+.btn-brand{
+    background: var(--brand);
+    color:#fff;
+    border:1px solid var(--brand);
+}
+.btn-brand:hover{ background: var(--brand-900); border-color: var(--brand-900); color:#fff; }
+
+.btn-outline-brand{
+    background:#fff;
+    color: var(--brand);
+    border:1px solid var(--brand);
+}
+.btn-outline-brand:hover{ background:#e8fff8; color: var(--brand-900); border-color: var(--brand-900); }
+
+/* 소셜 버튼 */
+.btn-kakao{
+    background:#FEE500; color:#111; border:0;
+}
+.btn-kakao:hover{ background:#f4d800; color:#111; }
+
+.btn-naver{
+    background:#03C75A; color:#fff; border:0;
+}
+.btn-naver:hover{ background:#02a94d; color:#fff; }
+
+/* 카드 공통 */
+
+.card{ border-radius: .8rem; }
+:root{ --brand-teal:#00dca0 }
+.login-page .form-gap .form-control{height:48px}
+.login-page .form-gap .btn{height:48px;border-radius:8px}
+.login-page .btn-teal{background:var(--brand-teal);color:#fff;border:1px solid var(--brand-teal)}
+.login-page .btn-outline-teal{background:#fff;color:var(--brand-teal);border:1px solid var(--brand-teal)}

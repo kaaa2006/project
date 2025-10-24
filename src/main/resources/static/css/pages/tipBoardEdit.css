@@ -1,0 +1,150 @@
+/* =========================================================
+   TIP Board — Edit (Modify)
+   - Scope: .tip-edit
+   - Design only (no behavior changes)
+   - Concept color: var(--brand-teal, #00DCA0)
+   ========================================================= */
+
+:root{
+    --te-brand:  var(--brand-teal, #00DCA0);
+    --te-ink:    #0b2413;
+    --te-muted:  #6b7d73;
+    --te-surface:#ffffff;
+    --te-border: #e6eeea;
+    --te-bg:     #f7faf8;
+    --te-radius: 14px;
+    --te-shadow: 0 8px 24px rgba(17,24,39,.06);
+}
+
+.tip-edit{ color: var(--te-ink); background: var(--te-bg); }
+
+.tip-edit .detail-container{
+    max-width: 1000px;
+    margin: 24px auto;
+    padding: 0 12px 28px;
+}
+
+/* ===== Page title ===== */
+.tip-edit .page-title{
+    position: relative;
+    margin: 6px 0 14px;
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+    color: #12251b;
+}
+.tip-edit .page-title::before{
+    content:"";
+    position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--te-brand);
+}
+
+/* ===== Form card ===== */
+.tip-edit .tip-form{
+    border:1px solid var(--te-border);
+    border-radius: var(--te-radius);
+    background: var(--te-surface);
+    box-shadow: var(--te-shadow);
+    padding: 18px;
+}
+
+.tip-edit .field-row{ margin-bottom: 14px; }
+.tip-edit .field-row:last-child{ margin-bottom: 0; }
+
+.tip-edit .field-row label{
+    display:block;
+    margin-bottom: 6px;
+    font-weight: 800;
+    color:#2a3a33;
+}
+
+/* Inputs */
+.tip-edit input[type="text"],
+.tip-edit input[type="file"],
+.tip-edit textarea{
+    width: 100%;
+    border:1px solid var(--te-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    background:#fff;
+    box-shadow: inset 0 1px 0 rgba(16,24,40,.02);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+    font-size: 1rem;
+}
+.tip-edit textarea{ min-height: 260px; resize: vertical; }
+
+.tip-edit input:focus,
+.tip-edit textarea:focus{
+    outline: none;
+    border-color: var(--te-brand);
+    box-shadow: 0 0 0 4px rgba(0,220,160,.18);
+}
+
+.tip-edit ::placeholder{ color:#a2b2ab; }
+
+.tip-edit .help{
+    color: var(--te-muted);
+    font-size: .92rem;
+    margin-top: 6px;
+}
+
+/* Image preview */
+.tip-edit .image-preview-wrap{
+    margin-top: 10px;
+    border:1px dashed var(--te-border);
+    background:#fbfdfc;
+    border-radius: 12px;
+    padding: 12px;
+}
+.tip-edit #image-preview{
+    display:block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* ===== Actions ===== */
+.tip-edit .form-buttons{
+    display:flex; gap: 8px;
+    justify-content: flex-end; align-items: center;
+    margin-top: 8px;
+}
+
+.tip-edit .btn-submit,
+.tip-edit .btn-cancel{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 44px; padding: 0 16px;
+    border-radius: 12px; border: 2px solid transparent;
+    font-weight: 800; text-decoration: none !important;
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s, filter .15s;
+}
+
+/* Submit: 브랜드 단색 */
+.tip-edit .btn-submit{
+    background: var(--te-brand);
+    color:#fff;
+    border-color: var(--te-brand);
+    box-shadow: var(--te-shadow);
+}
+.tip-edit .btn-submit:hover{ filter: brightness(.97); }
+
+/* Cancel: 아웃라인 */
+.tip-edit .btn-cancel{
+    background:#fff;
+    color: var(--te-brand);
+    border-color: var(--te-brand);
+}
+.tip-edit .btn-cancel:hover{
+    background: var(--te-brand);
+    color:#fff;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 767.98px){
+    .tip-edit .detail-container{ padding: 0 10px 22px; }
+    .tip-edit .form-buttons{ flex-direction: column-reverse; align-items: stretch; }
+    .tip-edit .btn-submit, .tip-edit .btn-cancel{ width: 100%; }
+}
+
+/* ===== Bootstrap coexistence ===== */
+.tip-edit .btn{ line-height: 1; } /* 텍스트 세로 정렬 안정화 */

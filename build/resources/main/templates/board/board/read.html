@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <meta charset="UTF-8">
+    <title>공지 상세</title>
+    <th:block layout:fragment="page_head">
+        <!-- ✅ 공지 상세 전용 CSS (팁 상세 톤과 동일) -->
+        <link rel="stylesheet" th:href="@{/css/pages/noticeRead.css?v=1}">
+        <!-- CSRF (필요 시) -->
+        <meta th:if="${_csrf != null}" name="_csrf" th:content="${_csrf.token}">
+        <meta th:if="${_csrf != null}" name="_csrf_header" th:content="${_csrf.headerName}">
+    </th:block>
+</head>
+
+<body class="notice-read">
+<main layout:fragment="content" class="container py-4">
+    <div class="list-container notice-read-container">
+
+        <!-- 제목 -->
+        <h1 class="page-title" th:text="${dto.title != null ? dto.title : '제목 없음'}">제목 없음</h1>
+
+        <!-- 메타 -->
+        <div class="meta-info">
+            <p>작성자: <span th:text="${dto.writer ?: '작성자 없음'}">작성자 없음</span></p>
+            <p>작성일: <span th:text="${dto.regTime != null ? #temporals.format(dto.regTime,'yyyy-MM-dd a h:mm') : '-'}">-</span></p>
+            <p th:if="${dto.updateTime != null}">
+                수정일: <span th:text="${#temporals.format(dto.updateTime,'yyyy-MM-dd a h:mm')}">-</span>
+            </p>
+            <p th:if="${dto.viewCount != null}">
+                조회수: <span th:text="${dto.viewCount}">0</span>
+            </p>
+        </div>
+
+        <hr>
+
+        <!-- 본문 -->
+        <div class="post-content" th:utext="${dto.content}">본문 내용</div>
+
+        <!-- 첨부 이미지 (있는 경우) -->
+        <div class="post-images" th:if="${dto.fileNames != null and !#lists.isEmpty(dto.fileNames)}">
+            <div class="image-grid" th:each="img : ${dto.fileNames}">
+                <img th:src="${img}" alt="첨부 이미지" class="post-img">
+            </div>
+        </div>
+
+        <!-- 하단 액션: 좌측 목록 / 우측 관리자 버튼 -->
+        <div class="actions-row">
+            <a th:href="@{/board/list(boardType=${dto.boardType != null ? dto.boardType.name() : 'NOTICE'})}"
+               class="btn-outline back-btn">목록으로</a>
+
+            <div class="admin-actions"
+                 th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a th:href="@{/board/modify(bno=${dto.bno})}" class="btn-primary">수정</a>
+                <form method="post" th:action="@{/board/remove}" class="inline-delete">
+                    <input type="hidden" name="bno" th:value="${dto.bno}">
+                    <input type="hidden" th:if="${_csrf != null}"
+                           th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="btn-danger">삭제</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<th:block layout:fragment="page_foot">
+    <script th:src="@{/js/noticeRead.js?v=1}" defer></script>
+</th:block>
+</body>
+</html>

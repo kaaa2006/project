@@ -1,0 +1,81 @@
+<!-- templates/fragments/mypage-side.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<body>
+<!-- 프래그먼트 시그니처: active(문자열) -->
+<aside class="side" th:fragment="side(active)">
+    <div class="section">
+        <div class="section-title">마이페이지</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">쇼핑정보</div>
+        <ul class="nav-list">
+            <li th:classappend="${active}=='orders' ? 'active'">
+                <a th:href="@{/orders/list}">주문목록/배송조회</a>
+            </li>
+            <li th:classappend="${active}=='refunds' ? 'active'"> <!-- ✅ active 키를 refunds로 -->
+                <a th:href="@{/orders/refunds}">환불내역/취소내역</a> <!-- ✅ 컨트롤러와 일치 -->
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-title">혜택관리</div>
+        <ul class="nav-list">
+            <li th:classappend="${active}=='coupons' ? 'active'">
+                <a th:href="@{/coupons}">쿠폰함</a>
+            </li>
+            <li th:classappend="${active}=='points' ? 'active'">
+                <a th:href="@{/points}">포인트</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-title">고객센터</div>
+        <ul class="nav-list">
+            <li th:classappend="${active}=='notice' ? 'active'">
+                <a th:href="@{/notice}">공지사항</a>
+            </li>
+            <li th:classappend="${active}=='contact' ? 'active'">
+                <a th:href="@{/support/contact}">1:1문의</a>
+            </li>
+            <li th:classappend="${active}=='faq' ? 'active'">
+                <a th:href="@{/support/faq}">FAQ</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-title">회원정보</div>
+        <ul class="nav-list">
+            <li th:classappend="${active}=='profile' ? 'active'">
+                <a th:href="@{/mypage/profile}">회원정보변경</a>
+            </li>
+            <li th:classappend="${active}=='withdraw' ? 'active'">
+                <a th:href="@{/mypage/withdraw}">회원탈퇴</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-title">상품문의</div>
+        <ul class="nav-list">
+            <li th:classappend="${active}=='qna' ? 'active'">
+                <a th:href="@{/qna}">상품문의</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-title">상품후기</div>
+        <ul class="nav-list">
+            <li th:classappend="${active}=='reviews' ? 'active'">
+                <a th:href="@{/items/reviews}">상품후기</a>
+            </li>
+        </ul>
+    </div>
+</aside>
+</body>
+</html>

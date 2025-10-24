@@ -1,0 +1,72 @@
+.edit-success-page{
+  --brand-teal: #00dca0;  /* 브랜드 초록 — 프로필 페이지와 맞춤 */
+}
+
+/* 1) 헤더–푸터 사이 여백 */
+.edit-success-page{
+    padding-block:96px;
+}
+
+/* 2) 회색선 박스 + 가운데 정렬 */
+.edit-success-page .success-wrap{
+    max-width:720px;
+    margin:0 auto;
+    padding:40px 32px;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    background:#fff;
+    text-align:center;
+}
+
+/* 3) 아이콘: 브랜드 컬러 */
+.edit-success-page .ico{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:72px; height:72px; margin:0 auto 12px;
+    border-radius:50%;
+    background:color-mix(in srgb, var(--brand-teal) 12%, transparent);
+    color:var(--brand-teal);
+}
+.edit-success-page .ico .bi{font-size:2rem}
+
+/* 4) 텍스트 */
+.edit-success-page .title{
+    color:var(--brand-teal); font-weight:800; margin:6px 0 10px;
+}
+.edit-success-page .desc{
+    color:#666; margin:0 0 22px; line-height:1.6;
+}
+
+/* 5) 버튼 레이아웃 */
+.edit-success-page .actions{
+    display:flex; justify-content:center; align-items:center;
+    gap:14px; margin:16px 0 4px; flex-wrap:wrap;
+}
+.edit-success-page .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    gap:8px; height:48px; padding:0 18px;
+    border-radius:12px; font-weight:600; line-height:1; text-align:center;
+}
+.edit-success-page .actions .btn{
+    flex:1 0 200px; max-width:260px;
+}
+
+/* Primary: 초록 배경 */
+.edit-success-page .btn-login{
+    background:var(--brand-teal); border-color:var(--brand-teal); color:#fff;
+}
+.edit-success-page .btn-login:hover{ filter:brightness(.95); }
+
+/* 보조 버튼 */
+.edit-success-page .btn-outline-secondary{
+    border:1px solid #cfcfcf; color:#333; background:#fff;
+}
+.edit-success-page .btn-outline-secondary:hover{
+    background:#f8f9fa; color:#111;
+}
+
+/* 모바일 */
+@media (max-width:576px){
+    .edit-success-page{ padding-block:72px; }
+    .edit-success-page .success-wrap{ padding:28px 22px; }
+    .edit-success-page .actions .btn{ flex-basis:100%; max-width:none; }
+}

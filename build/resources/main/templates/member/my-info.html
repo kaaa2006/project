@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내 회원정보</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body{max-width:960px;margin:40px auto;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;}
+        h2{margin:0 0 20px;font-weight:700}
+        .card{border:1px solid #e6e6e6;border-radius:12px;padding:20px;margin-bottom:20px}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:10px 12px;border-bottom:1px solid #eee;text-align:left}
+        th{width:160px;color:#666;background:#fafafa}
+        .badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:.8rem;border:1px solid #ddd}
+        .badge-primary{background:#e8f3ff;border-color:#b8dbff;color:#1064d3}
+        .muted{color:#888}
+        .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+        a.btn{display:inline-block;padding:10px 14px;border:1px solid #e0e0e0;border-radius:8px;text-decoration:none;color:#222}
+        a.btn:hover{background:#f7f7f7}
+    </style>
+</head>
+<body>
+
+<h2>내 회원정보</h2>
+
+<!-- 프로필 카드 -->
+<div class="card" th:if="${member != null}">
+    <table>
+        <tr>
+            <th>이메일</th>
+            <td th:text="${member.email}">email@example.com</td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td th:text="${member.memberName}">홍길동</td>
+        </tr>
+        <tr>
+            <th>휴대폰</th>
+            <td th:text="${member.phone}">010-0000-0000</td>
+        </tr>
+        <tr>
+            <th>등급</th>
+            <td th:text="${member.grade}">BASIC</td>
+        </tr>
+        <tr>
+            <th>포인트</th>
+            <td th:text="${member.points}">0</td>
+        </tr>
+        <tr>
+            <th>마케팅 수신</th>
+            <td th:text="${member.marketingYn} ? '동의' : '미동의'">미동의</td>
+        </tr>
+    </table>
+    <div class="actions">
+        <a class="btn" th:href="@{/}">홈으로</a>
+        <!-- <a class="btn" th:href="@{/members/edit}">정보 수정</a> -->
+    </div>
+</div>
+
+<!-- 주소 목록 -->
+<div class="card">
+    <h3 style="margin:0 0 10px;">배송지</h3>
+
+    <!-- 널/빈 컬렉션 가드 -->
+    <div class="muted" th:if="${member == null or #lists.isEmpty(member.addresses)}">
+        등록된 주소가 없습니다.
+    </div>
+
+    <table th:if="${member != null and not #lists.isEmpty(member.addresses)}">
+        <thead>
+        <tr>
+            <th>별칭</th>
+            <th>우편번호</th>
+            <th>주소</th>
+            <th>상세주소</th>
+            <th>기본</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="addr : ${member.addresses}">
+            <td th:text="${addr.alias} ?: '-'">집</td>
+            <td th:text="${addr.zipCode}">00000</td>
+            <td th:text="${addr.addr1}">서울시 …</td>
+            <td th:text="${addr.addr2} ?: '-'">101동 101호</td>
+            <td>
+                <span class="badge badge-primary" th:if="${addr.isDefault}">기본</span>
+                <span class="muted" th:if="${!addr.isDefault}">-</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="actions">
+        <!-- <a class="btn" th:href="@{/members/addresses/new}">주소 추가</a> -->
+    </div>
+</div>
+
+</body>
+</html>

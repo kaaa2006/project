@@ -1,0 +1,767 @@
+/* ======================================================================
+   board.css  (공지사항/게시판 전용)
+   2025-09-27 — Bootstrap 충돌 완전 차단
+   ====================================================================== */
+
+/* 전체 레이아웃 */
+body.board-page {
+    font-family: 'Noto Sans KR', 'Arial', sans-serif;
+    background-color: #f5f7fa;
+    color: var(--gray);
+}
+
+/* 메인 컨테이너 */
+body.board-page .board-container,
+body.board-page .board-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 제목 */
+body.board-page .board-title {
+    margin-top: 0;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--brand-teal);
+}
+
+/* ──────────────────────────────────────────────
+   버튼 (전용 네임스페이스)
+   ────────────────────────────────────────────── */
+body.board-page .board-btn {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 8px 16px;
+    background-color: var(--brand-teal);
+    color: #fff !important;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+body.board-page .board-btn:hover {
+    background-color: #00b884;
+    transform: translateY(-2px);
+}
+
+/* ──────────────────────────────────────────────
+   테이블
+   ────────────────────────────────────────────── */
+body.board-page .board-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+body.board-page .board-table th,
+body.board-page .board-table td {
+    padding: 12px;
+    text-align: center;
+}
+
+body.board-page .board-table th {
+    background-color: #eee;
+    color: var(--gray);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+body.board-page .board-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+body.board-page .board-table tr:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.01);
+}
+
+/* ──────────────────────────────────────────────
+   본문/이미지
+   ────────────────────────────────────────────── */
+body.board-page .board-content {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+}
+
+body.board-page .board-content a {
+    color: var(--brand-teal);
+    text-decoration: none;
+}
+body.board-page .board-content a:hover {
+    text-decoration: underline;
+}
+
+body.board-page .board-images img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+/* ──────────────────────────────────────────────
+   폼 (register / modify)
+   ────────────────────────────────────────────── */
+body.board-page .board-form input[type="text"],
+body.board-page .board-form textarea,
+body.board-page .board-form input[type="file"],
+body.board-page .board-form select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+body.board-page .board-form input[type="text"]:focus,
+body.board-page .board-form textarea:focus,
+body.board-page .board-form select:focus {
+    border-color: var(--brand-teal);
+    outline: none;
+}
+
+body.board-page .board-form .submit-btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    background-color: var(--brand-teal);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+body.board-page .board-form .submit-btn:hover {
+    background-color: #00b884;
+    transform: translateY(-2px);
+}
+
+/* ──────────────────────────────────────────────
+   페이지네이션 (Brand 스타일)
+   ────────────────────────────────────────────── */
+body.board-page .board-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+    gap: 6px;
+}
+
+body.board-page .board-pagination li {
+    display: inline-block;
+}
+
+/* 기본 버튼 */
+body.board-page .board-pagination .page-btn {
+    min-width: 40px;
+    height: 40px;
+    border-radius: .75rem;
+    border: none;
+    background: #fff;
+    color: #334155;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+/* hover */
+body.board-page .board-pagination .page-btn:hover:not(.active):not(.disabled) {
+    background: rgba(0, 220, 160, .08);
+    color: var(--brand-teal);
+}
+
+/* 현재 페이지 */
+body.board-page .board-pagination .page-btn.active {
+    background: var(--brand-teal);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+    cursor: default;
+}
+
+/* 비활성 버튼 */
+body.board-page .board-pagination .page-btn.disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* … 표시 */
+body.board-page .board-pagination .ellipsis {
+    padding: 0 6px;
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+/* =========================================================
+   Board — Write Page Polish (공지/FAQ/이벤트 공통)
+   - HTML 수정 없이 form#registerForm 기준으로 스코프
+   - 브랜드 톤 유지, 선택 카테고리에 따라 포인트만 부드럽게 변화
+   ========================================================= */
+
+/* 기본 톤(브랜드 틴트) */
+:root{
+    --board-ink:#0b2413;
+    --board-muted:#6b7d73;
+    --board-border:#e6efea;
+    --board-surface:#fff;
+    --board-bg:#f7faf8;
+    --board-accent: var(--brand-teal, #00dca0); /* 토큰 있으면 사용 */
+    --board-ring: rgba(0,220,160,.22);
+}
+
+/* ===== 페이지 헤더 ===== */
+main.container:has(#registerForm){
+    color:var(--board-ink);
+}
+main.container:has(#registerForm) > h1{
+    margin: 4px 0 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+}
+main.container:has(#registerForm)::before{
+    content:""; display:block; height:6px; width:48px; border-radius:999px;
+    background: var(--board-accent);
+    margin: 2px 0 10px;
+}
+
+/* ===== 카드 래퍼(폼) ===== */
+form#registerForm{
+    background: var(--board-surface);
+    border:1px solid var(--board-border);
+    border-radius: 14px;
+    box-shadow: 0 8px 22px rgba(17,24,39,.05);
+    padding: 18px;
+}
+
+/* ===== 폼 그리드 ===== */
+form#registerForm .bw-grid{
+    display:grid; gap:14px;
+    grid-template-columns: 1fr;
+}
+@media (min-width: 768px){
+    form#registerForm .bw-grid{ grid-template-columns: 1fr 1fr; }
+    form#registerForm .bw-span-2{ grid-column: 1 / -1; }
+}
+
+/* ===== 라벨/인풋 공통 ===== */
+form#registerForm label{
+    font-weight:700; color:#2b3c34; margin-bottom:6px; display:inline-block;
+}
+form#registerForm input[type="text"],
+form#registerForm input[type="date"],
+form#registerForm select,
+form#registerForm textarea{
+    width:100%;
+    border:1px solid var(--board-border);
+    border-radius: 10px;
+    background:#fff;
+    padding: 10px 12px;
+    box-shadow: inset 0 1px 0 rgba(16,24,40,.02);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+}
+form#registerForm textarea{
+    min-height: 220px;
+    resize: vertical;
+}
+form#registerForm input:focus,
+form#registerForm select:focus,
+form#registerForm textarea:focus{
+    outline: none;
+    border-color: var(--board-accent);
+    box-shadow: 0 0 0 4px var(--board-ring);
+}
+
+/* place-holder 색 조정 */
+form#registerForm ::placeholder{ color:#a2b2ab; }
+
+/* ===== 첫 줄: 게시판 선택 ===== */
+form#registerForm .bw-row{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+form#registerForm .bw-row .select{
+    min-width: 220px;
+}
+
+/* ===== 파일/날짜 영역(보이는 경우에도 동일 톤) ===== */
+#fileUploadDiv,
+#dateDiv{
+    border:1px dashed var(--board-border);
+    background: #fbfdfc;
+    border-radius: 12px;
+    padding: 14px;
+}
+#dateDiv label{ margin-right: 14px; }
+#dateDiv input[type="date"]{ max-width: 220px; }
+
+/* ===== 액션 버튼 ===== */
+form#registerForm .bw-actions{
+    display:flex; gap:10px; justify-content:flex-end; align-items:center; margin-top: 8px;
+}
+.pf-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    height:44px; padding: 0 16px; border-radius: 12px;
+    font-weight:800; border:2px solid var(--board-accent);
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+    text-decoration:none !important;
+}
+.pf-btn-primary{
+    background: var(--board-accent); color:#fff;
+}
+.pf-btn-primary:hover{
+    background:#fff; color: var(--board-accent);
+}
+.pf-btn-outline{
+    background:#fff; color: var(--board-accent);
+}
+.pf-btn-outline:hover{
+    background: var(--board-accent); color:#fff;
+}
+
+/* ===== 하단 '목록' 링크도 버튼 톤으로 ===== */
+main.container:has(#registerForm) > a[href*="/board/list"]{
+    display:inline-flex; align-items:center; justify-content:center;
+    height:40px; padding: 0 14px; border-radius: 12px; margin-top: 10px;
+    font-weight:700; border:1px solid var(--board-border); color: var(--board-accent);
+    text-decoration:none;
+}
+main.container:has(#registerForm) > a[href*="/board/list"]:hover{
+    border-color: var(--board-accent);
+    background: #f0fff8;
+}
+
+/* ===== 도움텍스트/에러 ===== */
+.bw-help{ color: var(--board-muted); font-size:.9rem; margin-top:6px; }
+.bw-error{ color:#dc3545; font-size:.9rem; margin-top:6px; }
+
+/* ===== 카테고리별 포인트 컬러 (선택값 감지) =====
+   - HTML 수정 없이 :has()로 select의 선택값을 읽어 포인트 변수만 교체
+   - 미지원 브라우저에서도 기본 톤(브랜드 틴트)로 정상 동작
+*/
+main.container:has(#boardTypeSelect option[value="NOTICE"]:checked){
+    --board-accent: #00dca0;  /* 기본 브랜드 */
+    --board-ring: rgba(0,220,160,.22);
+}
+main.container:has(#boardTypeSelect option[value="FAQ"]:checked){
+    --board-accent: #00c2b2;  /* 살짝 청록 */
+    --board-ring: rgba(0,194,178,.22);
+}
+main.container:has(#boardTypeSelect option[value="EVENT"]:checked){
+    --board-accent: #18c964;  /* 연두빛 */
+    --board-ring: rgba(24,201,100,.22);
+}
+
+/* ===== 작은 화면 최적화 ===== */
+@media (max-width: 576px){
+    #dateDiv label{ display:block; margin: 0 0 8px; }
+    #dateDiv input[type="date"]{ max-width: 100%; }
+}
+
+/* ===== 폼 내부 기본 간격 적용 (기존 마크업 보존) ===== */
+#titleLabel, #contentLabel{ display:block; margin: 6px 0; }
+#titleInput{ margin-bottom: 10px; }
+#contentInput{ margin-bottom: 10px; }
+
+/* ===== 페이지 배경 톤 (상단/하단 여백 자연스럽게) ===== */
+body{
+    background: var(--board-bg);
+}
+
+/* ========== Board Write (글 작성 공통) ========== */
+:root{
+    --brand: #00DCA0;          /* 고정 포인트 컬러 */
+    --ink: #0b2413;
+    --muted: #6b7d73;
+    --border: #e7eeea;
+    --surface: #ffffff;
+    --radius: 14px;
+}
+
+/* 제목: 왼쪽 세로 초록 바 */
+.page-title{
+    position: relative;
+    padding-left: 14px;
+    margin: 0 0 18px 0;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    color: var(--ink);
+}
+.page-title::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .15em;
+    bottom: .15em;
+    width: 6px;
+    border-radius: 8px;
+    background: var(--brand);
+}
+
+/* 카드 컨테이너 */
+.bw-card{
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: 0 4px 18px rgba(0,0,0,.04);
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+/* 폼 그리드 */
+.bw-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+.bw-row{
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    align-items: center;
+    gap: 10px;
+}
+.bw-span-2{ grid-column: 1 / -1; }
+
+/* 라벨 & 인풋 */
+.bw-grid label{
+    font-weight: 700;
+    color: #2a3a33;
+    margin: 0;
+}
+.bw-grid input[type="text"],
+.bw-grid select,
+.bw-grid textarea,
+.bw-grid input[type="date"],
+.bw-grid input[type="file"]{
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .6rem .8rem;
+    background: #fff;
+}
+.bw-grid textarea{
+    min-height: 260px;
+    resize: vertical;
+}
+
+/* 액션 영역: 목록(좌) 등록(우) */
+.bw-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+/* 버튼 톤 고정 (카테고리 변경에도 변하지 않도록) */
+.pf-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 46px;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-weight: 800;
+    border: 2px solid transparent;
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+    text-decoration: none !important;   /* 링크 형태여도 밑줄 제거 */
+}
+.pf-btn-primary{
+    background: var(--brand) !important;
+    border-color: var(--brand) !important;
+    color: #fff !important;
+}
+.pf-btn-primary:hover{ filter: brightness(.96); }
+.pf-btn-outline{
+    background: #fff;
+    color: var(--brand) !important;
+    border-color: var(--brand) !important;
+}
+.pf-btn-outline:hover{
+    background: var(--brand);
+    color: #fff !important;
+}
+
+/* 반응형 */
+@media (max-width: 992px){
+    .bw-row{ grid-template-columns: 140px 1fr; }
+}
+@media (max-width: 768px){
+    .bw-grid{ grid-template-columns: 1fr; }
+    .bw-row{ grid-template-columns: 1fr; }
+}
+
+/* 보조 텍스트/간격 유틸 (선택) */
+.bw-help{ color: var(--muted); font-size: .92rem; margin-top: .35rem; }
+.bw-gap-sm{ margin-top: .5rem; }
+
+/* ===== Board Write — Safe Addon ===== */
+:root{
+    --bw-brand: #00DCA0;      /* 고정 포인트 컬러 */
+    --bw-ink: #0b2413;
+    --bw-muted: #6b7d73;
+    --bw-border: #e7eeea;
+    --bw-surface: #ffffff;
+    --bw-radius: 14px;
+}
+
+/* 제목: 왼쪽 세로 포인트 바 */
+.bw-page-title{
+    position: relative;
+    padding-left: 14px;
+    margin: 0 0 18px 0;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    color: var(--bw-ink);
+}
+.bw-page-title::before{
+    content: "";
+    position: absolute;
+    left: 0; top: .15em; bottom: .15em;
+    width: 6px; border-radius: 8px;
+    background: var(--bw-brand);
+}
+
+/* 카드 */
+.bw-card{
+    border: 1px solid var(--bw-border);
+    border-radius: var(--bw-radius);
+    background: var(--bw-surface);
+    box-shadow: 0 4px 18px rgba(0,0,0,.04);
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+/* 폼 그리드 */
+.bw-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+.bw-row{
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    align-items: center;
+    gap: 10px;
+}
+.bw-span-2{ grid-column: 1 / -1; }
+
+/* 라벨 & 필드 */
+.bw-grid label{
+    font-weight: 700;
+    color: #2a3a33;
+    margin: 0;
+}
+.bw-grid input[type="text"],
+.bw-grid select,
+.bw-grid textarea,
+.bw-grid input[type="date"],
+.bw-grid input[type="file"]{
+    width: 100%;
+    border: 1px solid var(--bw-border);
+    border-radius: 10px;
+    padding: .6rem .8rem;
+    background: #fff;
+}
+.bw-grid textarea{
+    min-height: 260px;
+    resize: vertical;
+}
+
+/* select 래퍼(브랜드 톤) */
+.bw-select select{
+    appearance: none;
+    background-image:
+            linear-gradient(45deg, transparent 50%, var(--bw-brand) 50%),
+            linear-gradient(135deg, var(--bw-brand) 50%, transparent 50%);
+    background-position:
+            calc(100% - 18px) calc(1em - 2px),
+            calc(100% - 13px) calc(1em - 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+}
+
+/* 액션: 목록(좌) / 등록(우) */
+.bw-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+/* 버튼 톤 고정 (#00DCA0) — 페이지 한정 */
+.pf-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 46px;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-weight: 800;
+    border: 2px solid transparent;
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+    text-decoration: none !important; /* 링크 밑줄 제거 */
+}
+.pf-btn-primary{
+    background: var(--bw-brand) !important;
+    border-color: var(--bw-brand) !important;
+    color: #fff !important;
+}
+.pf-btn-primary:hover{ filter: brightness(.96); }
+.pf-btn-outline{
+    background: #fff;
+    color: var(--bw-brand) !important;
+    border-color: var(--bw-brand) !important;
+}
+.pf-btn-outline:hover{
+    background: var(--bw-brand);
+    color: #fff !important;
+}
+
+/* 반응형 */
+@media (max-width: 992px){
+    .bw-row{ grid-template-columns: 140px 1fr; }
+}
+@media (max-width: 768px){
+    .bw-grid{ grid-template-columns: 1fr; }
+    .bw-row{ grid-template-columns: 1fr; }
+}
+/* 글작성 제목 위에 생기는 가로 포인트 라인 제거 (이 페이지 전용) */
+main.container h1::after { content: none !important; display: none !important; }
+.bw-title::after { content: none !important; display: none !important; }
+
+/* === 글작성 제목 위 가로 포인트 라인 제거 (이 페이지 전용) === */
+/* .page-title 패턴 */
+.board-write .page-title::after { content: none !important; display: none !important; }
+/* h1에 직접 붙는 경우 */
+.board-write h1::after          { content: none !important; display: none !important; }
+/* 커스텀 클래스 사용 시 (.bw-title) */
+.board-write .bw-title::after   { content: none !important; display: none !important; }
+.board-write .page-title::after { content:none !important; display:none !important; }
+.board-write .page-title::before { content:none !important; display:none !important; }
+/* 글작성 페이지: 메인 상단 가로 바 완전 제거 */
+main.container.board-write:has(#registerForm)::before{ content:none !important; display:none !important; }
+
+/* ▼ 아이콘 표시용 래퍼 */
+.bw-select{
+    position: relative;
+    display: inline-block;
+}
+
+/* 네이티브 화살표 숨기고 우측 여백 확보 */
+.bw-select select{
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 2.2rem;          /* 아이콘 자리 */
+    background-image: none; /* 이전 삼각형 배경 제거 */
+}
+
+/* 커스텀 ▼ 아이콘 */
+.bw-select::after{
+    content: "▾";                   /* ▼, ▾, ▽ 등 취향에 맞게 교체 가능 */
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--bw-brand, #00DCA0);
+    font-weight: 700;
+    line-height: 1;
+    pointer-events: none;           /* 클릭 막지 않음 */
+}
+
+/* 포커스 시 살짝 강조 */
+.bw-select select:focus + .dummy,
+.bw-select:has(select:focus)::after{
+    color: #00b684;                 /* 살짝 어두운 톤 */
+}
+
+/* 다크/하이컨트라스트 대비(선택) */
+@media (forced-colors: active){
+    .bw-select::after { color: CanvasText; }
+}
+
+/* ▼ 아이콘을 셀렉트의 배경으로 직접 렌더링 (크로스브라우저 확실) */
+.board-write .bw-select select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* 우측 아이콘 자리 확보 */
+    padding-right: 2.2rem;
+
+    /* 기존 배경 화살표들 제거 */
+    background-image: none !important;
+
+    /* ▼ 아이콘 삽입 (브랜드색 #00DCA0) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%2300DCA0' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;   /* 위치 조정 */
+    background-size: 12px 12px;               /* 크기 조정 */
+}
+
+/* 포커스 시 아이콘 톤 살짝 어둡게(선택) */
+.board-write .bw-select select:focus{
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0,220,160,.22);
+    border-color: #00DCA0;
+    background-image:url("data:image/svg+xml,...") !important;
+}
+
+/* === 카테고리 셀렉트 ▼ 항상 보이게 (모든 카테고리 + 긴 텍스트 대응) === */
+.board-write .bw-select{
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    min-width: 220px;           /* 너무 좁아지지 않도록 (원하면 조정) */
+}
+
+.board-write .bw-select select{
+    width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;           /* 네이티브 화살표 제거 */
+    padding-right: 2.6rem;      /* ▼ 자리 확보 (텍스트가 덮지 않게) */
+    background: #fff !important;
+    background-image: none !important;  /* 다른 규칙이 덮어써도 확실히 제거 */
+    white-space: nowrap;        /* 한 줄 고정 */
+    overflow: hidden;           /* 넘치는 글자 숨김 */
+    text-overflow: ellipsis;    /* … 표시로 깔끔하게 */
+    line-height: 1.2;           /* 높이 작아도 아이콘이 잘 맞도록 */
+}
+
+/* ▼ 아이콘: 항상 위에 떠서 가려지지 않음. 색은 카테고리 포인트 변수를 따름 */
+.board-write .bw-select::after{
+    content: "";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px; height: 12px;
+    pointer-events: none;
+    z-index: 1;
+
+    /* SVG를 마스크로 쓰고 색은 배경색으로 칠함 → CSS 변수로 색 변경 가능 */
+    background-color: var(--board-accent, var(--bw-brand, #00DCA0));
+    -webkit-mask: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>\
+<path d='M7 10l5 5 5-5z'/></svg>") no-repeat center / contain;
+    mask: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>\
+<path d='M7 10l5 5 5-5z'/></svg>") no-repeat center / contain;
+}
+
+/* 포커스 시 살짝 진하게(선택) */
+.board-write .bw-select:has(select:focus)::after{
+    background-color: color-mix(in srgb, var(--board-accent, var(--bw-brand, #00DCA0)) 85%, black);
+}

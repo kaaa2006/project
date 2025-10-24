@@ -1,0 +1,247 @@
+/* =========================================================
+   TIP Board — Read (Detail)
+   - Scope: .tip-read (body class)
+   - Design only; no behavior changes
+   - Concept color: var(--brand-teal, #00DCA0)
+   ========================================================= */
+
+:root{
+    --tr-brand: var(--brand-teal, #00DCA0);
+    --tr-ink:   #0b2413;
+    --tr-muted: #6b7d73;
+    --tr-surface:#ffffff;
+    --tr-border:#e6eeea;
+    --tr-bg:    #f7faf8;
+    --tr-radius:16px;
+    --tr-shadow:0 8px 24px rgba(17,24,39,.06);
+    --tr-shadow-lg:0 16px 36px rgba(17,24,39,.10);
+}
+
+/* Page base */
+.tip-read{ color: var(--tr-ink); background: var(--tr-bg); }
+.tip-read .list-container{
+    max-width: 1000px;
+    margin: 24px auto;
+    padding: 0 12px 28px;
+}
+
+/* ===== Title ===== */
+.tip-read .list-container > h1{
+    position: relative;
+    margin: 6px 0 10px;
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+    color:#12251b;
+    word-break: keep-all;
+}
+.tip-read .list-container > h1::before{
+    content:"";
+    position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--tr-brand);
+}
+
+/* ===== Meta ===== */
+.tip-read .meta-info{
+    display:flex; align-items:center; flex-wrap: wrap; gap: 8px 12px;
+    color: var(--tr-muted);
+    font-size: .95rem;
+    margin-bottom: 12px;
+}
+.tip-read .meta-info p{ margin: 0; }
+.tip-read .meta-info p + p{ position: relative; padding-left: 12px; }
+.tip-read .meta-info p + p::before{
+    content: "·";
+    position: absolute; left:0; top: 0; color:#a7b5ae;
+}
+
+/* Divider */
+.tip-read hr{
+    margin: 12px 0 16px;
+    border: 0; height: 1px; background: var(--tr-border);
+}
+
+/* ===== Content (typography) ===== */
+.tip-read .tip-content{
+    background: var(--tr-surface);
+    border: 1px solid var(--tr-border);
+    border-radius: var(--tr-radius);
+    box-shadow: var(--tr-shadow);
+    padding: 18px;
+    color:#12251b;
+    line-height: 1.75;
+    word-break: keep-all;
+}
+.tip-read .tip-content h1,
+.tip-read .tip-content h2,
+.tip-read .tip-content h3,
+.tip-read .tip-content h4,
+.tip-read .tip-content h5,
+.tip-read .tip-content h6{
+    margin: 1.1em 0 .6em; font-weight:800; line-height:1.35;
+}
+.tip-read .tip-content p{ margin: .65em 0; }
+.tip-read .tip-content a{ color: var(--tr-brand); text-decoration: underline; }
+.tip-read .tip-content img{ max-width:100%; height:auto; border-radius: 8px; }
+
+/* ===== Reaction + right actions ===== */
+.tip-read .reaction{
+    display:flex; justify-content: space-between; align-items: center;
+    gap: 12px; flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+/* left group */
+.tip-read .tip-action-buttons{
+    display:flex; gap: 8px; align-items:center; flex-wrap: wrap;
+}
+.tip-read .reaction-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 40px; padding: 0 14px;
+    border-radius: 12px; border: 1.5px solid var(--tr-border);
+    background:#fff; color:#334155; font-weight: 800;
+    box-shadow: 0 1px 0 rgba(16,24,40,.06);
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s, transform .1s;
+}
+.tip-read .reaction-btn:hover{
+    background: rgba(0,220,160,.06);
+    border-color: color-mix(in srgb, var(--tr-brand) 38%, var(--tr-border));
+}
+/* active states (JS가 .active, .left/.right를 관리) */
+.tip-read .tip-action-buttons .btn-helpful.active{
+    background: var(--tr-brand); color:#fff; border-color: var(--tr-brand);
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+}
+.tip-read .tip-action-buttons .btn-not-helpful.active{
+    background:#e9eef0; color:#1f2937; border-color:#dfe6ea;
+}
+/* 컨테이너 방향 강조(선택): 좌/우 반응 시 미세 강조 */
+.tip-read .tip-action-buttons.left  .btn-helpful{ transform: translateY(-1px); }
+.tip-read .tip-action-buttons.right .btn-not-helpful{ transform: translateY(-1px); }
+
+/* right group (수정/삭제) */
+.tip-read .tip-action-buttons-right{
+    margin-left: auto; display:flex; gap: 8px; align-items:center; flex-wrap: wrap;
+}
+.tip-read .btn-submit,
+.tip-read .btn-delete{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 40px; padding: 0 14px;
+    border-radius: 12px; border: 2px solid transparent;
+    font-weight: 800; text-decoration: none !important;
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+}
+.tip-read .btn-submit{
+    background: var(--tr-brand); color:#fff; border-color: var(--tr-brand);
+    box-shadow: var(--tr-shadow);
+}
+.tip-read .btn-submit:hover{ filter: brightness(.97); }
+.tip-read .btn-delete{
+    background:#fff; color:#b42318; border-color:#ffd1cc;
+}
+.tip-read .btn-delete:hover{
+    background:#ffeceb; color:#8f1c14; border-color:#ffc2bb;
+}
+
+/* ===== Comments ===== */
+.tip-read h3{
+    margin: 18px 0 10px; font-weight: 800; letter-spacing: -.2px;
+}
+
+/* new comment */
+.tip-read #new-comment{
+    margin-bottom: 10px;
+}
+.tip-read #reply-text{
+    width: 100%; min-height: 110px; resize: vertical;
+    padding: 10px 12px; border-radius: 12px;
+    border:1px solid var(--tr-border); background:#fff;
+    box-shadow: inset 0 1px 0 rgba(16,24,40,.02);
+}
+.tip-read #btn-add-comment{
+    display:inline-flex; align-items:center; justify-content:center;
+    margin-top: 8px; height: 40px; padding: 0 14px;
+    border-radius: 12px; border:2px solid var(--tr-brand);
+    background: var(--tr-brand); color:#fff; font-weight: 800;
+}
+.tip-read #btn-add-comment:hover{ filter: brightness(.97); }
+
+/* comments list */
+.tip-read #comments-container ul{ list-style: none; margin: 0; padding: 0; }
+.tip-read #comments-container li{
+    border:1px solid var(--tr-border);
+    border-radius: 12px; background:#fff; margin-bottom: 10px; padding: 12px;
+    box-shadow: 0 1px 0 rgba(16,24,40,.06);
+}
+.tip-read #comments-container .comment-header{
+    display:flex; justify-content: space-between; align-items:center; gap: 10px;
+    margin-bottom: 6px;
+}
+.tip-read #comments-container .comment-date{
+    color: var(--tr-muted); font-size: .9rem;
+}
+.tip-read #comments-container .comment-buttons{
+    display:flex; gap: 6px; align-items:center;
+}
+.tip-read #comments-container .btn-edit,
+.tip-read #comments-container .btn-delete{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 32px; padding: 0 10px; border-radius: 10px;
+    border:1.5px solid var(--tr-border); background:#fff; color:#334155; font-weight:700;
+}
+.tip-read #comments-container .btn-edit:hover{ border-color: color-mix(in srgb, var(--tr-brand) 38%, var(--tr-border)); }
+.tip-read #comments-container .btn-delete{ color:#b42318; border-color:#ffd1cc; }
+.tip-read #comments-container .btn-delete:hover{ background:#ffeceb; color:#8f1c14; border-color:#ffc2bb; }
+
+.tip-read #comments-container .reply-text{
+    white-space: pre-wrap; line-height: 1.6; color:#12251b;
+}
+
+/* ===== Bottom back link ===== */
+.tip-read .list-container > a[href*="/board/tip/list"]{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 44px; padding: 0 16px; margin-top: 12px;
+    border-radius: 12px; border: 2px solid var(--tr-brand);
+    background:#fff; color: var(--tr-brand); font-weight: 800;
+    text-decoration: none !important;
+}
+.tip-read .list-container > a[href*="/board/tip/list"]:hover{
+    background: var(--tr-brand); color:#fff;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 767.98px){
+    .tip-read .list-container{ padding: 0 10px 22px; }
+    .tip-read .reaction{ flex-direction: column; align-items: stretch; }
+    .tip-read .tip-action-buttons-right{ margin-left: 0; justify-content: flex-end; }
+    .tip-read .btn-submit, .tip-read .btn-delete{ height: 42px; }
+}
+
+/* ===== Bootstrap coexistence ===== */
+.tip-read .btn{ line-height: 1; }
+
+/* ===== Reaction icons (monochrome brand) ===== */
+.tip-read .reaction-btn .reaction-icon{
+    font-size: 18px;
+    margin-right: 8px;
+    line-height: 1;
+    color: var(--tr-brand);         /* 기본: 브랜드 단색 */
+}
+
+/* hover 시 약간만 진해보이게 */
+.tip-read .reaction-btn:hover .reaction-icon{
+    filter: brightness(.92);
+}
+
+/* 활성 상태: 좋아요는 버튼이 브랜드 배경이라 아이콘을 흰색으로 */
+.tip-read .tip-action-buttons .btn-helpful.active .reaction-icon{
+    color: #fff;
+}
+
+/* 활성 상태: 싫어요는 중립 배경이므로 아이콘은 계속 브랜드색 유지 */
+.tip-read .tip-action-buttons .btn-not-helpful.active .reaction-icon{
+    color: var(--tr-brand);
+}
+
+/* (선택) 아이콘/텍스트 간격 미세 정렬 */
+.tip-read .reaction-btn .label{ margin-right: 2px; }

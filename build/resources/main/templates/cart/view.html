@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+  <title>장바구니</title>
+  <th:block layout:fragment="page_head">
+    <link rel="stylesheet" th:href="@{/css/pages/cart.css}">
+  </th:block>
+</head>
+<body>
+<main layout:fragment="content" class="container-xxl py-4 cart-view-page">
+
+  <!-- 상단: 제목 + 단계 -->
+  <div class="cart-top d-flex align-items-start justify-content-between flex-wrap gap-2">
+    <h2 class="cart-title">장바구니</h2>
+    <ol class="checkout-steps" aria-label="주문 단계">
+      <li class="step active">01 장바구니</li>
+      <li class="sep">›</li>
+      <li class="step">02 주문서/결제</li>
+      <li class="sep">›</li>
+      <li class="step">03 주문완료</li>
+    </ol>
+  </div>
+
+  <!-- 리스트 헤드: 일반상품 + 전체선택 + 선택삭제 -->
+  <div class="cart-list-head">
+    <div class="head-left">
+      <input id="select-all" class="form-check-input" type="checkbox" aria-label="전체 선택">
+      <span class="cart-section-title">일반상품</span>
+    </div>
+    <button id="delete-checked-btn" type="button" class="delete-link">
+      <i class="bi bi-trash"></i><span>선택 삭제</span>
+    </button>
+  </div>
+
+
+  <!-- ✅ JS가 테이블을 주입하는 자리 -->
+  <section id="cart-box"></section>
+
+  <!-- ✅ JS가 요약 박스를 주입하는 자리 -->
+  <section id="summary-box"></section>
+
+  <!-- 안내문: 요약 박스 바깥 우하단 -->
+  <p class="summary-note note-out">
+    네이버페이 결제 시 새벽배송 불가, 쿠폰/적립금은 주문서 작성 단계에서 적용 가능
+  </p>
+
+  <!-- 하단 액션 -->
+  <div class="cart-actions">
+    <a th:href="@{/thymeleaf/main}" class="btn btn-outline">쇼핑 계속하기</a>
+    <button id="order-checked-btn" class="btn btn-outline">선택 상품 주문</button>
+    <!-- ✅ id 추가 -->
+    <a href="/orders/checkout" id="order-all-btn" class="btn btn-primary" role="button">전체 주문</a>
+  </div>
+
+
+</main>
+
+<th:block layout:fragment="page_foot">
+  <script th:src="@{/js/header-cart.js}" defer></script>
+  <script th:src="@{/js/shop/cart-view.js}" defer></script>
+</th:block>
+</body>
+</html>

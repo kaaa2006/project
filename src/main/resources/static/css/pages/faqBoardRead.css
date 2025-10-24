@@ -1,0 +1,165 @@
+/* =========================================================
+   FAQ Board — Read (tip 상세 톤 매칭)
+   Concept color: var(--brand-teal, #00DCA0)
+   ========================================================= */
+:root{
+    --faq-brand: var(--brand-teal, #00DCA0);
+    --faq-ink:   #0b2413;
+    --faq-muted: #6b7d73;
+    --faq-surface:#ffffff;
+    --faq-border:#e6eeea;
+    --faq-bg:    #f7faf8;
+    --faq-radius:14px;
+    --faq-shadow:0 8px 24px rgba(17,24,39,.06);
+}
+
+body.faq-read{ background: var(--faq-bg); color: var(--faq-ink); }
+
+.list-container{
+    max-width: 980px;
+    margin: 24px auto;
+    padding: 0 12px 32px;
+}
+
+/* 제목: 아래 간격 "조금" 증가 */
+.page-title{
+    position: relative;
+    margin: 0 0 10px 0; /* 기존 6px -> 10px */
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: -.2px;
+}
+.page-title::before{
+    content:"";
+    position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--faq-brand);
+}
+
+/* 메타: 상단 살짝 띄우기 */
+.meta-info{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 12px 22px;
+    color: var(--faq-muted);
+    font-size: .95rem;
+    margin-top: 4px;      /* 추가 */
+    margin-bottom: 8px;
+}
+.meta-info p{ margin: 0; }
+
+/* Q/A 공통 */
+.qa-block{
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 12px;
+    align-items: start;
+    margin: 14px 0;
+}
+.qa-label{
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display:flex; align-items:center; justify-content:center;
+    font-weight: 900;
+    background: #ecfdf5; color: var(--faq-brand);
+    box-shadow: 0 1px 0 rgba(16,24,40,.06) inset;
+}
+.qa-label.a{
+    background: var(--faq-brand);
+    color: #fff;
+}
+.qa-body{
+    background: var(--faq-surface);
+    border: 1px solid var(--faq-border);
+    border-radius: var(--faq-radius);
+    padding: 18px 16px;
+    box-shadow: var(--faq-shadow);
+}
+.q-body{ font-weight: 800; }
+.a-body{ line-height: 1.7; }
+
+/* 액션 라인 */
+.action-row{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top: 20px; gap: 12px; flex-wrap: wrap;
+}
+.action-row .right{ display:flex; gap: 8px; }
+.action-row .inline{ display:inline; }
+
+/* 버튼들 — 팁/리뷰 상세와 유사한 톤/사이즈/호버 */
+.btn-outline,
+.btn-submit,
+.btn-delete{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width: 120px;           /* 사이즈 살짝 키움 */
+    height: 44px;               /* 42px → 44px */
+    padding: 0 16px;
+    border-radius: 12px;
+    font-weight: 800;
+    text-decoration: none !important;
+    transition: background .15s, color .15s, transform .15s, box-shadow .15s, filter .15s;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+/* 목록으로 (아웃라인) */
+.btn-outline{
+    border-color: var(--faq-brand);
+    color: var(--faq-brand);
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(16,24,40,.06);
+}
+.btn-outline:hover{
+    background: rgba(0,220,160,.08);
+    color: var(--faq-brand);
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+}
+
+/* 수정 (프라이머리) */
+.btn-submit{
+    background: var(--faq-brand);
+    color: #fff;
+    border-color: var(--faq-brand);
+    box-shadow: var(--faq-shadow);
+}
+.btn-submit:hover{
+    filter: brightness(.97);
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+}
+
+/* 삭제 (레드) */
+.btn-delete{
+    background: #ef4444;
+    color:#fff;
+    border-color:#ef4444;
+    box-shadow: var(--faq-shadow);
+}
+.btn-delete:hover{
+    filter: brightness(.95);
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 4px rgba(239,68,68,.18);
+}
+
+/* 포커스 접근성 */
+.btn-outline:focus-visible,
+.btn-submit:focus-visible,
+.btn-delete:focus-visible{
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+}
+
+/* 눌림감 */
+.btn-outline:active,
+.btn-submit:active,
+.btn-delete:active{
+    transform: translateY(0);
+}
+
+/* 반응형 */
+@media (max-width: 575.98px){
+    .meta-info{ grid-template-columns: 1fr; }
+    .btn-outline, .btn-submit, .btn-delete{
+        flex:1; min-width: 0; height: 44px;
+    }
+}

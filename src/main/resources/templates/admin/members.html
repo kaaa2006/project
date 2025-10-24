@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+  <title>회원 조회</title>
+
+  <th:block layout:fragment="page_head">
+    <style>
+      .admin-members .toolbar .form-label { font-weight: 600; }
+      .admin-members .search-row { row-gap: .5rem; }
+      .admin-members .stat-chip { font-size: .78rem; padding: .25rem .5rem; border-radius: .5rem; }
+      .admin-members .chip-role   { background: #e6f7ff; }
+      .admin-members .chip-grade  { background: #e9fff7; }
+      .admin-members .chip-status { background: #f3f4f6; }
+      .admin-members .table thead th { white-space: nowrap; }
+      .admin-members .table tbody td { vertical-align: middle; padding-top: .7rem; padding-bottom: .7rem; }
+      .admin-members .empty { padding: 3rem 0; color: #777; text-align:center; }
+      .admin-members .btn-primary { background:#00dca0; border-color:#00dca0; }
+      .admin-members .btn-outline-secondary:hover { background:#f5f6f7; }
+      .admin-members .sort-link { text-decoration: none; }
+      .modal { z-index: 2000 !important; }
+      .modal-backdrop { z-index: 1990 !important; }
+    </style>
+  </th:block>
+</head>
+
+<body>
+<div layout:fragment="content" class="container-xxl py-4 admin-members">
+
+  <h2 class="mb-3">회원 조회</h2>
+
+  <!-- 🔎 검색/필터/정렬 -->
+  <section class="toolbar card shadow-sm mb-3">
+    <div class="card-body">
+      <form method="get">
+        <div class="row search-row align-items-end">
+          <div class="col-12 col-md-4">
+            <label class="form-label">검색어</label>
+            <input type="text" class="form-control" name="keyword" placeholder="이름/이메일"
+                   th:value="${keyword}">
+          </div>
+
+          <div class="col-6 col-md-4">
+            <label class="form-label">카테고리</label>
+            <select name="category" class="form-select">
+              <option value="" th:selected="${category==null or category==''}">전체</option>
+              <optgroup label="역할">
+                <option th:each="r : ${roles}" th:value="${r.name()}" th:text="${r.name()}"
+                        th:selected="${category==r.name()}">USER</option>
+              </optgroup>
+              <optgroup label="상태">
+                <option value="ACTIVE" th:selected="${category=='ACTIVE'}">ACTIVE</option>
+                <option value="WITHDRAWN" th:selected="${category=='WITHDRAWN'}">WITHDRAWN</option>
+              </optgroup>
+              <optgroup label="등급">
+                <option th:each="g : ${grades}" th:value="${g.name()}" th:text="${g.name()}"
+                        th:selected="${category==g.name()}">BASIC</option>
+              </optgroup>
+              <optgroup label="소셜">
+                <option value="LOCAL" th:selected="${category=='LOCAL'}">LOCAL</option>
+                <option value="KAKAO" th:selected="${category=='KAKAO'}">KAKAO</option>
+                <option value="NAVER" th:selected="${category=='NAVER'}">NAVER</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="col-6 col-md-2">
+            <label class="form-label">정렬</label>
+            <select name="sort" class="form-select">
+              <option value="desc"  th:selected="${sort=='desc'}">최신순</option>
+              <option value="asc"   th:selected="${sort=='asc'}">오래된순</option>
+              <option value="grade" th:selected="${sort=='grade'}">등급순</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-fill">검색</button>
+            <a th:href="@{/admin/members}" class="btn btn-outline-secondary">초기화</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 📋 결과 테이블 -->
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+          <tr>
+            <th style="width:80px">#</th>
+            <th>이메일</th>
+            <th>이름</th>
+            <th>전화</th>
+            <th>등급</th>
+            <th>역할</th>
+            <th>상태</th>
+            <th>포인트</th>
+            <th>
+              <span>가입일</span>
+              <a class="sort-link ms-1"
+                 th:if="${sort != 'grade'}"
+                 th:href="@{|?page=0&size=${members.size}&keyword=${keyword}&category=${category}&sort=${sort=='desc'?'asc':'desc'}|}"
+                 th:title="${sort=='desc'?'오래된순':'최신순'}">
+                <i class="bi" th:classappend="${sort=='desc' ? 'bi-arrow-down-short' : 'bi-arrow-up-short'}"></i>
+              </a>
+            </th>
+            <th class="text-end" style="width:160px">관리</th>
+          </tr>
+          </thead>
+
+          <!-- ✅ tbody 하나만 -->
+          <tbody>
+          <!-- 비어있음 -->
+          <tr th:if="${members.totalElements == 0}">
+            <td colspan="10" class="empty">조건에 맞는 회원이 없습니다.</td>
+          </tr>
+
+          <!-- 목록 -->
+          <tr th:each="m, stat : ${members}"
+              th:with="rowNo=${members.number * members.size + stat.index + 1}"
+              th:attr="data-mno=${m.mno},
+                       data-name=${m.memberName},
+                       data-role=${m.role},
+                       data-grade=${m.grade},
+                       data-points=${m.points}">
+            <td th:text="${rowNo}">1</td>
+            <td th:text="${m.email}">user@example.com</td>
+            <td th:text="${m.memberName}">홍길동</td>
+            <td th:text="${m.phone}">010-0000-0000</td>
+            <td><span class="stat-chip chip-grade"  th:text="${m.grade}">BASIC</span></td>
+            <td><span class="stat-chip chip-role"   th:text="${m.role}">USER</span></td>
+            <td><span class="stat-chip chip-status" th:text="${m.status}">ACTIVE</span></td>
+            <td><span th:text="${#numbers.formatInteger(m.points, 1, 'COMMA')}">0</span></td>
+            <td th:text="${#temporals.format(m.createdAt, 'yyyy-MM-dd')}">2025-08-27</td>
+            <td class="text-end">
+              <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary btn-sm"
+                        data-bs-toggle="modal" data-bs-target="#editModal"
+                        th:attr="data-mno=${m.mno},
+                                 data-name=${m.memberName},
+                                 data-role=${m.role},
+                                 data-grade=${m.grade},
+                                 data-points=${m.points}">
+                  수정
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal" data-bs-target="#deleteModal"
+                        th:attr="data-mno=${m.mno},
+                                 data-name=${m.memberName},
+                                 data-status=${m.status}">
+                  삭제
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 페이징 -->
+    <div class="card-footer bg-white">
+      <nav th:if="${members.totalPages > 1}">
+        <ul class="pagination mb-2">
+          <li class="page-item" th:classappend="${members.first}? 'disabled'">
+            <a class="page-link"
+               th:href="@{|?page=${members.number-1}&size=${members.size}&keyword=${keyword}&category=${category}&sort=${sort}|}">이전</a>
+          </li>
+          <li class="page-item"
+              th:each="i : ${#numbers.sequence(0, (members.totalPages > 4 ? 3 : members.totalPages-1))}"
+              th:classappend="${members.number==i}? 'active'">
+            <a class="page-link"
+               th:text="${i+1}"
+               th:href="@{|?page=${i}&size=${members.size}&keyword=${keyword}&category=${category}&sort=${sort}|}"></a>
+          </li>
+          <li class="page-item disabled" th:if="${members.totalPages > 5}">
+            <span class="page-link">…</span>
+          </li>
+          <li class="page-item" th:if="${members.totalPages > 5}"
+              th:classappend="${members.number==(members.totalPages-1)}? 'active'">
+            <a class="page-link"
+               th:text="${members.totalPages}"
+               th:href="@{|?page=${members.totalPages-1}&size=${members.size}&keyword=${keyword}&category=${category}&sort=${sort}|}"></a>
+          </li>
+          <li class="page-item" th:classappend="${members.last}? 'disabled'">
+            <a class="page-link"
+               th:href="@{|?page=${members.number+1}&size=${members.size}&keyword=${keyword}&category=${category}&sort=${sort}|}">다음</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+</div>
+
+<th:block layout:fragment="page_foot">
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css}">
+
+  <!-- 수정 모달 -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="post" id="editForm" action="" data-base="/admin/members">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">회원 정보 수정</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label" for="editName">이름</label>
+              <input id="editName" type="text" name="memberName" class="form-control" required>
+            </div>
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label" for="editGrade">등급</label>
+                <select id="editGrade" name="grade" class="form-select">
+                  <option th:each="g : ${grades}" th:value="${g.name()}" th:text="${g.name()}">BASIC</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label" for="editRole">역할</label>
+                <select id="editRole" name="role" class="form-select">
+                  <option th:each="r : ${roles}" th:value="${r.name()}" th:text="${r.name()}">USER</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="editPoints">포인트</label>
+              <input id="editPoints" type="number" name="points" class="form-control" min="0" step="1" placeholder="0">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="hidden" name="keyword"  th:value="${keyword}">
+            <input type="hidden" name="category" th:value="${category}">
+            <input type="hidden" name="sort"     th:value="${sort}">
+            <input type="hidden" name="page"     th:value="${members.number}">
+            <input type="hidden" name="size"     th:value="${members.size}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소</button>
+            <button type="submit" class="btn btn-primary">저장</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 삭제 모달 -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="post" id="deleteForm" action="" data-base="/admin/members">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">회원 삭제 / 상태변경</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" name="_memberName" value="">
+            <div class="mb-2">처리 방식을 선택하세요.</div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="mode" id="modeStatus" value="status" checked>
+              <label class="form-check-label" for="modeStatus">상태 변경</label>
+              <div class="mt-2 ms-4">
+                <label for="delStatus" class="form-label visually-hidden">상태</label>
+                <select id="delStatus" name="status" class="form-select">
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="WITHDRAWN">WITHDRAWN</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-check mt-3">
+              <input class="form-check-input" type="radio" name="mode" id="modeDrop" value="DROP">
+              <label class="form-check-label text-danger" for="modeDrop">물리삭제(DROP) — 되돌릴 수 없습니다.</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="hidden" name="keyword"  th:value="${keyword}">
+            <input type="hidden" name="category" th:value="${category}">
+            <input type="hidden" name="sort"     th:value="${sort}">
+            <input type="hidden" name="page"     th:value="${members.number}">
+            <input type="hidden" name="size"     th:value="${members.size}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소</button>
+            <button type="submit" class="btn btn-danger">확인</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 토스트 -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 2100;">
+    <div class="toast align-items-center text-bg-dark border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         th:classappend="${msg} != null ? ' show' : ''">
+      <div class="d-flex">
+        <div class="toast-body" th:text="${msg}">알림</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const editModalEl   = document.getElementById('editModal');
+    const deleteModalEl = document.getElementById('deleteModal');
+
+    // 수정 모달
+    if (editModalEl) {
+      editModalEl.addEventListener('show.bs.modal', function (event) {
+        const btn    = event.relatedTarget;
+        const mno    = btn?.getAttribute('data-mno');
+        const name   = btn?.getAttribute('data-name')  || '';
+        const role   = btn?.getAttribute('data-role')  || 'USER';
+        const grade  = btn?.getAttribute('data-grade') || 'BASIC';
+        const points = btn?.getAttribute('data-points') || '0';
+
+        const form = document.getElementById('editForm');
+        const base = form.getAttribute('data-base') || '/admin/members';
+
+        form.action = base + '/' + mno + '/update';
+        form.memberName.value = name;
+        form.querySelector('select[name="role"]').value  = role;
+        form.querySelector('select[name="grade"]').value = grade;
+        form.querySelector('input[name="points"]').value = points;
+      });
+    }
+
+    // 삭제 모달
+    if (deleteModalEl) {
+      deleteModalEl.addEventListener('show.bs.modal', function (event) {
+        const btn    = event.relatedTarget;
+        const mno    = btn?.getAttribute('data-mno');
+        const name   = btn?.getAttribute('data-name') || '';
+        const status = btn?.getAttribute('data-status') || 'ACTIVE';
+
+        const form = document.getElementById('deleteForm');
+        const base = form.getAttribute('data-base') || '/admin/members';
+
+        form.action = base + '/' + mno + '/delete';
+        form.querySelector('input[name="_memberName"]').value = name;
+
+        form.querySelector('#modeStatus').checked = true;
+        const sel = form.querySelector('select[name="status"]');
+        sel.disabled = false;
+        if (status && sel.querySelector('option[value="'+status+'"]')) {
+          sel.value = status;
+        }
+      });
+
+      deleteModalEl.addEventListener('change', function(e){
+        if (e.target.name !== 'mode') return;
+        const sel = deleteModalEl.querySelector('select[name="status"]');
+        sel.disabled = !deleteModalEl.querySelector('#modeStatus').checked;
+      });
+    }
+
+    // 제출 가드
+    function guardSubmit(form, pattern, makeConfirmMessage) {
+      form.addEventListener('submit', function(e){
+        const okAction = !!form.action && pattern.test(form.action);
+        if (!okAction) { e.preventDefault(); alert('대상 회원이 선택되지 않았습니다.'); return; }
+        const msg = makeConfirmMessage(form);
+        if (msg && !confirm(msg)) e.preventDefault();
+      });
+    }
+
+    const editForm = document.getElementById('editForm');
+    if (editForm) {
+      guardSubmit(
+              editForm,
+              /\/admin\/members\/\d+\/update$/,
+              (f) => {
+                const nm = f.memberName.value?.trim() || '이 회원';
+                const role  = f.querySelector('select[name="role"]').value;
+                const grade = f.querySelector('select[name="grade"]').value;
+                const pts   = f.querySelector('input[name="points"]').value || '0';
+                return `변경사항을 저장할까요?\n\n대상: ${nm}\n역할: ${role}\n등급: ${grade}\n포인트: ${pts}`;
+              }
+      );
+    }
+
+    const deleteForm = document.getElementById('deleteForm');
+    if (deleteForm) {
+      guardSubmit(
+              deleteForm,
+              /\/admin\/members\/\d+\/delete$/,
+              (f) => {
+                const isDrop = f.querySelector('#modeDrop').checked;
+                const nm = f.querySelector('input[name="_memberName"]').value || '이 회원';
+                if (isDrop) return `정말로 ${nm}을(를) 완전히 삭제할까요?\n\n이 작업은 되돌릴 수 없습니다.`;
+                const st = f.querySelector('select[name="status"]').value;
+                return `${nm}의 상태를 ${st}(으)로 변경할까요?`;
+              }
+      );
+    }
+
+    (function(){
+      const toastEl = document.querySelector('.toast');
+      if (toastEl && toastEl.classList.contains('show')) {
+        const t = new bootstrap.Toast(toastEl, { delay: 2500 });
+        t.show();
+      }
+    })();
+  </script>
+</th:block>
+</body>
+</html>

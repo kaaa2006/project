@@ -1,0 +1,185 @@
+/* =========================================================
+   Notice Board — List (Tip-like UI)
+   - Scope: this page only
+   - Concept color: var(--brand-teal, #00DCA0)
+   - No behavior changes
+   ========================================================= */
+
+:root{
+    --nb-brand: var(--brand-teal, #00DCA0);
+    --nb-ink:   #0b2413;
+    --nb-muted: #6b7d73;
+    --nb-surface:#ffffff;
+    --nb-border:#e6eeea;
+    --nb-bg:    #f7faf8;
+    --nb-radius:14px;
+    --nb-shadow:0 8px 24px rgba(17,24,39,.06);
+}
+
+body.notice-page{ background: var(--nb-bg); color: var(--nb-ink); }
+
+/* 컨테이너 */
+.list-container{
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 12px 24px;
+}
+
+/* 헤더 */
+.list-container .header{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom: 12px;
+}
+.list-container .header h1{
+    position: relative; margin: 0; padding-left: 14px;
+    font-weight: 800; letter-spacing: -.2px; color:#12251b;
+}
+.list-container .header h1::before{
+    content:""; position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--nb-brand);
+}
+
+/* 글쓰기 버튼 (관리자) */
+.btn-register{
+    display:inline-flex; align-items:center; justify-content:center;
+    height: 44px; padding: 0 16px;
+    border-radius: 12px; border: 2px solid var(--nb-brand);
+    background: var(--nb-brand); color:#fff !important;
+    font-weight: 800; text-decoration: none !important;
+    box-shadow: var(--nb-shadow);
+    transition: filter .15s, transform .15s, box-shadow .15s;
+    margin: 8px 0 16px auto;
+}
+.btn-register:hover{ filter: brightness(.97); transform: translateY(-1px); }
+
+/* ===== Table-like UL ===== */
+.notice-table{
+    list-style: none; margin: 0; padding: 0;
+    border: 1px solid var(--nb-border);
+    border-radius: var(--nb-radius);
+    background: var(--nb-surface);
+    box-shadow: var(--nb-shadow);
+    overflow: hidden;
+}
+
+/* 컬럼 그리드 (번호 | 제목 | 작성자 | 작성일 | 조회) */
+.notice-table .notice-header,
+.notice-table .notice-item{
+    display: grid;
+    grid-template-columns: 90px 1fr 140px 180px 90px;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+}
+
+/* 헤더 행 */
+.notice-table .notice-header{
+    background: #f1f6f4;
+    color: #2e3a34;
+    font-weight: 800;
+    border-bottom: 1px solid var(--nb-border);
+}
+
+/* 데이터 행 */
+.notice-table .notice-item{
+    background: #fff;
+    transition: background .15s, transform .15s;
+    border-bottom: 1px solid var(--nb-border);
+    cursor: pointer; /* li 클릭 이동 UX */
+}
+.notice-table .notice-item:last-child{ border-bottom: 0; }
+.notice-table .notice-item:hover{
+    background: #fbfdfc; transform: translateY(-1px);
+}
+
+/* 셀 */
+.notice-table .col-no{
+    text-align: center; color:#4b5c54; font-weight: 700;
+}
+.notice-table .col-title{
+    min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    font-weight: 700; color:#12251b;
+}
+.notice-table .col-title a{ color: inherit; text-decoration: none; }
+.notice-table .col-title a:hover{ text-decoration: underline; }
+.notice-table .col-writer{ color:#2b3c34; font-weight:700; }
+.notice-table .col-date{
+    color: var(--nb-muted); font-variant-numeric: tabular-nums; text-align:right;
+}
+.notice-table .col-views{ text-align:center; color:#4b5c54; font-weight:700; }
+
+/* 빈 상태 */
+.notice-empty{
+    border:1px dashed var(--nb-border);
+    background:#fbfdfc;
+    border-radius: 12px;
+    padding: 32px 16px;
+    color:#9aa8a1; text-align:center;
+    margin-top: 8px;
+}
+
+/* 반응형 */
+@media (max-width: 1199.98px){
+    .notice-table .notice-header,
+    .notice-table .notice-item{
+        grid-template-columns: 80px 1fr 130px 170px 90px;
+    }
+}
+@media (max-width: 991.98px){
+    .notice-table .notice-header,
+    .notice-table .notice-item{
+        grid-template-columns: 70px 1fr 120px 160px;
+    }
+    .notice-table .col-views{ display:none; }
+}
+@media (max-width: 767.98px){
+    .btn-register{ width: 100%; }
+    .notice-table .notice-header,
+    .notice-table .notice-item{
+        grid-template-columns: 60px 1fr 120px;
+    }
+    .notice-table .col-date{ display:none; }
+}
+@media (max-width: 575.98px){
+    .list-container{ padding: 0 8px 18px; }
+    .notice-table .notice-header,
+    .notice-table .notice-item{
+        grid-template-columns: 52px 1fr;
+    }
+    .notice-table .col-writer{ display:none; }
+}
+
+/* ===== Pagination (팁 리스트와 동일 톤) ===== */
+.pagination-wrap{ margin-top: 20px; }
+.board-pagination{
+    display:flex; justify-content:center; align-items:center; gap: 6px;
+    list-style:none; padding:0; margin:0;
+}
+.board-pagination .page-btn{
+    min-width: 40px; height: 40px;
+    border-radius: .75rem; border: none;
+    background: #fff; color:#334155;
+    font-weight:700; font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(16,24,40,.06);
+    display:flex; align-items:center; justify-content:center;
+    transition: all .2s ease;
+}
+.board-pagination .page-btn:hover:not(.active):not(.disabled){
+    background: rgba(0,220,160,.08);
+    color: var(--nb-brand);
+}
+.board-pagination .page-btn.active{
+    background: var(--nb-brand); color:#fff;
+    box-shadow: 0 0 0 4px rgba(0,220,160,.15);
+    cursor: default;
+}
+.board-pagination .page-btn.disabled{
+    background:#f1f5f9; color:#94a3b8; cursor:not-allowed;
+}
+.board-pagination .ellipsis{
+    padding: 0 6px; color: #94a3b8; font-size: 16px;
+}
+
+/* Bootstrap 공존 */
+.btn{ line-height: 1; }

@@ -1,0 +1,86 @@
+/* =========================================================
+   Inquiry User — Read (Tip-like Style)
+   * 디자인만 적용, 기존 user.js 동작과 충돌 없음
+   ========================================================= */
+:root{
+    --iur-brand: var(--brand-teal, #00DCA0);
+    --iur-ink:   #0b2413;
+    --iur-muted: #6b7d73;
+    --iur-surface:#ffffff;
+    --iur-border:#e6eeea;
+    --iur-bg:    #f7faf8;
+    --iur-radius:14px;
+    --iur-shadow:0 8px 24px rgba(17,24,39,.06);
+}
+
+body.inquiry-user-read{ background: var(--iur-bg); color: var(--iur-ink); }
+.list-container{ max-width: 980px; margin: 24px auto; padding: 0 12px 28px; }
+
+/* 제목 (좌측 포인트 바) */
+.page-title{
+    position: relative; margin: 0 0 16px; padding-left: 14px;
+    font-weight: 800; letter-spacing: -.2px; color:#12251b;
+}
+.page-title::before{
+    content:""; position:absolute; left:0; top:.18em; bottom:.18em;
+    width:6px; border-radius:8px; background: var(--iur-brand);
+}
+
+/* 카드 */
+.pf-card{
+    border:1px solid var(--iur-border);
+    border-radius: var(--iur-radius);
+    background: var(--iur-surface);
+    box-shadow: var(--iur-shadow);
+    margin-bottom: 16px; overflow: hidden;
+}
+.pf-card-head{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding: 12px 16px; background:#f1f6f4; border-bottom:1px solid var(--iur-border);
+}
+.pf-card-title{ font-weight:800; color:#2b3c34; }
+.pf-card-head .meta{ display:flex; gap:14px; flex-wrap:wrap; color:#41524a; font-weight:600; }
+.pf-card-body{ padding: 16px; }
+
+/* 본문 */
+.post-title{ margin: 0 0 8px; font-weight: 800; }
+.post-content{ color:#1e2b25; line-height:1.75; word-break: break-word; }
+
+/* 답변 */
+.answer-view.alert{
+    background:#e6fff7; border:1px solid #b6f3de; color:#0f5132;
+}
+.answer-empty.alert{
+    background:#f8fafc; border:1px dashed var(--iur-border); color:#475569;
+}
+
+/* 하단 버튼 구역 */
+.bottom-actions{
+    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top: 10px;
+}
+.bottom-actions .right{ display:flex; gap:8px; }
+
+/* 버튼 - 브랜드 톤 */
+.btn-primary, .btn-outline, .btn-danger{
+    display:inline-flex; align-items:center; justify-content:center;
+    height:40px; padding: 0 14px; border-radius: 12px; font-weight: 800;
+    border:2px solid transparent; text-decoration:none !important; line-height:1;
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+}
+.btn-sm{ height:36px; padding:0 12px; font-weight:800; }
+
+/* Variants */
+.btn-primary{ background: var(--iur-brand); color:#fff; border-color: var(--iur-brand); }
+.btn-primary:hover{ filter: brightness(.97); }
+.btn-outline{ background:#fff; color: var(--iur-brand); border-color: var(--iur-brand); }
+.btn-outline:hover{ background: var(--iur-brand); color:#fff; }
+.btn-danger{ background:#ef4444; color:#fff; border-color:#ef4444; }
+.btn-danger:hover{ filter: brightness(.96); }
+
+/* 반응형 */
+@media (max-width: 575.98px){
+    .list-container{ padding: 0 8px 22px; }
+    .pf-card-head{ flex-direction: column; align-items:flex-start; gap:6px; }
+    .bottom-actions{ flex-direction: column; align-items: stretch; }
+    .bottom-actions .right{ justify-content: space-between; }
+}

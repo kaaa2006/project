@@ -1,0 +1,144 @@
+/* src/main/resources/static/css/admin/admin-items.css */
+:root { --brand-teal:#00dca0; }
+
+/* ===== 모달이 헤더/카테고리바 위로 오도록 (z-index 고정) ===== */
+.modal-backdrop { z-index: 1999 !important; }
+.modal { z-index: 2000 !important; }
+
+/* 헤더/카테고리바가 너무 위로 올라가는 경우 낮춤(필요한 공통 클래스들에 적용) */
+header, .navbar, .category-bar, .global-header, .site-header, .sticky-top {
+    z-index: 1030 !important;
+}
+
+/* ===== 공통 버튼 ===== */
+.btn.btn-brand{
+    background: var(--brand-teal); border-color: var(--brand-teal); color:#fff;
+}
+.btn.btn-brand:hover{ filter:brightness(.95); color:#fff; }
+
+/* ===== 상세 페이지 ===== */
+.admin-item-detail-page .text-teal{ color: var(--brand-teal); }
+.admin-item-detail-page .price-xl{
+    font-weight: 800;
+    font-size: clamp(1.8rem, 2vw + 1.2rem, 2.6rem);
+    line-height: 1.1;
+}
+
+/* 갤러리 */
+.admin-item-detail-page .gallery-hero{
+    position:relative; width:100%; aspect-ratio: 4/3; background:#f2f2f2; overflow:hidden;
+    border-radius: .75rem;
+}
+.admin-item-detail-page .gallery-hero img{
+    width:100%; height:100%; object-fit:cover; display:block;
+}
+.admin-item-detail-page .gallery-thumbs{
+    display:flex; gap:.5rem; flex-wrap:wrap;
+}
+.admin-item-detail-page .gallery-thumbs .thumb{
+    border:0; padding:0; background:transparent; cursor:pointer;
+    width:80px; aspect-ratio:4/3; border-radius:.5rem; overflow:hidden; outline:1px solid #e5e5e5;
+}
+.admin-item-detail-page .gallery-thumbs .thumb img{
+    width:100%; height:100%; object-fit:cover; display:block;
+}
+.admin-item-detail-page .gallery-thumbs .thumb.active{ outline:2px solid var(--brand-teal); }
+
+/* 갤러리 관리 그리드 */
+.detail-grid{
+    display:grid; gap:.75rem; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+.detail-card{
+    position:relative; border:1px solid #e5e5e5; border-radius:.75rem; overflow:hidden; background:#fafafa;
+}
+.detail-card img{ width:100%; height:140px; object-fit:cover; display:block; }
+.detail-card .actions{
+    position:absolute; inset:auto .5rem .5rem .5rem; display:flex; gap:.4rem; justify-content:center;
+}
+
+/* 긴 설명 이미지 (세로) */
+.long-images{
+    display:flex; flex-direction:column; gap:1rem;
+}
+.long-card{
+    border:1px solid #eaeaea; border-radius:.75rem; overflow:hidden; background:#fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.03);
+}
+.long-card .long-img{
+    width:100%; height:auto; display:block;
+}
+
+/* 긴 설명 이미지 관리 그리드(미리보기 카드) */
+.long-grid{
+    display:grid; gap:.75rem; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+.long-grid-card{
+    position:relative; border:1px solid #e5e5e5; border-radius:.75rem; overflow:hidden; background:#fafafa;
+}
+.long-grid-card img{
+    width:100%; height:220px; object-fit:cover; display:block;
+}
+.long-grid-card .actions{
+    position:absolute; right:.5rem; bottom:.5rem; display:flex; gap:.4rem;
+}
+
+/* === 상세페이지: 메인 갤러리 정사각 === */
+.admin-item-detail-page .gallery-hero{
+    /* 기존 aspect-ratio: 4/3; 를 아래로 교체 */
+    aspect-ratio: 1 / 1;
+}
+
+/* === 상세페이지: 썸네일 리스트(작은 미리보기)도 정사각 === */
+.admin-item-detail-page .gallery-thumbs .thumb{
+    /* 기존 aspect-ratio: 4/3; 를 정사각으로 */
+    aspect-ratio: 1 / 1;
+    /* 보기 좋은 기본 크기 */
+    width: 84px;
+}
+@media (min-width: 992px){
+    .admin-item-detail-page .gallery-thumbs .thumb{ width: 96px; }
+}
+
+/* (옵션) 수정 모달의 썸네일 미리보기(#thumb-preview)도 정사각으로 보이고 싶다면 */
+#thumb-preview{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+/* === 상세 설명 이미지: 가로폭 줄여 중앙 정렬 + 비율 유지 === */
+/* 컨테이너에서 가운데로 모으기 */
+.long-images{
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* 중앙 정렬 */
+    gap: 1rem;
+}
+
+/* 카드 자체의 최대 가로폭을 제한(반응형): 너무 넓지 않게 */
+.long-card{
+    /* 520px ~ 860px 사이에서 뷰포트에 맞춰 자연스러운 폭 */
+    width: clamp(520px, 72vw, 860px);
+    margin-inline: auto;
+}
+
+/* 이미지는 가로폭에 맞추고 세로비율은 자동 유지 */
+.long-card .long-img{
+    width: 100%;
+    height: auto;       /* 비율 유지 */
+    display: block;
+    object-fit: contain;/* 혹시 높이 제한이 걸리더라도 비율 유지 */
+}
+
+/* (선택) 관리 모달의 '설명 이미지' 미리보기 카드도 정사각/직사각 혼합 대비 여백 조정 */
+.long-grid-card img{
+    width: 100%;
+    height: 220px;
+    object-fit: cover;  /* 미리보기는 타이트하게 */
+}
+
+/* 편집 화면에서도 상세용 규칙을 그대로 쓰고 싶으면 에일리어스 부여 */
+.admin-items-edit { --brand-teal: #00dca0; }
+.admin-items-edit .gallery-hero { aspect-ratio: 1/1; }
+.admin-items-edit .gallery-thumbs .thumb { aspect-ratio: 1/1; width: 84px; }
+@media (min-width: 992px){ .admin-items-edit .gallery-thumbs .thumb{ width:96px; } }

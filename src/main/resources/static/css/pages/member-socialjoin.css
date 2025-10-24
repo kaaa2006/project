@@ -1,0 +1,11 @@
+:root{
+    --brand-teal:#00dca0;
+    --danger:#e03131;
+    --muted:#9a9a9a;
+}
+/* signup-form.css와 톤 통일, 필요한 것만 */
+.signup-page .hint{font-size:.85rem;margin-top:6px;min-height:1.2em}
+.signup-page .hint.success{color:var(--brand-teal)}
+.signup-page .hint.danger{color:var(--danger)}
+.signup-page .field-error{color:var(--danger);font-size:.85rem;margin-top:6px}
+.signup-page .terms-box{border-top:1px solid #eee;margin-top:18px;padding-top:18px}

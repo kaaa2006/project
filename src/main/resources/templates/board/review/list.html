@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title layout:fragment="page_title">후기 게시판 리스트</title>
+    <th:block layout:fragment="page_head">
+        <!-- ✅ 동일 파일명 사용(교체버전) -->
+        <link rel="stylesheet" th:href="@{/css/pages/reviewBoard.css?v=list1}">
+    </th:block>
+</head>
+
+<body>
+<main layout:fragment="content" class="container py-4 review-list-page">
+
+    <!-- 상단 타이틀 + 버튼 -->
+    <div class="d-flex justify-content-between align-items-center mb-3 review-head">
+        <h1 class="review-page-title">후기 게시판</h1>
+        <a class="btn btn-register"
+           th:href="@{/board/review/register}"
+           th:data-loggedin="${isLoggedIn}"
+           th:data-admin="${isAdmin}">
+            글 등록
+        </a>
+    </div>
+
+    <!-- 리스트 (TIP과 유사한 UL 구조) -->
+    <div class="review-list-wrap">
+        <ul class="review-list" th:if="${response.dtoList != null and !response.dtoList.isEmpty()}">
+            <!-- 헤더 -->
+            <li class="review-header-row">
+                <span class="col-no">번호</span>
+                <span class="col-title">제목</span>
+                <span class="col-writer">작성자</span>
+                <span class="col-date">등록일</span>
+                <span class="col-views">조회수</span>
+                <span class="col-helpful">도움 됨</span>
+            </li>
+
+            <!-- 항목 -->
+            <li class="review-item" th:each="dto : ${response.dtoList}">
+                <span class="col-no" th:text="${dto.bno}">1</span>
+                <span class="col-title">
+          <a th:href="@{/board/review/read(bno=${dto.bno})}">
+            <span th:if="${dto.secretBoard}" class="lock" aria-label="비밀글">🔒</span>
+            <span th:text="${dto.canViewSecret} ? (${dto.title} ?: '제목 없음') : '비밀글입니다.'">게시글 제목</span>
+          </a>
+        </span>
+                <span class="col-writer" th:text="${dto.writer}">홍길동</span>
+                <span class="col-date" th:text="${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm')}">2025-09-26</span>
+                <span class="col-views" th:text="${dto.viewCount}">123</span>
+                <span class="col-helpful" th:text="${dto.helpfulCount}">10</span>
+            </li>
+        </ul>
+
+        <!-- 비어있을 때 -->
+        <div th:if="${response.dtoList == null or response.dtoList.isEmpty()}"
+             class="text-center text-muted py-5">등록된 후기가 없습니다.</div>
+    </div>
+
+    <!-- 서버 페이징 (기능 그대로) -->
+    <nav th:if="${response.totalPage > 1}" aria-label="Page navigation">
+        <ul class="pagination brand-paging justify-content-center mt-4">
+            <!-- 이전 -->
+            <li class="page-item" th:classappend="${response.page > 1} ? '' : 'disabled'">
+                <a class="page-link" th:if="${response.page > 1}"
+                   th:href="@{/board/review/list(page=${response.page - 1}, size=${response.size})}">이전</a>
+                <span class="page-link" th:unless="${response.page > 1}">이전</span>
+            </li>
+
+            <!-- 번호 -->
+            <li class="page-item"
+                th:each="pageNum : ${response.pageList}"
+                th:classappend="${pageNum == response.page} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/board/review/list(page=${pageNum}, size=${response.size})}"
+                   th:text="${pageNum}">1</a>
+            </li>
+
+            <!-- 다음 -->
+            <li class="page-item" th:classappend="${response.page < response.totalPage} ? '' : 'disabled'">
+                <a class="page-link" th:if="${response.page < response.totalPage}"
+                   th:href="@{/board/review/list(page=${response.page + 1}, size=${response.size})}">다음</a>
+                <span class="page-link" th:unless="${response.page < response.totalPage}">다음</span>
+            </li>
+        </ul>
+    </nav>
+
+</main>
+
+<th:block layout:fragment="page_foot">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.loggedInUser = /*[[${isLoggedIn}]]*/ false ? '/*[[${#authentication?.principal?.username}]]*/' : '';
+        window.isAdmin = /*[[${isAdmin}]]*/ false;
+        if (!window.loggedInUser) window.loggedInUser = "";
+        if (typeof window.isAdmin !== 'boolean') window.isAdmin = false;
+        /*]]>*/
+    </script>
+    <script th:src="@{/js/reviewBoard.js}"></script>
+</th:block>
+</body>
+</html>

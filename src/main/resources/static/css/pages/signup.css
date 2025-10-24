@@ -1,0 +1,35 @@
+/* 레이아웃 */
+.signup-wrap{ max-width: 520px; }
+.card{ border-radius: .9rem; }
+.promo-img{ border-radius: .9rem; display:block; }
+
+/* 브랜드 컬러(헤더에서 쓰는 변수 재사용 가능) */
+:root{
+    --brand: var(--brand-teal, #00dca0);
+    --brand-900: #00b487;
+}
+
+/* 기본 버튼 */
+.btn-outline-brand{
+    background:#fff; color: var(--brand);
+    border:1px solid var(--brand); border-radius:.7rem;
+}
+.btn-outline-brand:hover{
+    background:#e8fff8; color: var(--brand-900); border-color: var(--brand-900);
+}
+
+/* 소셜 버튼 */
+.btn-kakao{
+    background:#FEE500; color:#111; border:0; border-radius:.7rem;
+}
+.btn-kakao:hover{ background:#f4d800; color:#111; }
+
+.btn-naver{
+    background:#03C75A; color:#fff; border:0; border-radius:.7rem;
+}
+.btn-naver:hover{ background:#02a94d; color:#fff; }
+
+.btn-apple{
+    background:#111; color:#fff; border:0; border-radius:.7rem;
+    opacity:.7; cursor:not-allowed;
+}

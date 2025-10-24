@@ -1,0 +1,220 @@
+/* 페이지 스코프 변수: 전역과 충돌 방지 */
+.mypage-wrap{
+    --pf-teal: var(--brand-teal, #14b8a6);
+    --pf-ink-900:#111827; --pf-ink-700:#374151; --pf-ink-600:#4b5563; --pf-ink-400:#9ca3af;
+    --pf-surface:#ffffff; --pf-surface-50:#f8fafc; --pf-border:#eaecef; --pf-ring:rgba(20,184,166,.25);
+}
+
+.mypage-wrap .content{min-width:0;}
+.mypage-wrap .page-header{margin-bottom:18px;}
+.mypage-wrap .page-header .eyebrow{font-size:.8rem;color:var(--pf-ink-400);text-transform:uppercase;letter-spacing:.06em}
+.mypage-wrap .page-header .page-title{margin:.25rem 0 .25rem;font-weight:700;color:var(--pf-ink-900)}
+.mypage-wrap .page-header .page-sub{color:var(--pf-ink-600);font-size:.95rem}
+
+/* 좌측 초록 포인트 바 */
+.mypage-wrap .pf-border-accent{
+    border-left:4px solid var(--pf-teal);
+    padding-left:12px;
+}
+
+/* ========================= */
+/* View/Edit 공통 스타일 보강 */
+/* ========================= */
+
+/* Hero (상단 요약 배너) */
+.mypage-wrap .pf-hero{
+    display:flex; gap:14px; align-items:center;
+    padding:16px 18px; border-radius:12px;
+    background:linear-gradient(135deg, color-mix(in srgb, var(--pf-teal) 8%, #fff), #fff);
+    border:1px solid color-mix(in srgb, var(--pf-teal) 18%, #fff);
+    box-shadow:0 6px 18px rgba(16,185,129,.06);
+    margin-bottom:16px;
+}
+.mypage-wrap .pf-hero-icon{
+    width:42px;height:42px;border-radius:10px;display:grid;place-items:center;
+    background:color-mix(in srgb, var(--pf-teal) 12%, #fff);color:var(--pf-teal);font-size:1.1rem;
+}
+.mypage-wrap .pf-hero-title{margin:0;font-weight:800;letter-spacing:-.2px}
+.mypage-wrap .pf-hero-sub{margin:2px 0 0;color:var(--pf-ink-600)}
+
+/* 카드 (pf-card: 템플릿에서 사용) */
+.mypage-wrap .pf-card{
+    border:1px solid var(--pf-border);
+    border-radius:12px;
+    background:var(--pf-surface);
+    box-shadow:0 8px 22px rgba(17,24,39,.05);
+    padding:16px;
+    margin-bottom:16px;
+}
+.mypage-wrap .pf-card-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;
+}
+.mypage-wrap .pf-card-title{
+    font-weight:700;color:var(--pf-ink-700);display:flex;align-items:center;gap:8px;
+}
+.mypage-wrap .pf-card-title i{color:var(--pf-teal)}
+.mypage-wrap .pf-card-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* (기존 유지) card-elevated: 예전 템플릿 호환용 */
+.mypage-wrap .card-elevated{
+    border:1px solid var(--pf-border);
+    border-radius:12px;
+    background:var(--pf-surface);
+    box-shadow:0 4px 16px rgba(17,24,39,.06);
+    padding:18px;
+    margin-bottom:16px;
+}
+.mypage-wrap .card-elevated .card-title{
+    display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:12px;color:var(--pf-ink-700)
+}
+.mypage-wrap .card-elevated .card-title i{font-size:1.05rem;color:var(--pf-teal)}
+
+/* 표 (pf-table: 템플릿에서 사용) */
+.mypage-wrap .table-responsive{overflow-x:auto}
+.mypage-wrap .pf-table thead th{
+    background: color-mix(in srgb, var(--pf-teal) 7%, #fff);
+    color:#0f5132;
+}
+.mypage-wrap .pf-table th{
+    width:180px;background:var(--pf-surface-50);color:#616161;border-bottom:1px solid #eee;
+}
+.mypage-wrap .pf-table td{border-bottom:1px solid #f0f0f0}
+
+/* (기존 유지) table-profile: 예전 템플릿 호환용 */
+.mypage-wrap .table-profile th{
+    width:180px;background:var(--pf-surface-50);color:#616161;border-bottom:1px solid #eee
+}
+.mypage-wrap .table-profile td{border-bottom:1px solid #f0f0f0}
+
+/* 강조 텍스트 */
+.mypage-wrap .text-em .accent,
+.mypage-wrap .pf-em .pf-accent{color:var(--pf-teal);font-weight:700}
+
+/* 배지 (페이지 전용) */
+.mypage-wrap .pf-badge{
+    display:inline-block;padding:.25rem .5rem;line-height:1;border-radius:999px;
+    font-size:.8rem;border:1px solid #e5e7eb;background:#fff
+}
+.mypage-wrap .pf-badge-primary{
+    background:color-mix(in srgb, var(--pf-teal) 96%, white);
+    border-color:color-mix(in srgb, var(--pf-teal) 70%, white);
+    color:#fff;
+}
+.mypage-wrap .pf-badge-soft{
+    background:color-mix(in srgb, var(--pf-teal) 8%, white);
+    border-color:color-mix(in srgb, var(--pf-teal) 25%, white);
+    color:var(--pf-teal);
+}
+
+/* 버튼 (페이지 전용) */
+.mypage-wrap .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.mypage-wrap .pf-btn{
+    display:inline-block; padding:.55rem .9rem; border-radius:10px; text-decoration:none;
+    font-weight:600; border:1px solid transparent; transition:transform .08s ease, box-shadow .2s ease, background .2s ease;
+    will-change:transform;
+}
+.mypage-wrap .pf-btn:active{transform:translateY(1px)}
+.mypage-wrap .pf-btn-primary{
+    background:var(--pf-teal); color:#fff; border-color:var(--pf-teal);
+    box-shadow:0 6px 18px color-mix(in srgb, var(--pf-teal) 28%, transparent);
+}
+.mypage-wrap .pf-btn-primary:hover{
+    background:color-mix(in srgb, var(--pf-teal) 88%, black);
+    border-color:color-mix(in srgb, var(--pf-teal) 88%, black);
+}
+.mypage-wrap .pf-btn-outline{
+    background:#fff; color:var(--pf-teal);
+    border-color:color-mix(in srgb, var(--pf-teal) 55%, white);
+}
+.mypage-wrap .pf-btn-outline:hover{
+    background:color-mix(in srgb, var(--pf-teal) 6%, white);
+}
+
+/* 사이드바 active (프래그먼트와 일치) */
+.mypage-wrap .nav-list li.active > a{font-weight:700;color:var(--pf-teal)}
+
+/* ========================= */
+/* Edit page enhancements    */
+/* ========================= */
+.mypage-wrap .pf-form{margin-top:6px}
+.mypage-wrap .pf-form-row{
+    display:grid; gap:14px;
+    grid-template-columns: 1fr;                /* mobile */
+}
+@media (min-width: 768px){
+    .mypage-wrap .pf-form-row{ grid-template-columns: 1fr 1fr; }
+    .mypage-wrap .pf-form-row .pf-col-12{ grid-column: 1 / -1; }
+}
+
+/* Fields */
+.mypage-wrap .pf-field{display:flex; flex-direction:column}
+.mypage-wrap .pf-label{font-weight:700; margin-bottom:6px; color:var(--pf-ink-700)}
+.mypage-wrap .pf-input{
+    border-radius:10px; border:1px solid var(--pf-border); background:#fff;
+    box-shadow: inset 0 1px 0 rgba(16,24,40,.02);
+}
+.mypage-wrap .pf-input:focus{
+    outline:none; border-color: color-mix(in srgb, var(--pf-teal) 60%, white);
+    box-shadow: 0 0 0 4px var(--pf-ring);
+}
+
+.mypage-wrap .pf-help{color:var(--pf-ink-600); font-size:.9rem; margin-top:6px}
+.mypage-wrap .pf-error{color:#dc3545; font-size:.9rem; margin-top:6px}
+
+/* Divider */
+.mypage-wrap .pf-divider{
+    display:flex; align-items:center; gap:10px; margin:18px 0 12px;
+}
+.mypage-wrap .pf-divider::before,
+.mypage-wrap .pf-divider::after{
+    content:""; flex:1; height:1px; background:linear-gradient(90deg, transparent, var(--pf-border), transparent);
+}
+.mypage-wrap .pf-divider > span{color:var(--pf-ink-600); font-size:.95rem}
+
+/* Address Modal (scoped) */
+.mypage-wrap .pf-modal{position:fixed; inset:0; display:none; z-index:1050;}
+.mypage-wrap .pf-modal[aria-hidden="false"]{display:block;}
+.mypage-wrap .pf-modal-backdrop{position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter: blur(2px);}
+.mypage-wrap .pf-modal-dialog{
+    position:relative; max-width:720px; margin:6vh auto; background:#fff;
+    border:1px solid var(--pf-border); border-radius:14px; box-shadow:0 18px 60px rgba(17,24,39,.18);
+    padding:0; overflow:hidden;
+}
+.mypage-wrap .pf-modal-head{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; border-bottom:1px solid #eef1f3;}
+.mypage-wrap .pf-modal-head h3{margin:0; font-weight:800; letter-spacing:-.2px; color:var(--pf-ink-900)}
+.mypage-wrap .pf-modal-close{border:0; background:#fff; width:36px; height:36px; border-radius:8px; font-size:22px; line-height:1;}
+.mypage-wrap .pf-modal-close:hover{background:#f6f7f9}
+.mypage-wrap .pf-modal-body{padding:16px}
+.mypage-wrap .pf-modal-foot{display:flex; justify-content:flex-end; gap:8px; padding:12px 16px; border-top:1px solid #eef1f3;}
+/* 유틸 (부트스트랩 없을 대비) */
+.mypage-wrap .d-none{ display:none !important; }
+
+/* 모달을 최상단 레이어로 */
+.mypage-wrap .pf-modal{
+    position: fixed;        /* 뷰포트 기준 */
+    inset: 0;
+    z-index: 9999;          /* 헤더보다 확실히 높게 */
+}
+
+/* 모달 내부 레이어 명확화: 배경 < 다이얼로그 */
+.mypage-wrap .pf-modal-backdrop{
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.mypage-wrap .pf-modal-dialog{
+    position: relative;
+    z-index: 1;
+    /* (기존 스타일 유지) */
+}
+
+/* 모달 열릴 때 스크롤 잠금 */
+html.pf-modal-open, body.pf-modal-open{
+    overflow: hidden;
+}
+
+/* 스크롤바 사라질 때 가로 흔들림 방지(선택) */
+html.pf-modal-open{
+    padding-right: var(--sbw, 0px);
+}

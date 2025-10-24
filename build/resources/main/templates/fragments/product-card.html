@@ -1,0 +1,68 @@
+<!-- fragments/product-card.html -->
+<!-- 역할: 상품 카드 1개. 그리드(col-*)는 바깥에서 잡고, 카드는 프래그먼트가 렌더 -->
+<div th:fragment="card(p)">
+    <!-- a11y/SEO: article + schema.org Product -->
+    <article class="product-card h-100"
+             role="article" th:aria-labelledby="|prod-title-${p.id}|"
+             itemscope itemtype="https://schema.org/Product">
+
+        <!-- 썸네일(비율 고정) -->
+        <!-- detail 링크는 /product/{id} 기준. 라우트 다르면 바꿔주세요 -->
+        <a th:href="@{/product/{id}(id=${p.id})}"
+           class="product-card__thumb ratio ratio-3x4 d-block position-relative" itemprop="url">
+            <img
+                    th:src="${p.thumb} != null ? @{|/img/products/${p.thumb}|} : @{/img/products/placeholder.webp}"
+                    th:alt="${p.name}"
+                    width="300" height="400"                <!-- CLS 방지: 원본비율에 맞춰 조정 -->
+            loading="lazy" decoding="async"
+            itemprop="image"
+            class="img-fluid">
+
+            <!-- 좌상단 배지 (BEST/NEW 등) -->
+            <span class="badge bg-primary-subtle text-primary-emphasis position-absolute m-2 pc-badge-left"
+                  th:if="${p.badge}" th:text="${p.badge}">BEST</span>
+
+            <!-- 우상단 세일 퍼센트 -->
+            <span class="badge bg-danger-subtle text-danger-emphasis position-absolute m-2 pc-badge-right"
+                  th:if="${p.discountPrice != null and p.discountPrice < p.price}"
+                  th:text="'-'+ ${T(java.lang.Math).round((p.price - p.discountPrice) * 100.0 / p.price)} + '%'">-10%</span>
+        </a>
+
+        <!-- 상품명 -->
+        <h3 class="product-card__name mt-2 mb-1 h6" th:id="|prod-title-${p.id}|" itemprop="name">
+            <a th:href="@{/product/{id}(id=${p.id})}" class="stretched-link text-reset text-decoration-none"
+               th:text="${p.name}">상품명</a>
+        </h3>
+
+        <!-- 가격/품절 표시 -->
+        <div class="product-card__meta d-flex align-items-center gap-2">
+            <!-- 판매가(할인 적용가 우선) -->
+            <div class="price-group" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                <link itemprop="availability"
+                      th:href="${p.soldOut} ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock'">
+                <span class="price h6 mb-0 fw-bold" itemprop="price"
+                      th:text="${#numbers.formatInteger((p.discountPrice != null ? p.discountPrice : p.price),3,'COMMA')} + '원'">0원</span>
+                <meta itemprop="priceCurrency" content="KRW">
+
+                <!-- 정상가(취소선) -->
+                <span class="text-muted text-decoration-line-through small"
+                      th:if="${p.discountPrice != null and p.discountPrice < p.price}"
+                      th:text="${#numbers.formatInteger(p.price,3,'COMMA')} + '원'">0원</span>
+            </div>
+
+            <!-- 품절 뱃지 -->
+            <span class="badge bg-secondary-subtle text-secondary-emphasis" th:if="${p.soldOut}">품절</span>
+        </div>
+
+        <!-- 평점(옵션) -->
+        <div class="product-card__rating small text-muted mt-1" th:if="${p.rating != null}">
+            <i class="bi bi-star-fill"></i>
+            <span th:text="${#numbers.formatDecimal(p.rating,1,1)}">4.5</span>
+            <span th:if="${p.reviewCount != null}"
+                  th:text="'(' + ${#numbers.formatInteger(p.reviewCount,3,'COMMA')} + ')'">(12)</span>
+        </div>
+
+        <!-- sku(있으면) -->
+        <meta itemprop="sku" th:if="${p.sku != null}" th:content="${p.sku}">
+    </article>
+</div>

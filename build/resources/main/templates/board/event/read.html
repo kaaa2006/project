@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <meta charset="UTF-8">
+    <title>이벤트 상세</title>
+
+    <!-- 페이지 전용 CSS -->
+    <th:block layout:fragment="page_head">
+        <link rel="stylesheet" th:href="@{/css/pages/boardRead.css?v=1}">
+    </th:block>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <main class="container-xxl my-4 board-read">
+
+        <!-- 상단: 제목 + 목록 버튼 -->
+        <div class="br-head d-flex justify-content-between align-items-center">
+            <h1 class="br-title">이벤트 상세</h1>
+            <div class="br-actions">
+                <a th:href="@{/board/list(boardType='EVENT')}" class="br-btn br-btn-outline">
+                    이벤트 목록
+                </a>
+            </div>
+        </div>
+
+        <!-- 카드 -->
+        <section class="br-card event-detail">
+
+            <!-- 제목 -->
+            <h2 class="event-title" th:text="${dto.title}">이벤트 제목</h2>
+
+            <!-- 메타 -->
+            <div class="event-meta">
+                <span class="meta-item">
+                    작성자 <strong th:text="${dto.writer}">관리자</strong>
+                </span>
+                <span class="meta-dot" aria-hidden="true">·</span>
+                <span class="meta-item">
+                    작성일
+                    <strong th:text="${#temporals.format(dto.regTime,'yyyy-MM-dd a h:mm:ss')}">
+                        2025-09-29
+                    </strong>
+                </span>
+                <span class="meta-dot" aria-hidden="true">·</span>
+                <span class="meta-item">
+                    조회 <strong th:text="${dto.viewCount}">0</strong>
+                </span>
+            </div>
+
+            <!-- 첨부 이미지(있을 때만) -->
+            <div class="board-images" th:if="${dto.fileNames != null and !#lists.isEmpty(dto.fileNames)}">
+                <div class="img-stack" th:each="img : ${dto.fileNames}">
+                    <img th:src="${img}" class="board-img" alt="이벤트 이미지">
+                </div>
+            </div>
+
+            <!-- 본문 -->
+            <article class="event-content typo" th:utext="${dto.content}">
+                이벤트 내용
+            </article>
+
+            <!-- 관리자 컨트롤 -->
+            <div id="adminControls"
+                 class="admin-actions"
+                 th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a th:href="@{/board/modify(bno=${dto.bno})}" class="br-btn br-btn-primary">수정</a>
+
+                <!-- ✅ 삭제 확인(confirm) 적용된 폼 -->
+                <form th:action="@{/board/remove}" method="post" class="inline" id="deleteForm">
+                    <input type="hidden" th:name="bno" th:value="${dto.bno}">
+                    <button type="submit" class="br-btn br-btn-danger" id="deleteBtn">삭제</button>
+                </form>
+            </div>
+        </section>
+    </main>
+</th:block>
+
+<!-- 페이지 스크립트 -->
+<th:block layout:fragment="page_foot">
+    <script src="/js/board.js"></script>
+
+    <!-- ✅ 브라우저 기본 팝업(confirm)으로 삭제 확인 + 중복 제출 방지 -->
+    <script>
+        (function () {
+            const form = document.getElementById('deleteForm');
+            const btn  = document.getElementById('deleteBtn');
+            if (!form) return;
+
+            let pending = false;
+
+            form.addEventListener('submit', function (e) {
+                if (pending) return; // 이미 제출 중이면 통과(추가 제출 차단)
+                const ok = confirm('정말 삭제하시겠어요? 삭제 후 되돌릴 수 없습니다.');
+                if (!ok) {
+                    e.preventDefault(); // 취소 시 전송 중단
+                    return;
+                }
+                pending = true;       // 확인 후에는 중복 제출 방지
+                if (btn) btn.disabled = true;
+            });
+        })();
+    </script>
+</th:block>
+</body>
+</html>

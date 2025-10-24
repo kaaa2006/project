@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <meta charset="UTF-8">
+    <title>이벤트 게시판</title>
+    <link rel="stylesheet" th:href="@{/css/pages/boardEvent.css?v=1}">
+</head>
+
+<body>
+<th:block layout:fragment="content">
+    <div class="container-xxl my-4 board-page">
+
+        <!-- 상단 제목 + 등록 버튼 -->
+        <div class="board-head d-flex justify-content-between align-items-center">
+            <h1 class="board-heading">이벤트 게시판</h1>
+            <div class="board-actions" sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/board/register(boardType='EVENT')}" class="btn btn-primary btn-register">새 이벤트 등록</a>
+            </div>
+        </div>
+
+        <!-- 필터 버튼 (진행 / 종료) -->
+        <div class="btn-group mb-3" role="group">
+            <a th:href="@{/board/list(boardType='EVENT', status='ongoing')}"
+               th:classappend="${status == 'ongoing'} ? 'btn btn-success active' : 'btn btn-outline-success'"
+               class="btn">진행중인 이벤트</a>
+            <a th:href="@{/board/list(boardType='EVENT', status='expired')}"
+               th:classappend="${status == 'expired'} ? 'btn btn-secondary active' : 'btn btn-outline-secondary'"
+               class="btn">종료된 이벤트</a>
+        </div>
+
+        <!-- 이벤트 리스트 -->
+        <div class="event-list">
+            <div th:if="${events != null and !events.isEmpty()}" th:each="event : ${events}"
+                 class="event-card mb-3"
+                 th:classappend="${status == 'expired'} ? ' disabled'">
+                <a th:href="@{'/board/read'(bno=${event.bno}, boardType='EVENT')}">
+                    <!-- 이미지 -->
+                    <div class="card-image mb-2" th:if="${event.fileNames != null and !event.fileNames.isEmpty() and event.fileNames[0] != null}">
+                        <img th:src="${event.fileNames[0]}" alt="이벤트 이미지" class="event-img" />
+                    </div>
+                    <div class="card-title">
+                        <h3 class="event-title" th:text="${event.title}">이벤트 제목</h3>
+                        <p class="event-dates">
+                            시작: <span th:text="${event.startDate}">시작일</span> /
+                            종료: <span th:text="${event.endDate}">종료일</span>
+                        </p>
+                        <span th:if="${status == 'ongoing'}" class="badge bg-success">진행중</span>
+                        <span th:if="${status == 'expired'}" class="badge bg-secondary">종료</span>
+                    </div>
+                </a>
+            </div>
+            <div th:if="${events == null or events.isEmpty()}" class="text-center text-muted py-5">
+                등록된 이벤트가 없습니다.
+            </div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination-wrap mt-4">
+            <ul class="pagination justify-content-center"
+                id="event-pagination"
+                th:data-current-page="${responseDTO.page}"
+                th:data-total-pages="${responseDTO.totalPage}">
+            </ul>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="page_foot">
+    <script src="/js/pagination.js"></script>
+    <script src="/js/board.js"></script>
+</th:block>
+</body>
+</html>

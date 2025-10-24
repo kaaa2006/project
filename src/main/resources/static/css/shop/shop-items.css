@@ -1,0 +1,577 @@
+/* =========================
+   Theme (Single Source)
+   ========================= */
+:root{
+    --brand-green:#00DCA0;
+    --brand-green-600:#00C090;        /* hover tone */
+    --brand-ink:#0b2413;
+    --brand-muted:#667a6f;
+    --brand-surface:#f3faf6;
+    --brand-surface-2:#e8f6ee;
+    --radius-xl:1.25rem;
+    --radius-lg:.875rem;
+    --sticky-top:72px;                /* sticky tabs default */
+}
+
+/* =========================
+   Page Skin
+   ========================= */
+.shop-theme{ background:#fff; color:var(--brand-ink); }
+
+/* =========================
+   Hero
+   ========================= */
+.hero-wrap .hero-card{
+    display:flex; align-items:center; justify-content:space-between; gap:24px;
+    padding:24px 28px; border-radius:var(--radius-xl);
+    background: var(--brand-surface);
+    border:1px solid #eef3ef;
+}
+.eyebrow{ font-weight:700; letter-spacing:.2em; color:var(--brand-green); }
+.hero-title{ font-weight:900; margin:.25rem 0 .5rem; }
+.hero-title .accent{ color:var(--brand-green); }
+.hero-sub{ color:var(--brand-muted); margin:0; }
+.hero-illust{ width:240px; height:160px; border-radius:16px; object-fit:cover; display:block; }
+
+/* =========================
+   Toolbar
+   ========================= */
+.toolbar .btn-brand{
+    background:var(--brand-green); color:#fff; border:0;
+    border-radius:.75rem; padding:.5rem 1rem; font-weight:700;
+}
+.toolbar .btn-brand:hover{ background:var(--brand-green-600); }
+.input-group .input-group-text{ border-radius:.75rem 0 0 .75rem; }
+.input-group .form-control{ border-radius:0; }
+.input-group .btn-brand{ border-radius:0 .75rem .75rem 0; }
+
+/* =========================
+   Cards (List/Grid)
+   ========================= */
+.card-item{
+    border:1px solid #eef0f2; border-radius:var(--radius-xl);
+    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    overflow:hidden; background:#fff;
+}
+.card-item:hover{
+    transform:translateY(-4px);
+    border-color:#e3efe7;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+}
+.card-item .img-wrap{ position:relative; background:#fafafa; aspect-ratio:1/1; overflow:hidden; }
+.card-item .thumb{ width:100%; height:100%; object-fit:cover; display:block; }
+.card-item .status-pill{
+    position:absolute; top:12px; left:12px;
+    padding:.3rem .6rem; border-radius:999px; font-weight:600; font-size:.8rem;
+    backdrop-filter:blur(6px);
+}
+.status-on{ background:rgba(0,220,160,.12); color:var(--brand-green); }
+.status-soldout{ background:#ECEFF1; color:#6B7280; }
+.card-item .body{ padding:12px 14px 14px; }
+.item-price{ font-weight:900; font-size:1.5rem; line-height:1.2; color:var(--brand-green); }
+.item-title{
+    margin-top:4px; font-weight:800; color:#0f172a;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:2.75em;
+}
+.item-meta{ margin-top:6px; color:#64748b; font-size:.875rem; display:flex; align-items:center; gap:8px; }
+.chip{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:.2rem .5rem; border-radius:.75rem;
+    background:var(--brand-surface-2); color:var(--brand-green); font-weight:700; font-size:.8rem;
+}
+
+/* =========================
+   Pagination (Brand)
+   ========================= */
+.brand-paging .page-link{
+    border:none; margin:0 .2rem; min-width:2.5rem; text-align:center;
+    border-radius:.75rem; font-weight:700; color:#334155;
+}
+.brand-paging .page-item .page-link:hover{
+    background:rgba(0,220,160,.08); color:var(--brand-green);
+}
+.brand-paging .page-item.active .page-link{
+    background:var(--brand-green); color:#fff;
+    box-shadow:0 0 0 4px rgba(0,220,160,.15);
+}
+.brand-paging .page-item.disabled .page-link{ background:#f1f5f9; color:#94a3b8; }
+
+/* =========================
+   Helpers
+   ========================= */
+.text-truncate-2{
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* =========================
+   Detail: Gallery / Summary
+   ========================= */
+.gallery{ border:1px solid #eef0f2; border-radius:1rem; overflow:hidden; background:#fff; }
+.hero-img{ width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:#fafafa; }
+.thumbs{ display:flex; flex-wrap:wrap; gap:10px; padding:12px; background:#fff; border-top:1px solid #eef0f2; }
+.thumbs img{ width:84px; height:84px; object-fit:cover; border-radius:.5rem; border:1px solid #e5e7eb; cursor:pointer; }
+.thumbs img.active{ outline:3px solid var(--brand-green); }
+
+.summary{ border:1px solid #eef0f2; border-radius:1rem; padding:18px; background:#fff; }
+.summary-head{ display:flex; gap:8px; align-items:center; margin-bottom:6px; }
+.summary .title{ font-weight:900; margin:4px 0 10px; }
+.price-row{ display:flex; align-items:baseline; gap:12px; }
+.price{ color:var(--brand-green); font-weight:900; font-size:2rem; line-height:1.1; }
+.muted{ color:#6b7280; }
+.desc{ margin:12px 0 16px; color:#475569; }
+.btns{ display:flex; gap:10px; }
+
+/* 상태 배지(부트스트랩 호환) */
+.badge{ font-weight:700; }
+.text-bg-success, .status-on{ background:rgba(0,220,160,.12); color:var(--brand-green); font-weight:600; }
+.text-bg-secondary, .status-soldout{ background:#ECEFF1; color:#6B7280; }
+
+/* =========================
+   Sticky Tabs (Single)
+   ========================= */
+.detail-tabs{
+    position:sticky;
+    top:var(--sticky-top);
+    z-index:1030;
+    background:#fff;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+}
+.detail-tabs .tab{
+    flex:1; padding:12px 16px; background:transparent; border:0;
+    font-weight:700; color:#94a3b8; border-bottom:3px solid transparent;
+}
+.detail-tabs .tab.active{ color:var(--brand-green); border-bottom-color:var(--brand-green); }
+
+/* Section gaps + sticky safety */
+.section-block{ padding:24px 0; }
+.long-images{ display:flex; flex-direction:column; gap:16px; }
+.long-images img{
+    display:block; width:100%; max-width:900px; margin-inline:auto;
+    border-radius:.75rem; border:1px solid #eef0f2;
+}
+.item-detail-page, .section-block, .container-xxl{ overflow:visible; }
+
+/* =========================
+   Buttons (Brand)
+   ========================= */
+.btn-success{ background:var(--brand-green); border-color:var(--brand-green); }
+.btn-success:hover{ background:var(--brand-green-600); border-color:var(--brand-green-600); }
+.btn-outline-success{ color:var(--brand-green); border-color:var(--brand-green); background:#fff; }
+.btn-outline-success:hover{
+    background:rgba(0,220,160,.08);
+    color:var(--brand-green-600); border-color:var(--brand-green-600);
+}
+
+/* --- sticky 기본 + fixed 폴백 --- */
+.detail-tabs{
+    position: sticky;
+    top: 72px;                       /* 기본 폴백 */
+    top: var(--sticky-top, 72px);    /* 동적 보정 */
+    z-index: 1030;
+    background:#fff;
+    border-bottom:1px solid #e5e7eb;
+}
+
+/* 조상 overflow가 sticky를 막는 경우가 많아 안전하게 열어둠 */
+.item-detail-page, .section-block, .container-xxl { overflow: visible; }
+
+/* JS 폴백: 스크롤 임계값 넘으면 fixed로 전환 */
+.detail-tabs.is-fixed{
+    position: fixed;
+    top: var(--sticky-top, 72px);
+    /* width / left 는 JS에서 컨테이너 기준으로 계산해 inline-style로 넣어줌 */
+    z-index: 1030;
+    background:#fff;
+    border-bottom:1px solid #e5e7eb;
+}
+
+/* 브랜드 컬러(#00DCA0) 유지 */
+:root{
+    --brand-green:#00DCA0;
+    --brand-green-600:#00C090;
+}
+.text-bg-success{ background:rgba(0,220,160,.12); color:#00DCA0; font-weight:600; }
+.btn-success{ background:#00DCA0; border-color:#00DCA0; }
+.btn-success:hover{ background:#00C090; border-color:#00C090; }
+.btn-outline-success{ color:#00DCA0; border-color:#00DCA0; background:#fff; }
+.btn-outline-success:hover{ background:rgba(0,220,160,.08); color:#00C090; border-color:#00C090; }
+.price{ color:#00DCA0; font-weight:900; font-size:2rem; line-height:1.1; }
+
+/* 탭 섹션 자체 상단 여백 제거 */
+.detail-tabs-wrap { margin-top: 0 !important; }
+
+/* sticky 기본 + fixed 폴백 (간격 0 기준) */
+.detail-tabs{
+    position: sticky;
+    top: var(--sticky-top, 0px);   /* ← 기본 0으로 */
+    z-index: 1030;
+    background:#fff;
+    border-bottom:1px solid #e5e7eb;
+}
+.detail-tabs.is-fixed{
+    position: fixed;
+    top: var(--sticky-top, 0px);   /* ← 동일 값 사용 */
+    z-index: 1030;
+    background:#fff;
+    border-bottom:1px solid #e5e7eb;
+}
+
+/* 조상 overflow가 sticky를 막는 경우 방지 */
+.item-detail-page, .section-block, .container-xxl { overflow: visible; }
+
+/* 리스트 카드: 찜/조회 수 */
+.item-stats{
+    margin-top:6px; display:flex; align-items:center; gap:8px;
+    color:#64748b; font-size:.9rem; font-weight:700;
+}
+.item-stats .stat i{ margin-right:6px; }
+.item-stats .dot{ opacity:.6; }
+
+/* 상세 요약 메타 */
+.summary-meta{ display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+.summary-stats{
+    display:flex; align-items:center; gap:14px; margin:6px 0 10px;
+    color:#64748b; font-weight:700;
+}
+.summary-stats .stat i{ margin-right:6px; }
+.summary-stats .link-reviews{ text-decoration:none; color:inherit; }
+.summary-stats .link-reviews:hover{ color:#00DCA0; }
+
+/* chip는 기존 리스트 스타일 재사용 */
+
+/* --- 카드 이미지: 언제나 정사각형 --- */
+.card-item .img-wrap{
+    position: relative;
+    background:#fafafa;
+    overflow: hidden;
+    border-bottom: 1px solid #eef0f2;
+}
+.card-item .img-wrap::before{ /* aspect-ratio 폴백 */
+    content:""; display:block; padding-top:100%;
+}
+.card-item .thumb{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; display:block;
+}
+
+/* --- 제목: 기존 대비 60% 크기 --- */
+.card-item .item-title{
+    font-size: calc(1rem * .6);           /* ← “10분의 6” */
+    line-height: 1.25;
+    min-height: calc(1.25em * 2);         /* 2줄 고정 높이 */
+    margin-top: 6px; font-weight: 800; color:#0f172a;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* --- 가격 라인: 좌 할인율 · 가운데 판매가 · 우 정가(취소선) --- */
+.card-item .price-line{
+    margin-top:10px;
+    display:grid; grid-template-columns:min-content 1fr min-content;
+    align-items:baseline; column-gap:12px;
+}
+.price-line .discount{ color:var(--brand-green); font-weight:900; font-size:1.25rem; }
+.price-line .sale-price{ justify-self:center; font-weight:900; font-size:1.75rem; line-height:1.1; color:#0f172a; }
+.price-line .old-price{ color:#94a3b8; text-decoration:line-through; font-weight:700; }
+
+/* --- 하단 통계: 평점 | 리뷰 | 조회 --- */
+.item-stats{
+    margin-top:10px; display:flex; align-items:center; gap:14px;
+    color:#64748b; font-size:.95rem; font-weight:700;
+}
+.item-stats .stat i{ margin-right:6px; }
+.item-stats .dot{ opacity:.5; }
+
+/* === [1] 카드 이미지: 정사각형 유지 (이전과 동일, 혹은 보강) === */
+.card-item .img-wrap{ position:relative; background:#fafafa; overflow:hidden; border-bottom:1px solid #eef0f2; }
+.card-item .img-wrap::before{ content:""; display:block; padding-top:100%; } /* 1:1 */
+.card-item .thumb{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+
+/* === [2] 아이템명: 75%로 상향 (너무 작다는 피드백 반영) === */
+.card-item .item-title{
+    font-size: calc(1rem * 1.20);           /* ← 0.75배 */
+    line-height: 1.28;
+    min-height: calc(1.28em * 2);          /* 두 줄 고정 높이 */
+    margin-top: 6px; font-weight: 800; color:#0f172a;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* === [3] 가격 라인: 좌측 정렬 + 타이트 간격 === */
+/*   [할인율][판매가][정가] 가로 일렬, 간격은 이미지와 유사하게 촘촘 */
+.card-item .price-line{
+    margin-top: 10px;
+    display: flex; align-items: baseline; gap: 8px;      /* ← 타이트 */
+    /* 전부 좌측 정렬 (기존 중앙 배치 제거) */
+}
+.price-line .discount,
+.price-line .sale-price{
+    font-weight: 900;
+    font-size: clamp(1.25rem, 4.5vw, 1.75rem);           /* ← 두 값 동일 크기 */
+    line-height: 1.1;
+}
+.price-line .discount{ color: var(--brand-green); }
+.price-line .sale-price{ color: #0f172a; letter-spacing: -0.01em; }
+.price-line .old-price{
+    color:#94a3b8; text-decoration: line-through; font-weight:700;
+    margin-left: 4px;                                    /* 판매가와 아주 살짝 띄움 */
+    white-space: nowrap; font-size: 1.05rem;
+}
+
+/* === [4] 하단 통계: 평점 | 리뷰 | 조회 + 별 색상 브랜드 === */
+.item-stats{
+    margin-top: 10px; display: flex; align-items: center;
+    gap: 14px; color:#64748b; font-size:.95rem; font-weight:700;
+}
+.item-stats .stat i{ margin-right: 6px; }
+.item-stats .dot{ opacity:.5; }
+.item-stats .bi-star-fill{ color: var(--brand-green); }  /* 별만 브랜드색 */
+
+/* 할인율 · 정가 폰트 살짝 축소 */
+.card-item .price-line .discount { font-size: clamp(1.1rem, 4vw, 1.55rem); } /* 기존 1.25~1.75rem → 약 -12% */
+.card-item .price-line .old-price { font-size: .95rem; }                      /* 기존 1.05rem → 약 -10% */
+
+/* 할인율/가격/정가 블록만 위로 2px */
+.card-item .price-line{
+    transform: translateY(-2px);
+}
+
+/* =========================
+   Price Range (Single Source)
+   ========================= */
+
+/* 트리거 버튼(툴바) */
+#ddPriceBtn{
+    padding:.35rem .75rem;
+    font-size:.95rem;
+    line-height:1.2;
+}
+#ddPriceBtn #ddPriceLabel{
+    font-size:.85rem;
+    color:var(--brand-muted);
+}
+
+/* 드롭다운 패널 */
+.price-menu{
+    width:min(380px, 88vw);
+    padding:.75rem !important;
+}
+
+/* 내부 카드 */
+.price-menu .price-range{
+    background:#fff;
+    border:1px solid #eef0f2;
+    border-radius:10px;
+    padding:10px;
+}
+
+/* 라벨 */
+.price-menu .price-range .form-label{
+    margin-bottom:.35rem;
+    font-size:.9rem;
+}
+#price-range-label{ font-size:.85rem; }
+
+/* 수기 입력칸 */
+#min-price.form-control,
+#max-price.form-control{
+    padding:.35rem .5rem;
+    font-size:.95rem;
+}
+
+/* 듀얼 슬라이더 공통 레이아웃 */
+.price-menu .price-range .range-wrap{ height:22px; position:relative; }
+.price-menu .price-range .form-range{
+    position:absolute; inset:0;
+    background:none;
+    pointer-events:none;            /* 트랙 겹침 시 손잡이만 클릭되도록 */
+}
+
+/* 손잡이에만 포인터 허용 */
+.price-menu .price-range #range-min::-webkit-slider-thumb,
+.price-menu .price-range #range-max::-webkit-slider-thumb{ pointer-events:auto; }
+.price-menu .price-range #range-min::-moz-range-thumb,
+.price-menu .price-range #range-max::-moz-range-thumb{ pointer-events:auto; }
+
+/* 트랙/선택영역 */
+.price-menu .price-range .range-track,
+.price-menu .price-range .range-fill{
+    position:absolute; left:0; right:0; top:50%;
+    height:3px; transform:translateY(-50%);
+    border-radius:999px;
+}
+.price-menu .price-range .range-track{ background:#e9ecef; }
+.price-menu .price-range .range-fill{  background:var(--brand-green); }
+
+/* 손잡이 크기(웹킷/파폭) */
+.price-menu .price-range input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:14px; height:14px; border-radius:50%;
+    background:#fff; border:1px solid rgba(0,0,0,.15);
+    box-shadow:0 0 0 1px rgba(13,110,253,.2);
+}
+.price-menu .price-range input[type=range]::-moz-range-thumb{
+    width:14px; height:14px; border-radius:50%;
+    background:#fff; border:1px solid rgba(0,0,0,.15);
+    box-shadow:0 0 0 1px rgba(13,110,253,.2);
+}
+
+/* 하단 버튼(초기화/적용) */
+.price-menu .btn.btn-sm{
+    padding:.25rem .5rem;
+    font-size:.85rem;
+    border-radius:.5rem;
+}
+
+/* 아이템 상세 이미지용 */
+.long-images img{width:100%;height:auto;display:block;margin:0 0 16px;border-radius:12px}
+
+/* =========================
+   [2025-09-10] 아이템 상세 개선 오버라이드
+   ========================= */
+
+/* 1) 수량 입력칸만 짧게 (버튼 폭은 그대로) */
+.qty-input-group { max-width: 148px; } /* ≈ - / [ 64px ] / +  */
+.qty-row .form-control {
+    width: 64px; flex: 0 0 64px;
+    padding-inline: .5rem;
+    text-align: center;
+}
+.qty-row .btn { min-width: 36px; }
+
+/* 2) 가격 ↔ 수량 간격 살짝 띄우기 */
+.price-row { margin-bottom: 8px; }
+.qty-row   { margin-top: 14px; margin-bottom: 6px; }
+
+/* 3) 평점/리뷰/조회수: 카드 우측 하단 정렬 */
+.summary { display: flex; flex-direction: column; }
+.summary-stats-bottom{
+    align-self: flex-end;
+    margin-top: 10px;
+    color:#64748b; font-weight:700; font-size:.95rem;
+}
+.summary-stats-bottom .stat i{ margin-right:6px; }
+.summary-stats-bottom .link-reviews{ text-decoration:none; color:inherit; }
+.summary-stats-bottom .link-reviews:hover{ color: var(--brand-green-600, #00C090); }
+
+/* 4) 상품설명 이미지: 가운데 정렬 + 살짝 크게, 구분선 제거 */
+.long-images { display: flex; flex-direction: column; gap: 16px; }
+.long-images img{
+    display:block;
+    width: 100%;
+    max-width: min(1024px, 96%);
+    height:auto;
+    margin: 0 auto 16px;
+    border: none;              /* 구분선 제거 */
+    border-radius: 12px;
+}
+/* 에디터 본문 쪽 이미지를 써야 할 경우도 대비 */
+#desc img{
+    display:block;
+    max-width: min(1024px, 96%);
+    height:auto;
+    margin: 0 auto 16px;
+}
+/* 설명 영역의 <hr> 구분선 제거 */
+#section-desc hr, #desc hr { display: none; }
+
+/* 5) 자잘한 정리(시각 균형) */
+.summary .title { margin-bottom: 8px; }
+.price { line-height: 1.05; }
+
+/* =========================
+   [2025-09-10] 요약 카드: 본문 가운데 + 통계 하단 고정
+   ========================= */
+
+/* 카드 자체를 플렉스 컬럼 + 가운데 정렬 */
+.summary{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;     /* → summary-core를 세로 가운데로 */
+    /* 통계(absolute) 자리 확보 */
+    padding-bottom: 58px;        /* 카드 하단이 널찍해 보이지 않도록 적당히 */
+}
+
+/* 가운데 배치할 본문 묶음 */
+.summary-core{
+    display: grid;
+    gap: 8px;                    /* 기존 간격 감각 유지 */
+    margin: 0;                   /* 자동 여백 제거 */
+}
+
+/* 하단 고정되는 통계 */
+.summary-stats-bottom{
+    position: absolute;
+    right: 18px;
+    bottom: 16px;
+    margin-top: 0 !important;    /* 이전 여백 무효화 */
+    color:#64748b; font-weight:700; font-size:.95rem;
+}
+.summary-stats-bottom .stat i{ margin-right:6px; }
+.summary-stats-bottom .link-reviews{ text-decoration:none; color:inherit; }
+.summary-stats-bottom .link-reviews:hover{ color: var(--brand-green-600, #00C090); }
+
+/* 모바일(세로 공간 좁음)에서는 일반 흐름으로 복귀해 겹침 방지 */
+@media (max-width: 991.98px){
+    .summary{
+        justify-content: flex-start;
+        padding-bottom: 0;
+    }
+    .summary-stats-bottom{
+        position: static;
+        align-self: flex-end;
+        margin-top: 8px !important;
+    }
+}
+
+/* =========================
+   [2025-09-10] 통계줄에 '남은 수량' 배치 + 별 초록색
+   ========================= */
+
+/* 통계줄 내부 간격 & 구분감 */
+.summary-stats-bottom{
+    display: flex;                  /* 내부 정렬 명시 */
+    align-items: center;
+    gap: 14px;                      /* 살짝 띄워 구분 */
+}
+
+/* '남은 수량'을 왼쪽에 두고 약간 더 구분감 부여 */
+.summary-stats-bottom .stat-stock{
+    margin-right: 4px;              /* 너무 과하지 않게 */
+    padding-right: 10px;
+    border-right: 1px solid #e5e7eb;/* 은은한 구분선 */
+    font-weight: 700;
+    color: #475569;                 /* 본문보다 약간 진한 회색 */
+}
+
+.badge-admin {
+    display: inline-flex; align-items: center; gap: .35rem;
+    padding: .15rem .5rem;
+    border-radius: .5rem;
+    font-weight: 600; font-size: .875rem;
+    background: #e8f6ee;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+.badge-admin .bi { line-height: 1; }
+
+/* 리뷰 답변 박스 배경/테두리 보조 */
+.review-reply { --rr-border:#e2e8f0; --rr-bg:#f8fafc; }
+
+/* 별 아이콘을 브랜드 초록으로 */
+.summary-stats-bottom .bi-star-fill{
+    color: var(--brand-green, #00DCA0);
+}
+
+/* 모바일일 때도 자연스럽게 보이도록(이미 요약 카드 반응형 존재) */
+@media (max-width: 991.98px){
+    .summary-stats-bottom{
+        gap: 12px;
+    }
+    .summary-stats-bottom .stat-stock{
+        border-right: none;
+        padding-right: 0;
+        margin-right: 0;
+    }
+}

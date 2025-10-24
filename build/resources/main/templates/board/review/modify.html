@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+  <title layout:fragment="page_title">리뷰 수정</title>
+  <th:block layout:fragment="page_head">
+    <!-- ✅ 리스트용 reviewBoard.css 대신 수정 전용 CSS 추가 -->
+    <link rel="stylesheet" th:href="@{/css/pages/reviewBoardModify.css?v=1}">
+  </th:block>
+</head>
+
+<body class="review-modify" data-page="review-modify">
+<main layout:fragment="content" class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="card shadow-sm rounded-3 rb-card">
+        <div class="card-header bg-white rb-card-head">
+          <h1 class="h4 mb-0 rb-page-title">리뷰 수정</h1>
+        </div>
+
+        <div class="card-body">
+          <form th:action="@{/board/review/modify}"
+                method="post"
+                th:object="${reviewBoardDTO}"
+                class="needs-validation"
+                novalidate>
+
+            <input type="hidden" name="bno" th:value="${reviewBoardDTO.bno}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="mb-3">
+              <label for="title" class="form-label">제목</label>
+              <input type="text" name="title" th:value="${reviewBoardDTO.title}" id="title"
+                     class="form-control" required minlength="5" maxlength="30"
+                     placeholder="제목을 입력하세요 (5~30자)">
+              <div class="invalid-feedback">제목은 5~30자로 입력하세요.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="writer" class="form-label">작성자</label>
+              <input type="text" name="writer" th:value="${reviewBoardDTO.writer}" id="writer"
+                     class="form-control" readonly>
+            </div>
+
+            <div class="mb-3">
+              <label for="content" class="form-label">내용</label>
+              <textarea name="content" rows="8" id="content" class="form-control" required
+                        th:text="${reviewBoardDTO.content}" placeholder="리뷰 내용을 입력하세요"></textarea>
+              <div class="invalid-feedback">내용을 입력하세요.</div>
+            </div>
+
+            <div class="mb-3" th:if="${!isAdmin}">
+              <div class="form-check form-switch">
+                <input type="checkbox" th:field="*{secretBoard}" id="modifySecretCheck" class="form-check-input">
+                <label class="form-check-label" for="modifySecretCheck">비밀글로 유지/전환</label>
+              </div>
+              <input type="hidden" name="secretBoard" id="modifySecretBoardHidden"
+                     th:value="${reviewBoardDTO.secretBoard}">
+            </div>
+
+            <div class="mb-3" id="modifyCurrentPasswordGroup">
+              <label for="modifyCurrentPassword" class="form-label">현재 비밀번호</label>
+              <input type="password" id="modifyCurrentPassword" name="currentPassword" class="form-control"
+                     th:classappend="${#fields.hasErrors('currentPassword')} ? ' is-invalid'"
+                     placeholder="기존 비밀글일 경우 확인용">
+              <div class="invalid-feedback d-block"
+                   th:if="${#fields.hasErrors('currentPassword')}"
+                   th:errors="*{currentPassword}">비밀번호 오류</div>
+              <div class="form-text">기존 비밀글을 수정할 때 필요합니다.</div>
+            </div>
+
+            <div class="mb-3" id="modifyNewPasswordGroup">
+              <label for="modifyNewPassword" class="form-label">새 비밀번호</label>
+              <input type="password" id="modifyNewPassword" name="newPassword" class="form-control"
+                     th:classappend="${#fields.hasErrors('newPassword')} ? ' is-invalid'"
+                     placeholder="비밀번호 변경 또는 새로 설정(4자 이상)">
+              <div class="invalid-feedback d-block"
+                   th:if="${#fields.hasErrors('newPassword')}"
+                   th:errors="*{newPassword}"></div>
+            </div>
+
+            <div th:attr="data-was-secret=${reviewBoardDTO.wasSecretBoard}" id="wasSecretState" hidden></div>
+
+            <div id="fieldErrors"
+                 th:if="${#fields.hasErrors('*')}"
+                 th:data-current-password-err="${#fields.hasErrors('currentPassword')} ? ${#fields.errors('currentPassword')[0]} : ''"
+                 th:data-new-password-err="${#fields.hasErrors('newPassword')} ? ${#fields.errors('newPassword')[0]} : ''"
+                 hidden></div>
+
+            <!-- 액션: 아이콘 없음, 텍스트 중앙 정렬 -->
+            <div class="d-flex gap-2 justify-content-end pt-2 rb-actions" th:if="${isWriter}">
+              <a th:href="@{/board/review/list}" class="btn rb-btn-outline">취소</a>
+              <button type="submit" class="btn rb-btn-primary">수정</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<th:block layout:fragment="page_foot">
+  <script th:src="@{/js/reviewBoard.js}" defer></script>
+</th:block>
+</body>
+</html>

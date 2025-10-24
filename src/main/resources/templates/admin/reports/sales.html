@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+  <title>매출 (일별)</title>
+  <th:block layout:fragment="page_head">
+    <link rel="stylesheet" th:href="@{/css/admin/reports.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </th:block>
+</head>
+<body>
+<main layout:fragment="content" class="container-xxl report-wrap py-4"
+      data-api-series="/api/reports/sales/daily"
+      data-api-page="/api/reports/sales/daily/page">
+  <header class="d-flex align-items-center gap-2 mb-3">
+    <h2 class="mb-0">매출 (일별)</h2>
+    <div class="ms-auto d-flex gap-2">
+      <input type="date" id="fromDate" class="form-control form-control-sm">
+      <input type="date" id="toDate" class="form-control form-control-sm">
+      <button id="btnApply" class="btn btn-sm" style="background:#00dca0;color:#fff">적용</button>
+    </div>
+  </header>
+
+  <!-- 차트 -->
+  <section class="card p-3 shadow-sm">
+    <canvas id="salesChart" height="120"></canvas>
+  </section>
+
+  <!-- 테이블 -->
+  <section class="card p-3 shadow-sm mt-3">
+    <div class="table-responsive">
+      <table class="table table-sm align-middle mb-0">
+        <thead>
+        <tr>
+          <th>날짜</th>
+          <th class="text-end">주문수</th>
+          <th class="text-end">순매출</th>
+          <th class="text-end">AOV</th>
+        </tr>
+        </thead>
+        <tbody id="salesTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <nav class="mt-3">
+      <ul class="pagination pagination-sm mb-0" id="pager"></ul>
+    </nav>
+
+    <!-- 합계 바 -->
+    <div class="row g-3 mt-3">
+      <div class="col-12 col-lg-4">
+        <div class="kpi-card"><div class="kpi-title">총 주문수</div><div class="kpi-value" id="sumOrders">-</div></div>
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="kpi-card"><div class="kpi-title">총 순매출</div><div class="kpi-value" id="sumNet">-</div></div>
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="kpi-card"><div class="kpi-title">총 AOV</div><div class="kpi-value" id="sumAov">-</div></div>
+      </div>
+    </div>
+  </section>
+
+  <script th:src="@{/js/admin/report-sales.js}"></script>
+</main>
+</body>
+</html>

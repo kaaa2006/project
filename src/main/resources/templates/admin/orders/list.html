@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <title>주문/배송 관리</title>
+
+    <!-- 페이지 전용 CSS/메타 -->
+    <th:block layout:fragment="page_head">
+        <meta name="_csrf" th:content="${_csrf.token}">
+        <meta name="_csrf_header" th:content="${_csrf.headerName}">
+        <style>
+            .admin-toolbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;margin:1rem 0}
+            .pf-card{background:#fff;border:1px solid #e9ecef;border-radius:12px;padding:16px}
+            .table thead th{background:#f8f9fa}
+            .status-badge{padding:.25rem .5rem;border-radius:999px;font-size:.8rem}
+            .status-CREATED{background:#e7f1ff;color:#0d6efd}
+            .status-PREPARING{background:#fff3cd;color:#856404}
+            .status-SHIPPED{background:#e2f0d9;color:#0f5132}
+            .status-DELIVERED{background:#d1e7dd;color:#0f5132}
+            .status-COMPLETED{background:#e6ffed;color:#0a7a3b}
+            .status-CANCELED{background:#fde2e1;color:#842029}
+            .status-REFUNDED{background:#e7e1ff;color:#4338ca}
+        </style>
+    </th:block>
+</head>
+
+<body>
+<main layout:fragment="content" class="container my-4">
+
+    <!-- 상단 툴바 -->
+    <div class="admin-toolbar">
+        <h3 class="mb-0">주문/배송 관리</h3>
+        <div>
+            <a href="/admin/refunds" class="btn btn-outline-primary">환불요청 관리</a>
+            <a href="/admin" class="btn btn-secondary">관리자 홈</a>
+            <a href="/" class="btn btn-light">메인으로</a>
+        </div>
+    </div>
+
+    <!-- 필터 -->
+    <form class="pf-card mb-3" method="get" th:action="@{/admin/orders}">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">검색어</label>
+                <input type="text" name="q" class="form-control" th:value="${q}" placeholder="주문번호/이름/전화">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">주문상태</label>
+                <select name="status" class="form-select">
+                    <option value="" th:selected="${status == null}">전체</option>
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:selected="${status == s}"
+                            th:text="${s.description}">상태</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">결제수단</label>
+                <select name="pay" class="form-select">
+                    <option value="" th:selected="${pay == null}">전체</option>
+                    <option th:each="p : ${pays}"
+                            th:value="${p}"
+                            th:selected="${pay == p}"
+                            th:text="${p}">결제</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">정렬</label>
+                <select name="sort" class="form-select">
+                    <option th:value="DATE_DESC" th:selected="${sort == 'DATE_DESC'}">주문일 ▼</option>
+                    <option th:value="DATE_ASC"  th:selected="${sort == 'DATE_ASC'}">주문일 ▲</option>
+                    <option th:value="NAME_ASC"  th:selected="${sort == 'NAME_ASC'}">이름 ▲</option>
+                    <option th:value="NAME_DESC" th:selected="${sort == 'NAME_DESC'}">이름 ▼</option>
+                </select>
+            </div>
+            <div class="col-md-2 text-end">
+                <button class="btn btn-primary w-100">조회</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 목록 -->
+    <div class="pf-card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                    <th style="width:160px">주문번호</th>
+                    <th>회원</th>
+                    <th class="text-center">주문일</th>
+                    <th class="text-end">금액</th>
+                    <th class="text-center">상태</th>
+                    <th style="width:220px" class="text-end">액션</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="o : ${orders}">
+                    <td>
+                        <a th:href="@{|/orders/${o.orderId}/detail|}" th:text="${o.orderNo}">ORD-</a>
+                    </td>
+                    <td>
+                        <div class="fw-semibold" th:text="${o.receiverName}">홍길동</div>
+                        <div class="text-muted small" th:text="${o.receiverPhone}">010-0000-0000</div>
+                    </td>
+                    <td class="text-center" th:text="${#temporals.format(o.orderDate, 'yyyy-MM-dd HH:mm')}">-</td>
+                    <td class="text-end" th:text="${#numbers.formatInteger(o.payableAmount,3,'COMMA')} + '원'">0원</td>
+                    <td class="text-center">
+                        <span class="status-badge"
+                              th:classappend="' status-' + ${o.status}"
+                              th:text="${o.status.description}">상태</span>
+                    </td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-primary" th:href="@{|/orders/${o.orderId}/detail|}">상세</a>
+                        <form th:action="@{/admin/orders/{id}/status(id=${o.orderId})}"
+                              method="post" class="d-inline-block">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <select name="status" class="form-select form-select-sm d-inline-block" style="width:120px">
+                                <option th:each="s : ${statuses}"
+                                        th:value="${s}" th:text="${s.description}"
+                                        th:selected="${s == o.status}"></option>
+                            </select>
+                            <button class="btn btn-sm btn-secondary">변경</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(orders)}">
+                    <td colspan="6" class="text-center text-muted py-4">주문 내역이 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <nav th:if="${page != null and page.totalPages > 1}" class="mt-3">
+            <ul class="pagination justify-content-center flex-wrap">
+                <!-- 처음 -->
+                <li class="page-item" th:classappend="${page.first} ? ' disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/orders(page=0, size=${page.size}, q=${q}, status=${status}, pay=${pay}, sort=${sort})}">«</a>
+                </li>
+                <!-- 이전 -->
+                <li class="page-item" th:classappend="${page.first} ? ' disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/orders(page=${page.number > 0 ? page.number-1 : 0}, size=${page.size}, q=${q}, status=${status}, pay=${pay}, sort=${sort})}">이전</a>
+                </li>
+                <!-- 숫자 -->
+                <li th:each="i : ${#numbers.sequence(0, page.totalPages-1)}"
+                    class="page-item" th:classappend="${i} == ${page.number} ? ' active'">
+                    <a class="page-link"
+                       th:text="${i+1}"
+                       th:href="@{/admin/orders(page=${i}, size=${page.size}, q=${q}, status=${status}, pay=${pay}, sort=${sort})}"></a>
+                </li>
+                <!-- 다음 -->
+                <li class="page-item" th:classappend="${page.last} ? ' disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/orders(page=${page.number < page.totalPages-1 ? page.number+1 : page.totalPages-1}, size=${page.size}, q=${q}, status=${status}, pay=${pay}, sort=${sort})}">다음</a>
+                </li>
+                <!-- 마지막 -->
+                <li class="page-item" th:classappend="${page.last} ? ' disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/orders(page=${page.totalPages-1}, size=${page.size}, q=${q}, status=${status}, pay=${pay}, sort=${sort})}">»</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
+
+<!-- 페이지 전용 JS -->
+<th:block layout:fragment="page_foot">
+    <!-- 필요시 추가 스크립트 작성 -->
+</th:block>
+</body>
+</html>

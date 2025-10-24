@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+  <meta charset="UTF-8">
+  <title layout:fragment="page_title">FAQ 읽기</title>
+
+  <th:block layout:fragment="page_head">
+    <!-- 팁 상세 톤 매칭한 FAQ 상세 전용 CSS -->
+    <link rel="stylesheet" th:href="@{/css/pages/faqBoardRead.css?v=1}">
+  </th:block>
+</head>
+
+<body class="faq-read">
+<main layout:fragment="content" class="list-container">
+
+  <!-- 제목(고정 타이틀) + 메타 -->
+  <h1 class="page-title">FAQ</h1>
+
+  <div class="meta-info">
+    <p>
+      작성자: <span th:text="${dto.writer}">관리자</span>
+    </p>
+    <p>
+      등록일:
+      <span th:text="${dto.regTime != null ? #temporals.format(dto.regTime, 'yyyy-MM-dd a h:mm') : ''}">-</span>
+    </p>
+    <p th:if="${dto.updateTime != null}">
+      수정일:
+      <span th:text="${#temporals.format(dto.updateTime, 'yyyy-MM-dd a h:mm')}">-</span>
+    </p>
+  </div>
+
+  <hr>
+
+  <!-- Q -->
+  <section class="qa-block">
+    <div class="qa-label q">Q</div>
+    <div class="qa-body q-body" th:text="${dto.title}">질문 내용</div>
+  </section>
+
+  <!-- A -->
+  <section class="qa-block">
+    <div class="qa-label a">A</div>
+    <div class="qa-body a-body" th:utext="${dto.content}">답변 내용</div>
+  </section>
+
+  <!-- 액션 -->
+  <div class="action-row" >
+    <a th:href="@{/board/list(boardType=${dto.boardType.name()})}" class="btn-outline">목록으로</a>
+
+    <div class="right" sec:authorize="hasRole('ADMIN')">
+      <a th:href="@{/board/modify(bno=${dto.bno})}" class="btn-submit">수정</a>
+      <form method="post" th:action="@{/board/remove}" class="inline">
+        <input type="hidden" name="bno" th:value="${dto.bno}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button type="submit" class="btn-delete">삭제</button>
+      </form>
+    </div>
+  </div>
+
+</main>
+
+<th:block layout:fragment="page_foot">
+  <!-- 공용 스크립트 유지(필요 시) -->
+  <script th:src="@{/js/board.js}"></script>
+</th:block>
+</body>
+</html>

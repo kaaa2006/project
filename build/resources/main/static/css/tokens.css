@@ -1,0 +1,14 @@
+:root{
+    --brand:#00dca0; --gray:#505050; --muted:#9a9a9a;
+    --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+    --z-header:1000; --z-overlay:1100;
+    --cat-offset:72px; /* sticky bar 보정 */
+}
+/* 기존 :root 안에 이어서 한 줄 추가 */
+:root{
+    --brand:#00dca0; /* 기존 있음 */
+    /* ...기존 토큰들... */
+
+    /* alias: 프로젝트 메모 표준과 동기화 */
+    --brand-teal: var(--brand);
+}

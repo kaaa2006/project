@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+  <title layout:fragment="page_title">리뷰 작성</title>
+
+  <!-- ✅ 페이지 전용 CSS (리스트용 reviewBoard.css 대신 등록 전용으로 교체) -->
+  <th:block layout:fragment="page_head">
+    <link rel="stylesheet" th:href="@{/css/pages/reviewBoardWrite.css?v=1}">
+  </th:block>
+</head>
+
+<body class="review-write" data-page="review-register">
+<main layout:fragment="content" class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="card shadow-sm rounded-3 rb-card">
+        <div class="card-header bg-white rb-card-head">
+          <h1 class="h4 mb-0 rb-page-title">리뷰 작성</h1>
+        </div>
+
+        <div class="card-body">
+          <form id="registerReviewForm"
+                th:action="@{/board/review/register}"
+                th:object="${reviewBoardDTO}"
+                method="post"
+                novalidate>
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <!-- 제목 -->
+            <div class="mb-3">
+              <label for="title" class="form-label">제목</label>
+              <input type="text" th:field="*{title}" id="title" class="form-control"
+                     required minlength="5" maxlength="30" placeholder="제목을 입력하세요 (5~30자)">
+              <div class="invalid-feedback">제목은 5~30자로 입력하세요.</div>
+            </div>
+
+            <!-- 작성자 -->
+            <div class="mb-3">
+              <label for="writer" class="form-label">작성자</label>
+              <input type="text" th:field="*{writer}" id="writer" class="form-control" readonly>
+            </div>
+
+            <!-- 내용 -->
+            <div class="mb-3">
+              <label for="content" class="form-label">내용</label>
+              <textarea th:field="*{content}" id="content" rows="8" class="form-control" required
+                        placeholder="리뷰 내용을 입력하세요"></textarea>
+              <div class="invalid-feedback">내용을 입력하세요.</div>
+            </div>
+
+            <!-- 비밀글 -->
+            <div class="mb-3" th:if="${#authorization.expression('!hasRole(''ADMIN'')')}">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" th:field="*{secretBoard}" id="registerSecretCheck">
+                <label class="form-check-label" for="registerSecretCheck">비밀글로 등록</label>
+              </div>
+            </div>
+
+            <!-- 비밀번호 -->
+            <div class="mb-3" th:if="${#authorization.expression('!hasRole(''ADMIN'')')}">
+              <label for="registerCurrentPassword" class="form-label">비밀번호</label>
+              <input type="password" th:field="*{secretPassword}" id="registerCurrentPassword"
+                     class="form-control" placeholder="비밀글 비밀번호 (4자 이상)"
+                     minlength="4" disabled>
+              <div class="form-text">비밀글 설정 시 필수(최소 4자)</div>
+            </div>
+
+            <!-- 액션 -->
+            <div class="d-flex gap-2 justify-content-end pt-2 rb-actions">
+              <!-- 요청대로: 아이콘 없이 텍스트만, 중앙정렬 -->
+              <a th:href="@{/board/review/list}" class="btn rb-btn-outline">취소</a>
+              <button type="submit" class="btn rb-btn-primary">등록</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<th:block layout:fragment="page_foot">
+  <script th:src="@{/js/reviewBoard.js}" defer></script>
+</th:block>
+</body>
+</html>

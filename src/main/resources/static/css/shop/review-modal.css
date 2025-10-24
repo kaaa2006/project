@@ -1,0 +1,194 @@
+:root {
+    --accent: #00DCA0FF;
+    --accent-rgb: 0,220,160;
+    --modal-bg: rgba(15,23,42,.38);
+    --card-bg: #fff;
+    --card-br: 18px;
+    --card-bd: #e9edf3;
+    --shadow-lg: 0 10px 30px rgba(2,8,20,.18), 0 2px 8px rgba(2,8,20,.08);
+}
+
+/* ─────────── Overlay ─────────── */
+#review-modal.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: var(--modal-bg);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease;
+    z-index: 5000; /* header/nav 위로 */
+}
+#review-modal.modal-overlay.show {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ─────────── Card ─────────── */
+#review-modal .modal-card {
+    width: min(720px, 95vw);
+    background: var(--card-bg);
+    border: 1px solid var(--card-bd);
+    border-radius: var(--card-br);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    transform: translateY(8px) scale(.98);
+    opacity: .98;
+    transition: transform .22s cubic-bezier(.2,.6,.2,1), opacity .22s ease;
+    position: relative;
+}
+#review-modal.modal-overlay.show .modal-card {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+/* 상단 포인트 라인 */
+#review-modal .modal-card::before {
+    content:"";
+    position:absolute;
+    left:0; right:0; top:0; height:4px;
+    background: var(--accent);
+}
+
+/* ─────────── Header / Footer ─────────── */
+#review-modal .modal-hd {
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid #eef2f6;
+}
+#review-modal .modal-hd h5 {
+    margin:0; font-size:1.1rem; font-weight:800; letter-spacing:-.01em;
+}
+
+#review-modal .btn-close {
+    all: unset; cursor:pointer; width:36px; height:36px; border-radius:10px;
+    display:grid; place-items:center; position:relative;
+}
+#review-modal .btn-close::before,
+#review-modal .btn-close::after {
+    content:""; position:absolute; width:16px; height:2px; background:#334155; border-radius:2px;
+}
+#review-modal .btn-close::before { transform: rotate(45deg); }
+#review-modal .btn-close::after  { transform: rotate(-45deg); }
+#review-modal .btn-close:hover { background: rgba(var(--accent-rgb), .08); }
+
+#review-modal .modal-bd { padding: 12px 22px 8px; }
+#review-modal .modal-ft {
+    display:flex; gap:.6rem; justify-content:flex-end;
+    padding: 14px 22px 20px;
+    background: linear-gradient(180deg, #fafbfc, #f6f9f7);
+    border-top:1px solid #eef2f6;
+}
+
+/* ─────────── Hero (상품 썸네일/제목/작성자) ─────────── */
+#review-modal .rv-hero {
+    display:flex; align-items:center; gap:16px; margin:8px 0 16px;
+}
+#review-modal .rv-hero .rv-thumb {
+    width:104px; height:104px;
+    border-radius:12px; object-fit:cover;
+    border:1px solid #e2e8f0;
+}
+#review-modal .rv-hero .rv-item-title { font-weight:800; font-size:1.08rem; }
+#review-modal .rv-hero .rv-writer-line { color:#64748b; font-weight:600; }
+
+/* ─────────── ⭐ Star Widget ─────────── */
+#rv-stars {
+    display:inline-block;
+    position:relative;
+    --star-size:28px;
+    --star-count:5;
+    --pad-x: 14px; /* ← 좌우 여백 */
+    --star-mask:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>\
+<path fill='black' d='M12 2l3.09 6.26 6.91.63-5 4.73 1.49 6.87L12 17.77 5.51 20.49 7 13.62 2 8.89l6.91-.63L12 2z'/>\
+</svg>");
+    width: calc((var(--star-size) * var(--star-count)) + (var(--pad-x) * 2));
+    height: calc(var(--star-size) + 8px);
+    padding: 6px var(--pad-x);
+    border:1px solid #e2e8f0; border-radius:12px;
+    background:#f8fafc;
+    cursor:pointer; user-select:none;
+    transition: box-shadow .18s, border-color .18s, background .18s;
+}
+#rv-stars:hover {
+    border-color: rgba(var(--accent-rgb), .45);
+    box-shadow: 0 0 0 4px rgba(var(--accent-rgb), .12);
+}
+
+/* 별줄 위치 보정 */
+#rv-stars .bg,
+#rv-stars .fill {
+    position:absolute;
+    left: var(--pad-x);
+    right: var(--pad-x);
+    inset-block:0;
+    font-size:0;
+    pointer-events:none;
+}
+
+/* 배경 별 */
+#rv-stars .bg::before {
+    content:""; display:block;
+    width: calc(var(--star-size) * var(--star-count));
+    height:var(--star-size);
+    background-color:#e9edf2;
+    -webkit-mask-image:var(--star-mask);
+    -webkit-mask-repeat:repeat-x;
+    -webkit-mask-size:var(--star-size) var(--star-size);
+    mask-image:var(--star-mask);
+    mask-repeat:repeat-x;
+    mask-size:var(--star-size) var(--star-size);
+}
+
+/* 채워지는 별 */
+#rv-stars .fill {
+    width: 20%; /* JS에서 20%, 40% ... 바뀜 */
+    transition: width .22s cubic-bezier(.16,1,.3,1);
+    overflow: hidden;               /* ← 채움 영역 잘라내기 */
+    left: var(--pad-x);             /* ← 패딩 안쪽부터 시작 */
+    right: auto;
+}
+#rv-stars .fill::before {
+    content: "";
+    display: block;
+    width: calc(var(--star-size) * var(--star-count));
+    height: var(--star-size);
+    background-color: var(--accent);
+    -webkit-mask-image: var(--star-mask);
+    -webkit-mask-repeat: repeat-x;
+    -webkit-mask-size: var(--star-size) var(--star-size);
+    mask-image: var(--star-mask);
+    mask-repeat: repeat-x;
+    mask-size: var(--star-size) var(--star-size);
+}
+
+/* 점수 라벨 */
+#rv-rating-label {
+    display:inline-block; margin-left:12px; padding:.28rem .6rem;
+    border-radius:999px;
+    background: rgba(var(--accent-rgb), .08);
+    color:#0b1324; font-weight:700;
+    border:1px solid rgba(var(--accent-rgb), .18);
+    vertical-align:middle;
+}
+
+/* ─────────── 이미지 프리뷰 ─────────── */
+#rv-previews {
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:.5rem;
+}
+#rv-previews img {
+    width:100%; aspect-ratio:1/1; object-fit:cover;
+    border-radius:12px; border:1px solid #e2e8f0;
+    box-shadow:0 1px 2px rgba(2,8,20,.06);
+}
+
+/* ─────────── 반응형 ─────────── */
+@media (max-width:540px) {
+    #review-modal .modal-card { width:calc(100vw - 1.25rem); }
+    #review-modal .rv-hero .rv-thumb { width:92px; height:92px; }
+    #rv-stars { --star-size:24px; height:calc(var(--star-size) + 8px); }
+}

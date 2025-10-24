@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title>회원가입</title>
+    <th:block layout:fragment="page_head">
+        <link rel="stylesheet" th:href="@{/css/pages/signup.css?v=1}">
+    </th:block>
+</head>
+
+<body>
+<div layout:fragment="content" class="container-xxl py-5">
+    <div class="signup-wrap mx-auto">
+
+        <!-- 프로모션 배너(더미 이미지) -->
+        <div class="card border-0 shadow-sm mb-4">
+            <!-- ▼▼▼ 여기에 실제 제작한 이미지를 교체해서 넣으세요 ▼▼▼ -->
+            <img src="/img/new_join250812.gif"
+                 class="w-100 rounded-top promo-img"
+                 alt="첫 정기배송 응원 선물 프로모션 배너">
+            <!-- ▲▲▲ /static/img/signup/promo-dummy.jpg 위치 권장 ▲▲▲ -->
+        </div>
+
+        <!-- 소셜/일반 회원가입 버튼 -->
+        <div class="d-grid gap-3">
+
+            <!-- 카카오 -->
+            <a class="btn btn-kakao btn-lg" th:href="@{/oauth2/authorization/kakao}" aria-label="카카오로 회원가입/로그인">
+                <i class="bi bi-chat-fill me-2"></i>카카오 3초 회원가입/로그인
+            </a>
+
+            <!-- 네이버 -->
+            <a class="btn btn-naver btn-lg" th:href="@{/oauth2/authorization/naver}" aria-label="네이버로 회원가입/로그인">
+                <i class="bi bi-n-square me-2"></i>네이버 회원가입/로그인
+            </a>
+
+            <!-- 쇼핑몰 계정으로 회원가입 -->
+            <a class="btn btn-outline-brand btn-lg" th:href="@{/members/join}">
+                <i class="bi bi-person-plus me-2"></i>쇼핑몰 아이디로 회원가입
+            </a>
+
+        </div>
+
+    </div><!-- /signup-wrap -->
+</div>
+</body>
+</html>

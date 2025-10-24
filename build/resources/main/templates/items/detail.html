@@ -1,0 +1,131 @@
+<!-- templates/items/detail.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+  <title>상품 상세</title>
+  <th:block layout:fragment="page_head">
+    <link rel="stylesheet" th:href="@{/css/shop/shop-items.css}">
+  </th:block>
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+<body>
+<div layout:fragment="content"
+     class="py-4 item-detail-page shop-theme"
+     th:attr="data-item-id=${itemId},
+              data-api-detail=@{'/api/items/' + ${itemId}},
+              data-reviews=@{'/api/items/' + ${itemId} + '/reviews'}"
+     data-sticky-offset="72">
+
+  <!-- 상단 요약 -->
+  <section class="container-xxl">
+    <div class="row g-4 align-items-start">
+      <!-- 갤러리 -->
+      <div class="col-12 col-lg-6">
+        <div class="gallery card shadow-sm">
+          <img id="hero" class="hero-img" alt="">
+          <div id="thumbs" class="thumbs"></div>
+        </div>
+      </div>
+
+      <!-- 요약 정보 -->
+      <div class="col-12 col-lg-6">
+        <div class="summary card shadow-sm">
+          <!-- ✅ 가운데 배치할 본문 묶음 -->
+          <div class="summary-core">
+            <div class="summary-head">
+              <span id="badge" class="badge"></span>
+              <span id="category" class="muted small"></span>
+            </div>
+
+            <h2 id="name" class="title"></h2>
+
+            <div class="summary-meta">
+              <span id="chip-category" class="chip d-none"></span>
+              <span id="chip-food" class="chip d-none"></span>
+            </div>
+
+            <!-- 가격 영역 -->
+            <div class="price-row">
+              <div class="d-flex align-items-end gap-2 flex-wrap">
+                <div class="d-flex align-items-end gap-2">
+                  <div id="sale-price" class="price"></div>
+                  <span id="discount-badge" class="badge text-bg-danger d-none"></span>
+                </div>
+                <div class="sub muted">
+            <span id="original-price-wrap" class="d-none">
+              <s id="original-price"></s>
+            </span>
+                </div>
+              </div>
+              <div id="saving-wrap" class="muted small d-none">
+                <span>즉시할인 <b id="saving-amount"></b>원</span>
+              </div>
+            </div>
+
+            <!-- 수량 -->
+            <div class="qty-row mt-3">
+              <div class="input-group qty-input-group">
+                <button type="button" id="qty-dec" class="btn btn-outline-secondary" aria-label="수량 감소">−</button>
+                <input id="qty" class="form-control text-center"
+                       type="number" inputmode="numeric" pattern="[0-9]*"
+                       min="1" value="1" aria-label="구매 수량">
+                <button type="button" id="qty-inc" class="btn btn-outline-secondary" aria-label="수량 증가">＋</button>
+              </div>
+              <div id="qty-hint" class="small text-muted mt-1"></div>
+            </div>
+
+            <div class="btns mt-3">
+              <button id="btn-cart" class="btn btn-success btn-lg">장바구니</button>
+              <button id="btn-buy" class="btn btn-outline-success btn-lg">바로구매</button>
+            </div>
+          </div>
+
+          <!-- ✅ 하단 고정: 평점/리뷰/조회수 -->
+          <div class="summary-stats summary-stats-bottom">
+            <span class="ms-2">남은 수량: <span id="stock"></span></span>
+            <span class="stat"><i class="bi bi-star-fill"></i><span id="avg-rating">0.0</span></span>
+            <a class="stat link-reviews" href="#section-reviews">
+              <i class="bi bi-chat-dots"></i><span id="review-count-meta">0</span>
+            </a>
+            <span class="stat"><i class="bi bi-eye"></i><span id="view-cnt">0</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 탭 -->
+  <section class="container-xxl detail-tabs-wrap">
+    <div id="detail-tabs" class="detail-tabs">
+      <button class="tab active" data-target="#section-desc">상품설명</button>
+      <button class="tab" data-target="#section-reviews">구매후기(<span id="review-count">0</span>)</button>
+    </div>
+  </section>
+
+  <!-- 상품설명: 상세 이미지 -->
+  <section id="section-desc" class="container-xxl section-block">
+    <!-- 에디터 본문은 보안상 이미지 추출용으로만 사용. 화면엔 long-images로 렌더 -->
+    <div id="desc" class="desc d-none"></div>
+    <div id="long-images" class="long-images"></div>
+  </section>
+
+  <!-- 구매후기 -->
+  <section id="section-reviews" class="container-xxl section-block d-none">
+    <div id="reviews-box" class="reviews-box" aria-live="polite">
+      <div class="muted">구매후기를 불러오는 중…</div>
+    </div>
+    <nav class="mt-3">
+      <ul id="reviews-pagination" class="pagination brand-paging justify-content-center mb-0"></ul>
+    </nav>
+  </section>
+
+</div>
+
+<th:block layout:fragment="page_foot">
+  <script th:src="@{/js/shop/items-detail.js(v=${T(java.time.Instant).now().toEpochMilli()})}"></script>
+</th:block>
+</body>
+</html>

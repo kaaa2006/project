@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title layout:fragment="page_title">후기 게시글 상세</title>
+
+    <th:block layout:fragment="page_head">
+        <!-- ✅ 후기 상세 전용 CSS (팁 상세 톤과 동일) -->
+        <link rel="stylesheet" th:href="@{/css/pages/reviewBoardRead.css?v=tip-like}">
+
+        <!-- CSRF 메타 -->
+        <meta th:if="${_csrf != null}" name="_csrf" th:content="${_csrf.token}">
+        <meta th:if="${_csrf != null}" name="_csrf_header" th:content="${_csrf.headerName}">
+    </th:block>
+</head>
+
+<body class="review-read" th:attr="data-is-logged-in=${isLoggedIn}">
+<main layout:fragment="content" class="container py-4">
+
+    <!-- ◀ 팁 상세와 동일한 컨테이너 이름/느낌 -->
+    <div class="list-container review-detail-container">
+
+        <!-- 제목 & 메타 (팁 상세 헤더 구조) -->
+        <h1 class="page-title" th:text="${reviewBoardDTO.title != null ? reviewBoardDTO.title : '제목 없음'}">제목 없음</h1>
+
+        <div class="meta-info">
+            <p>
+                작성자:
+                <span th:text="${reviewBoardDTO.writer ?: '작성자 없음'}">작성자 없음</span>
+            </p>
+            <p>
+                등록일:
+                <span th:text="${reviewBoardDTO.regDate != null ? #temporals.format(reviewBoardDTO.regDate,'yyyy-MM-dd a h:mm') : '-'}">-</span>
+            </p>
+            <p>
+                조회수:
+                <span th:text="${reviewBoardDTO.viewCount ?: 0}">0</span>
+            </p>
+        </div>
+
+        <hr>
+
+        <!-- 비밀글 안내 (팁과 동일한 오버레이 스타일 유지) -->
+        <div th:if="${secretBoard and !canViewSecret}" class="secret-overlay">
+            <div class="secret-modal">
+                <h3>비밀글입니다</h3>
+                <p>비밀번호를 입력해주세요.</p>
+
+                <form th:action="@{/board/review/read}" method="get" class="d-grid gap-2">
+                    <input type="hidden" name="bno" th:value="${reviewBoardDTO.bno}">
+                    <input type="password" name="password" class="form-control mb-2" placeholder="비밀번호 입력" required>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success flex-fill">확인</button>
+                        <button type="button" id="passwordCancelBtn" class="btn btn-outline-secondary flex-fill">취소</button>
+                    </div>
+                </form>
+
+                <div th:if="${passwordError}" class="text-danger mt-2">비밀번호가 틀렸습니다.</div>
+            </div>
+        </div>
+
+        <!-- 본문 (팁 상세와 동일: utext/줄바꿈 보존) -->
+        <div th:if="${canViewSecret}" class="post-content" th:utext="${reviewBoardDTO.content}">
+            내용 없음
+        </div>
+
+        <!-- 반응 & 작성자 액션 (팁 상세 레이아웃과 동일) -->
+        <div class="reaction" th:data-user-reaction="${reviewBoardDTO.userReaction}">
+            <!-- 좌측: 반응 버튼 (JS 셀렉터 유지) -->
+            <div class="form-buttons review-action-buttons">
+                <button type="button" class="btn-helpful"
+                        th:attr="data-bno=${reviewBoardDTO.bno}">
+                    도움 됐어요 (<span class="count" th:text="${reviewBoardDTO.helpfulCount}">0</span>)
+                </button>
+
+                <button type="button" class="btn-not-helpful"
+                        th:attr="data-bno=${reviewBoardDTO.bno}">
+                    도움 안 됐어요 (<span class="count" th:text="${reviewBoardDTO.notHelpfulCount}">0</span>)
+                </button>
+            </div>
+
+            <!-- 우측: 작성자 전용 수정/삭제 (클래스명만 review용으로) -->
+            <div class="review-action-buttons-right"
+                 th:if="${isWriter}">
+                <a th:href="@{/board/review/modify(bno=${reviewBoardDTO.bno})}" class="btn-submit">수정</a>
+
+                <form th:action="@{/board/review/remove}" method="post" style="display:inline;">
+                    <input type="hidden" name="bno" th:value="${reviewBoardDTO.bno}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="btn-delete">삭제</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 댓글 (팁 상세 톤/구조 매칭) -->
+        <h3 class="comment-title">댓글</h3>
+
+        <div th:if="${reviewBoardDTO.replies == null or #lists.isEmpty(reviewBoardDTO.replies)}"
+             id="no-comments" class="text-muted no-comments">댓글이 없습니다.</div>
+
+        <ul id="review-comments-container" class="comments">
+            <li class="comment"
+                th:each="reply : ${reviewBoardDTO.replies}"
+                th:data-rno="${reply.rno}">
+                <div class="comment-header">
+                    <strong th:text="${reply.replyer}">관리자</strong>
+                    <span th:if="${reply.admin}" class="badge-admin">관리자</span>
+                    <span class="date" th:text="${reply.regDate != null ? #temporals.format(reply.regDate,'yyyy-MM-dd HH:mm') : '-'}">-</span>
+
+                    <span sec:authorize="hasRole('ADMIN')" class="comment-actions">
+                        <button type="button" class="btn-edit">수정</button>
+                        <button type="button" class="btn-delete">삭제</button>
+                    </span>
+                </div>
+                <div class="comment-body reply-text" th:text="${reply.replyText ?: ''}">댓글 내용</div>
+            </li>
+        </ul>
+
+        <!-- 댓글 작성 (관리자) -->
+        <div sec:authorize="hasRole('ADMIN')" class="comment-write">
+            <h4>댓글 작성</h4>
+            <form id="review-reply-form" th:action="@{/board/review/reply/register}" method="post">
+                <input type="hidden" name="reviewBoardId" th:value="${reviewBoardDTO.bno}">
+                <textarea name="replyText" class="form-control" placeholder="댓글을 입력하세요" required></textarea>
+
+                <div class="comment-actions-row">
+                    <a th:href="@{/board/review/list}" class="btn-outline">목록으로</a>
+                    <button type="submit" class="btn-primary btn-reply-submit">댓글 등록</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ✅ 하단 전역 '목록으로' 버튼 (팁 상세와 동일 톤) -->
+        <div class="back-to-list">
+            <a th:href="@{/board/review/list}" class="back-btn">목록으로</a>
+        </div>
+
+    </div>
+</main>
+
+<th:block layout:fragment="page_foot">
+    <!-- 기존 로직 그대로 -->
+    <script th:src="@{/js/reviewBoard.js}" defer></script>
+    <script th:if="${msg}">alert([[${msg}]]);</script>
+</th:block>
+</body>
+</html>

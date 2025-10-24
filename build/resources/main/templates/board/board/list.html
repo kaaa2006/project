@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <title>공지사항</title>
+    <th:block layout:fragment="page_head">
+        <!-- ✅ 공지 리스트 전용 CSS (팁 게시판 톤/그리드 매칭) -->
+        <link rel="stylesheet" th:href="@{/css/pages/noticeBoard.css?v=1}">
+        <!-- CSRF (필요 시) -->
+        <meta name="_csrf" th:content="${_csrf.token}">
+        <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    </th:block>
+</head>
+
+<body class="notice-page">
+<main layout:fragment="content" class="list-container">
+
+    <!-- 상단 헤더 -->
+    <div class="header">
+        <h1>공지사항</h1>
+
+        <!-- 관리자만 글쓰기 -->
+        <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+            <a th:href="@{/board/register(boardType='NOTICE')}" class="btn-register">글쓰기</a>
+        </th:block>
+    </div>
+
+    <!-- 목록 -->
+    <div th:if="${responseDTO.dtoList != null and !#lists.isEmpty(responseDTO.dtoList)}">
+        <ul id="notice-list" class="notice-table">
+            <!-- 헤더 -->
+            <li class="notice-header">
+                <span class="col-no">번호</span>
+                <span class="col-title">제목</span>
+                <span class="col-writer">작성자</span>
+                <span class="col-date">작성일</span>
+                <span class="col-views">조회</span>
+            </li>
+
+            <!-- 아이템 -->
+            <li class="notice-item"
+                th:each="board : ${responseDTO.dtoList}">
+                <span class="col-no" th:text="${board.bno}">1</span>
+                <span class="col-title">
+          <a th:href="@{'/board/read'(bno=${board.bno},boardType='NOTICE')}"
+             th:text="${board.title}">제목</a>
+        </span>
+                <span class="col-writer" th:text="${board.writer}">관리자</span>
+                <span class="col-date"
+                      th:text="${board.regTime != null ? #temporals.format(board.regTime, 'yyyy-MM-dd a h:mm') : ''}">-</span>
+                <span class="col-views" th:text="${board.viewCount}">0</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 빈 상태 -->
+    <div th:if="${responseDTO.dtoList == null or #lists.isEmpty(responseDTO.dtoList)}"
+         class="notice-empty">
+        등록된 공지사항이 없습니다.
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination-wrap mt-4">
+        <ul id="notice-pagination"
+            class="board-pagination"
+            th:data-current-page="${responseDTO.page}"
+            th:data-total-pages="${responseDTO.totalPage}"
+            data-size="20" th:data-size="${responseDTO.size != null ? responseDTO.size : 20}">
+        </ul>
+
+    </div>
+
+</main>
+
+<th:block layout:fragment="page_foot">
+    <!-- 공용이 있으면 그대로 사용 -->
+    <script th:src="@{/js/board.js}" defer></script>
+    <script th:src="@{/js/pagination.js}" defer></script>
+    <!-- 페이지 전용 -->
+    <script th:src="@{/js/noticeBoard.js?v=1}" defer></script>
+</th:block>
+</body>
+</html>

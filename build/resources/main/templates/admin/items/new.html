@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <title>상품 등록</title>
+    <th:block layout:fragment="page_head">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+        <meta name="items-api-base" content="/api/admin/items"/>
+
+        <style>
+            .page-wrap{max-width:1080px;margin:0 auto;padding:24px}
+            .page-header{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+            .grid{display:grid;grid-template-columns:1fr 360px;gap:20px}
+            .card{background:#fff;border:1px solid #eee;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+            .card .hd{padding:14px 16px;border-bottom:1px solid #eee;font-weight:600}
+            .card .bd{padding:16px}
+            .ctrls{display:flex;gap:8px;flex-wrap:wrap}
+            .thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+            .thumb{position:relative;border:1px solid #e6e6e6;border-radius:8px;padding:8px}
+            .thumb img{width:100%;height:110px;object-fit:cover;border-radius:6px}
+            .thumb-sm img{height:80px}
+            .muted{color:#888;font-size:12px}
+            .btn{padding:10px 14px;border:1px solid #ddd;border-radius:10px;background:#fafafa;cursor:pointer}
+            .btn.primary{background:#2563eb;color:#fff;border-color:#2563eb}
+            .btn-icon{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:1px solid #ddd;border-radius:999px;background:#fff;cursor:pointer;line-height:1}
+            .btn-del{position:absolute;top:6px;right:6px}
+            .field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+            .field input,.field select,.field textarea{padding:10px;border:1px solid #ddd;border-radius:10px}
+            .right{text-align:right}
+            .help{font-size:12px;color:#6b7280}
+            .row{display:flex;gap:10px}
+            .row .field{flex:1}
+            .border-dashed{border-style:dashed!important}
+            .border-primary{border-color:#2563eb!important}
+            .thumb.rep::after{
+                content:"대표";
+                position:absolute; top:6px; left:6px;
+                background:#2563eb; color:#fff; font-size:11px;
+                padding:2px 6px; border-radius:999px;
+            }
+            .thumb.rep{ box-shadow:0 0 0 2px rgba(37,99,235,.5); }
+
+        </style>
+    </th:block>
+
+    <!-- Thymeleaf 보안 제약에 안전한 캐시버스터 -->
+    <script th:src="@{/js/admin/item-edit.js(v=${#dates.createNow().time})}" defer></script>
+</head>
+<body>
+<div layout:fragment="content" class="page-wrap"
+     data-page="new"
+     data-api="/api/admin/items">
+
+    <div class="page-header">
+        <h1>상품 등록</h1>
+    </div>
+
+    <div class="grid">
+        <!-- 좌측: 기본 정보 -->
+        <div class="card">
+            <div class="hd">기본 정보</div>
+            <div class="bd">
+                <form id="itemForm" method="post" action="/api/admin/items" enctype="multipart/form-data">
+                    <div class="field">
+                        <label>상품명</label>
+                        <input type="text" name="itemNm" placeholder="예) 매콤 로제 파스타 밀키트" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label>정가</label>
+                            <input type="text" name="originalPrice" inputmode="numeric" pattern="[0-9,]*" placeholder="예) 12,900" required>
+                        </div>
+                        <div class="field">
+                            <label>할인율(0~95)</label>
+                            <input type="text" name="discountRate" inputmode="numeric" pattern="[0-9]*" value="0" required>
+                        </div>
+                    </div>
+
+                    <!-- 실판매가 미리보기 -->
+                    <div class="help" id="salePricePreview" style="margin-top:-6px">
+                        실판매가: <b id="salePriceValue">-</b> 원
+                    </div>
+
+                    <div class="field">
+                        <label>재고</label>
+                        <input type="number" name="stockNumber" min="0" step="1" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="field">
+                            <label>판매상태</label>
+                            <select name="itemSellStatus">
+                                <option value="SELL">판매중</option>
+                                <option value="SOLD_OUT">품절</option>
+                                <option value="STOP">중지</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>음식 분류(FoodItem)</label>
+                            <select name="foodItem" id="foodItemSelect" required>
+                                <option value="" selected disabled>선택</option>
+                                <option th:each="fi : ${foodItems}" th:value="${fi}" th:text="${fi}"></option>
+                            </select>
+                            <div class="help">Category는 서버에서 FoodItem 기준으로 자동 설정됩니다.</div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>상세 설명</label>
+                        <textarea name="itemDetail" id="itemDetail" rows="10" placeholder="텍스트 설명 또는 아래 '상세 이미지 삽입'을 이용하세요."></textarea>
+                        <div class="help">업로드 버튼으로 본문 하단에 &lt;img&gt;가 자동 삽입됩니다.</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 우측: 이미지 -->
+        <div class="card">
+            <div class="hd">상품 이미지</div>
+            <div class="bd">
+                <div class="field">
+                    <label>대표/추가 이미지 선택</label>
+                    <input type="file" id="files" name="files" accept="image/*" multiple form="itemForm">
+                    <div id="productDropZone" class="border border-dashed rounded p-3 mt-2 text-center">
+                        <small class="muted">여기에 이미지를 <b>드래그&드롭</b>하거나, <b>붙여넣기(Ctrl+V)</b> 하세요.</small>
+                    </div>
+                    <div class="help">여러 장 선택 가능. 아래에서 대표 이미지를 고르세요.</div>
+                </div>
+
+                <div class="field">
+                    <label>대표 이미지 지정</label>
+                    <select id="repIndex" name="repIndex" form="itemForm">
+                        <option value="">(자동 지정)</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>선택한 파일 미리보기</label>
+                    <div id="thumbs" class="thumbs"></div>
+                </div>
+
+                <div class="field">
+                    <label>상세 이미지 삽입</label>
+                    <input type="file" id="itemDetailFiles" name="itemDetailFiles" accept="image/*" multiple form="itemForm">
+                    <!-- 상세 이미지 미리보기 -->
+                    <div id="detailFilesPreview" class="thumbs thumb-sm"></div>
+
+                    <div class="ctrls" style="margin-top:8px">
+                        <button type="button" class="btn" id="btnClearAll">전체 비우기</button>
+                        <button type="button" class="btn" id="btnClearNonRep">대표 외 삭제</button>
+                    </div>
+
+                    <div class="help">업로드 즉시 본문 하단에 &lt;img&gt; 태그가 삽입됩니다.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right" style="margin-top:16px">
+        <button class="btn" onclick="history.back()">취소</button>
+        <!-- 폼 밖에 있어도 submit 되도록 지정 -->
+        <button class="btn primary" id="btnCreate" type="submit" form="itemForm">상품 등록</button>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+  <title>통계 · 리포트</title>
+  <th:block layout:fragment="page_head">
+    <link rel="stylesheet" th:href="@{/css/admin/reports.css}">
+  </th:block>
+</head>
+<body>
+<main layout:fragment="content" class="container-xxl report-wrap py-4">
+  <h2 class="mb-4">통계 · 리포트</h2>
+  <div class="row g-3">
+    <div class="col-12 col-md-6">
+      <a class="text-decoration-none" th:href="@{/admin/reports/exec}">
+        <div class="card h-100 shadow-sm"><div class="card-body">
+          <h5 class="card-title mb-2">경영 요약</h5>
+          <p class="text-muted small mb-0">기간별 순매출/주문수/AOV</p>
+        </div></div>
+      </a>
+    </div>
+    <div class="col-12 col-md-6">
+      <a class="text-decoration-none" th:href="@{/admin/reports/sales}">
+        <div class="card h-100 shadow-sm"><div class="card-body">
+          <h5 class="card-title mb-2">매출 (일별)</h5>
+          <p class="text-muted small mb-0">일자별 순매출/주문수/AOV 트렌드</p>
+        </div></div>
+      </a>
+    </div>
+  </div>
+</main>
+</body>
+</html>

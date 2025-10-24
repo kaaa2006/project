@@ -1,0 +1,80 @@
+/* ── 관리자 1:1 문의 상세 ── */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header .author-date {
+    font-weight: normal;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.alert {
+    background-color: #fff;
+    border-radius: 0;
+    border: none;
+    padding: 15px;
+    margin-bottom: 0;
+}
+
+.alert p {
+    margin-bottom: 0.5rem;
+}
+
+.alert .text-muted {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* ── 답변 작성 폼 ── */
+#answerForm {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#answerForm textarea {
+    resize: vertical;
+}
+
+.answerBtn {
+    min-width: 60px;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 768px) {
+    .card-body .d-flex {
+        flex-direction: column;
+    }
+    .card-body .d-flex > div + div {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+}
